@@ -182,7 +182,7 @@ function StateDot({ state }) {
     <div style={{ position: 'relative' }}>
       <button
         onClick={() => setOpen(o => !o)}
-        title="心潮状态"
+        title="身体状态"
         style={{
           width: 10, height: 10, borderRadius: '50%',
           background: dotColor,
@@ -200,7 +200,7 @@ function StateDot({ state }) {
           zIndex: 100, fontSize: 12,
           lineHeight: 1.8,
         }}>
-          <div style={{ fontWeight: 600, marginBottom: 6, fontSize: 13 }}>心潮</div>
+          <div style={{ fontWeight: 600, marginBottom: 6, fontSize: 13 }}>身体状态</div>
           {Object.entries(state.state || {}).map(([k, v]) => (
             <div key={k} style={{ display: 'flex', justifyContent: 'space-between' }}>
               <span style={{ color: 'var(--fg-muted)' }}>{k}</span>

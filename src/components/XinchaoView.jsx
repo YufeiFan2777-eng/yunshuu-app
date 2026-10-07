@@ -92,7 +92,7 @@ export default function XinchaoView({ onBack }) {
           background: 'transparent', border: 'none', cursor: 'pointer',
           color: '#513d2c',
         }}>←</button>
-        <div style={{ fontWeight: 400, fontSize: 17, fontFamily: "Georgia,'Songti SC',serif", color: '#513d2c' }}>心潮</div>
+        <div style={{ fontWeight: 400, fontSize: 17, fontFamily: "Georgia,'Songti SC',serif", color: '#513d2c' }}>身体状态</div>
       </div>
 
       {/* ── Scrollable body ── */}
@@ -127,7 +127,7 @@ export default function XinchaoView({ onBack }) {
         <div style={{ position: 'relative', zIndex: 1 }}>
           {/* Title */}
           <header style={{ textAlign: 'center', padding: '22px 0 4px' }}>
-            <h2 style={{ fontSize: 29, fontWeight: 400, margin: 0, color: '#513d2c' }}>心潮</h2>
+            <h2 style={{ fontSize: 29, fontWeight: 400, margin: 0, color: '#513d2c' }}>身体状态</h2>
             <div style={{ fontSize: 12, color: '#74604a', letterSpacing: '2px', marginTop: 4 }}>此刻的你，慢慢盛开</div>
           </header>
 
@@ -141,7 +141,7 @@ export default function XinchaoView({ onBack }) {
                 <svg
                   viewBox="0 0 400 428"
                   style={{ width: '100%', height: '100%', display: 'block' }}
-                  role="img" aria-label="七瓣心潮花，点击查看维度详情"
+                  role="img" aria-label="七瓣花，点击查看维度详情"
                 >
                   <defs>
                     <filter id="xc-pigment">
@@ -345,7 +345,7 @@ export default function XinchaoView({ onBack }) {
                 color: '#74604a', margin: '18px 0 0', lineHeight: 1.5,
                 fontFamily: 'sans-serif',
               }}>
-                数值范围 0–100 · 由心潮状态实时更新
+                数值范围 0–100 · 由身体状态实时更新
               </p>
             </>
           )}

@@ -50,7 +50,7 @@ function XinchaoPanel({ onXinchao }) {
             display: 'inline-block',
             animation: 'statePulse 3s ease-in-out infinite',
           }} />
-          心潮状态
+          身体状态
         </span>
         <span style={{ color: 'var(--fg-muted)', fontSize: 11 }}>{open ? '▲' : '▼'}</span>
       </button>
