@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import stickers from '/stickers.webp';
 import paperTex from '/paper-tex.jpg';
 
-const SINCE = new Date('2025-05-18');
+const SINCE = new Date('2026-10-06');
 
 function daysSince() {
   return Math.floor((Date.now() - SINCE.getTime()) / 86400000);
@@ -44,7 +44,7 @@ export default function HomeView() {
         <div className="hv-paper hv-counter">
           <span className="hv-clip" aria-hidden="true" />
           <div className="hv-days">{days}</div>
-          <div className="hv-since">SINCE 2025.5.18</div>
+          <div className="hv-since">SINCE 2026.10.6</div>
         </div>
 
         {/* ── Quote ── */}
