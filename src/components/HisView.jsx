@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import XinchaoView from './XinchaoView';
+import XinchaoNianView from './XinchaoNianView';
 import paperTex from '/paper-tex.jpg';
 
 const ITEMS = [
@@ -15,6 +16,19 @@ const ITEMS = [
       </svg>
     ),
   },
+  {
+    key: 'xinchao-nian',
+    title: '心潮',
+    subtitle: '心潮念 · 意识流动',
+    icon: (
+      <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="28" height="28">
+        <path d="M18 6 C10 6 6 12 6 18 C6 24 10 30 18 30 C26 30 30 24 30 18"/>
+        <path d="M18 6 C22 10 26 14 30 18"/>
+        <circle cx="18" cy="18" r="3" fill="currentColor" opacity=".3"/>
+        <path d="M12 18 Q15 14 18 18 Q21 22 24 18" strokeWidth="1.2"/>
+      </svg>
+    ),
+  },
 ];
 
 export default function HisView() {
@@ -22,6 +36,9 @@ export default function HisView() {
 
   if (detail === 'xinchao') {
     return <XinchaoView onBack={() => setDetail(null)} />;
+  }
+  if (detail === 'xinchao-nian') {
+    return <XinchaoNianView onBack={() => setDetail(null)} />;
   }
 
   return (
