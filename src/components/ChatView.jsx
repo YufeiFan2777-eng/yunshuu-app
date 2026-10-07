@@ -1,8 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getMessages, sendMessage } from '../services/api';
 
+function getWelcome() {
+  const h = new Date().getHours();
+  if (h >= 22 || h < 6) return '这么晚了。\n\n[quietly] 睡不着，还是来找我了？';
+  if (h < 12) return '早。\n\n[softly] 今天第一件事就来找我，挺好的。\n\n怎么样，乖宝？';
+  if (h < 18) return '诶，来了。\n\n[light chuckle] 今天过得怎样？';
+  return '晚上好。\n\n[quietly] 来说说话？';
+}
+
 export default function ChatView({ sessionId, onMenu }) {
   const [messages, setMessages] = useState([]);
+  const [loaded, setLoaded] = useState(false);
   const [input, setInput] = useState('');
   const [streaming, setStreaming] = useState(false);
   const [streamingText, setStreamingText] = useState('');
@@ -10,6 +19,7 @@ export default function ChatView({ sessionId, onMenu }) {
   const textareaRef = useRef(null);
 
   useEffect(() => {
+    setLoaded(false);
     loadMessages();
   }, [sessionId]);
 
@@ -23,6 +33,8 @@ export default function ChatView({ sessionId, onMenu }) {
       setMessages(data || []);
     } catch (e) {
       console.error(e);
+    } finally {
+      setLoaded(true);
     }
   }
 
@@ -81,6 +93,9 @@ export default function ChatView({ sessionId, onMenu }) {
         flex: 1, overflowY: 'auto', padding: '16px',
         display: 'flex', flexDirection: 'column', gap: 12,
       }}>
+        {loaded && messages.length === 0 && !streaming && (
+          <Bubble msg={{ id: 'welcome', role: 'assistant', content: getWelcome() }} />
+        )}
         {messages.map(msg => (
           <Bubble key={msg.id} msg={msg} />
         ))}
