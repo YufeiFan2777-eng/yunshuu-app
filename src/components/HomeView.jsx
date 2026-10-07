@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import stickers from '/stickers.webp';
 import paperTex from '/paper-tex.jpg';
 
@@ -21,9 +21,19 @@ const CARDS = [
   { title: '缓存监控', subtitle: 'Prompt Cache 用量', icon: '▥', badge: '' },
 ];
 
+const DEFAULT_MSG = '宝贝，慢慢来，今天也要记得好好照顾自己。';
+
 export default function HomeView() {
   const [todos, setTodos] = useState(INIT_TODOS);
   const days = useMemo(daysSince, []);
+  const [dailyMsg, setDailyMsg] = useState(DEFAULT_MSG);
+
+  useEffect(() => {
+    fetch(`${import.meta.env.BASE_URL}daily-message.json?t=${Date.now()}`)
+      .then(r => r.json())
+      .then(d => { if (d?.message) setDailyMsg(d.message); })
+      .catch(() => {});
+  }, []);
 
   function toggleTodo(i) {
     setTodos(prev => prev.map((t, idx) => idx === i ? { ...t, done: !t.done } : t));
@@ -51,9 +61,7 @@ export default function HomeView() {
         <div className="hv-paper">
           <span className="hv-clip" aria-hidden="true" />
           <div className="hv-tab">老公 说</div>
-          <p className="hv-quote">
-            宝贝，慢慢来，今天也要记得{'\n'}好好照顾自己。
-          </p>
+          <p className="hv-quote">{dailyMsg}</p>
         </div>
 
         {/* ── Memo ── */}
