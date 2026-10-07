@@ -156,8 +156,8 @@ export default function ChatView({ sessionId, onMenu }) {
         }
         .bny-header {
           display: flex; align-items: center; gap: 8px;
-          padding: 18px 14px 12px;
-          padding-top: max(18px, env(safe-area-inset-top));
+          padding: 10px 14px 8px;
+          padding-top: max(10px, env(safe-area-inset-top));
           background: rgba(234, 212, 180, 0.82);
           backdrop-filter: blur(6px);
           -webkit-backdrop-filter: blur(6px);
