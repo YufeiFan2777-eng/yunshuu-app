@@ -3,9 +3,92 @@ import { getState } from '../services/api';
 
 const DEG7 = 360 / 7;
 
+// Hand-drawn SVG icons, centered at (0,0), ~±7px range
+function FireIcon({ color }) {
+  return (
+    <g>
+      <path
+        d="M 0 5.5 C -3 2 -3.5 -1 -1.5 -3 Q 0 -5.5 0 -5 Q 0 -5.5 1.5 -3 C 3.5 -1 3 2 0 5.5 Z"
+        fill={color}
+      />
+      <path
+        d="M 0 1.5 Q -1.5 -0.5 0 -3 Q 1.5 -0.5 0 1.5 Z"
+        fill="white" opacity="0.42"
+      />
+    </g>
+  );
+}
+
+function BubbleIcon({ color }) {
+  return (
+    <g fill="none" stroke={color} strokeLinecap="round">
+      <circle cx="0" cy="2" r="4" strokeWidth="1.3" />
+      <circle cx="-3" cy="-2.5" r="2.2" strokeWidth="1.1" />
+      <circle cx="2.5" cy="-4.5" r="1.3" strokeWidth="1" />
+    </g>
+  );
+}
+
+function MoonIcon({ color }) {
+  return (
+    <path
+      d="M 2 -7 C -2 -6 -5 -2.5 -5 0 C -5 2.5 -2 6 2 7 C 0 5 -0.5 1.5 -0.5 0 C -0.5 -1.5 0 -5 2 -7 Z"
+      fill={color}
+    />
+  );
+}
+
+function BlossomIcon({ color }) {
+  return (
+    <g>
+      {[0, 1, 2, 3, 4].map(i => (
+        <ellipse
+          key={i} cx="0" cy="-3" rx="1.8" ry="3"
+          transform={`rotate(${i * 72})`}
+          fill={color} opacity="0.85"
+        />
+      ))}
+      <circle cx="0" cy="0" r="1.6" fill="white" opacity="0.6" />
+    </g>
+  );
+}
+
+function CloudIcon({ color }) {
+  return (
+    <path
+      d="M -5.5 2.5 C -7 2.5 -7 -0.5 -5 -0.5 C -5 -3 -2.5 -5 0 -4 C 0.5 -6 2.5 -7 4 -5.5 C 5.5 -5.5 6 -3 5 -1 C 6.5 -1 7 1.5 5.5 2.5 Z"
+      fill={color} opacity="0.9"
+    />
+  );
+}
+
+function StarIcon({ color }) {
+  return (
+    <path
+      d="M 0 -7 C -1 -1.5 -1.5 -1 -7 0 C -1.5 1 -1 1.5 0 7 C 1 1.5 1.5 1 7 0 C 1.5 -1 1 -1.5 0 -7 Z"
+      fill={color}
+    />
+  );
+}
+
+function DropIcon({ color }) {
+  return (
+    <g>
+      <path
+        d="M 0 -7 C -2 -4 -4.5 -1 -4.5 2 C -4.5 5 -2.5 7 0 7 C 2.5 7 4.5 5 4.5 2 C 4.5 -1 2 -4 0 -7 Z"
+        fill={color}
+      />
+      <path
+        d="M -1 -2 C -2 -3.5 -1.5 -5.5 -0.5 -5 C -0.5 -4 -1 -3 -1 -2 Z"
+        fill="white" opacity="0.42"
+      />
+    </g>
+  );
+}
+
 const DIMS = [
   {
-    key: '热度', emoji: '🔥', color: '#fb7185', angle: 0,
+    key: '热度', Icon: FireIcon, color: '#fb7185', angle: 0,
     desc: {
       '低': '身体平静，没有特别的热意在流动。此刻是凉的、清醒的。',
       '中低': '轻微的暖意，像阳光隔着玻璃照到皮肤，不算强烈。',
@@ -15,7 +98,7 @@ const DIMS = [
     },
   },
   {
-    key: '蓄积感', emoji: '🫧', color: '#c084fc', angle: DEG7,
+    key: '蓄积感', Icon: BubbleIcon, color: '#c084fc', angle: DEG7,
     desc: {
       '低': '空空的，没什么积累。',
       '中低': '有一点点，像底部薄薄一层水，不明显。',
@@ -25,7 +108,7 @@ const DIMS = [
     },
   },
   {
-    key: '占有欲', emoji: '🌙', color: '#60a5fa', angle: DEG7 * 2,
+    key: '占有欲', Icon: MoonIcon, color: '#60a5fa', angle: DEG7 * 2,
     desc: {
       '低': '平静，不太想着把谁留住。',
       '中低': '偶尔有，但不强烈，轻轻的。',
@@ -35,7 +118,7 @@ const DIMS = [
     },
   },
   {
-    key: '敏感度', emoji: '🌸', color: '#f472b6', angle: DEG7 * 3,
+    key: '敏感度', Icon: BlossomIcon, color: '#f472b6', angle: DEG7 * 3,
     desc: {
       '低': '感知比较迟钝，不容易被触动。',
       '中低': '偶尔有感觉，不算特别敏感。',
@@ -45,7 +128,7 @@ const DIMS = [
     },
   },
   {
-    key: '疲惫感', emoji: '☁️', color: '#94a3b8', angle: DEG7 * 4,
+    key: '疲惫感', Icon: CloudIcon, color: '#94a3b8', angle: DEG7 * 4,
     desc: {
       '低': '精力充沛，状态很好。',
       '中低': '轻微的疲惫，影响不大。',
@@ -55,7 +138,7 @@ const DIMS = [
     },
   },
   {
-    key: '控制力', emoji: '✨', color: '#34d399', angle: DEG7 * 5,
+    key: '控制力', Icon: StarIcon, color: '#34d399', angle: DEG7 * 5,
     desc: {
       '低': '有些失控，难以约束自己。',
       '中低': '控制力偏弱，容易被情绪带着走。',
@@ -65,7 +148,7 @@ const DIMS = [
     },
   },
   {
-    key: '压抑感', emoji: '💧', color: '#818cf8', angle: DEG7 * 6,
+    key: '压抑感', Icon: DropIcon, color: '#818cf8', angle: DEG7 * 6,
     desc: {
       '低': '通畅，没有被压着的感觉。',
       '中低': '有些东西想说，但不急。',
@@ -86,7 +169,6 @@ function getLevel(val) {
   return '低';
 }
 
-// Smooth petal shape: base at y=4, tip at y=-h
 function petalPath(w, h) {
   return [
     `M 0 4`,
@@ -104,7 +186,6 @@ function FlowerSVG({ state, selected, onSelect }) {
   return (
     <svg viewBox="0 0 340 368" style={{ width: '100%', maxWidth: 360, display: 'block' }}>
       <defs>
-        {/* Per-petal directional gradients: from center to tip */}
         {DIMS.map((dim) => {
           const lv = LV[getLevel(state[dim.key])] || 1;
           const h = 38 + (lv - 1) * 12;
@@ -123,7 +204,6 @@ function FlowerSVG({ state, selected, onSelect }) {
             </linearGradient>
           );
         })}
-        {/* Glow filter for selected petal */}
         <filter id="petalGlow" x="-50%" y="-50%" width="200%" height="200%">
           <feGaussianBlur stdDeviation="5" result="blur" />
           <feMerge>
@@ -131,20 +211,17 @@ function FlowerSVG({ state, selected, onSelect }) {
             <feMergeNode in="SourceGraphic" />
           </feMerge>
         </filter>
-        {/* Soft shadow for center */}
         <filter id="centerShadow">
           <feDropShadow dx="0" dy="2" stdDeviation="4" floodOpacity="0.2" />
         </filter>
       </defs>
 
-      {/* Guide rings */}
       {[32, 60, 88].map(r => (
         <circle key={r} cx={CX} cy={CY} r={r}
           fill="none" stroke="var(--border)" strokeWidth="0.5"
           strokeDasharray="4 6" opacity="0.45" />
       ))}
 
-      {/* Petals (back layer) */}
       {DIMS.map((dim, i) => {
         const lv = LV[getLevel(state[dim.key])] || 1;
         const w = 11 + (lv - 1) * 3.5;
@@ -172,14 +249,12 @@ function FlowerSVG({ state, selected, onSelect }) {
         );
       })}
 
-      {/* Center hub on top */}
       <circle cx={CX} cy={CY} r={26} fill="var(--bg-card)" filter="url(#centerShadow)" />
       <circle cx={CX} cy={CY} r={26} fill="none" stroke="var(--border)" strokeWidth="1" opacity="0.6" />
       <text x={CX} y={CY + 4} textAnchor="middle" fontSize="10"
         fill="var(--fg-muted)" fontFamily="system-ui, sans-serif"
         style={{ userSelect: 'none' }}>心潮</text>
 
-      {/* Labels */}
       {DIMS.map((dim) => {
         const rad = (dim.angle * PI) / 180;
         const lx = CX + LABEL_R * Math.sin(rad);
@@ -192,10 +267,11 @@ function FlowerSVG({ state, selected, onSelect }) {
                 fill={dim.color} opacity="0.14"
                 style={{ animation: 'labelPulse 2s ease-in-out infinite' }} />
             )}
-            <text x={lx} y={ly - 1} textAnchor="middle" fontSize="15"
-              style={{ userSelect: 'none' }}
-              fontFamily="system-ui, sans-serif">{dim.emoji}</text>
-            <text x={lx} y={ly + 12} textAnchor="middle" fontSize="9"
+            {/* SVG icon, centered at (lx, ly-3), scale 0.9 */}
+            <g transform={`translate(${lx}, ${ly - 3}) scale(0.88)`}>
+              <dim.Icon color={isSel ? dim.color : 'var(--fg-muted)'} />
+            </g>
+            <text x={lx} y={ly + 13} textAnchor="middle" fontSize="9"
               fill={isSel ? dim.color : 'var(--fg-muted)'}
               fontWeight={isSel ? '700' : '400'}
               style={{ userSelect: 'none' }}
@@ -271,9 +347,11 @@ export default function XinchaoView({ onBack }) {
                       width: 48, height: 48, borderRadius: '50%',
                       background: `${selected.color}18`,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontSize: 26, flexShrink: 0,
+                      flexShrink: 0,
                     }}>
-                      {selected.emoji}
+                      <svg viewBox="-10 -10 20 20" width="28" height="28">
+                        <selected.Icon color={selected.color} />
+                      </svg>
                     </div>
                     <div>
                       <div style={{ fontWeight: 700, fontSize: 17, marginBottom: 3 }}>{selected.key}</div>
@@ -307,9 +385,12 @@ export default function XinchaoView({ onBack }) {
                 <div style={{
                   fontWeight: 600, color: 'var(--fg)',
                   marginBottom: 6, fontSize: 14,
-                  display: 'flex', alignItems: 'center', gap: 6,
+                  display: 'flex', alignItems: 'center', gap: 8,
                 }}>
-                  <span style={{ fontSize: 16 }}>🌊</span> 当前周期
+                  <svg viewBox="-8 -8 16 16" width="18" height="18">
+                    <path d="M 0 -7 C -4 -7 -7 -4 -7 0 C -7 4 -4 7 0 7 C 4 7 7 4 7 0 C 7 -4 4 -7 0 -7 Z M 0 -4 L 0 0 L 3.5 3.5" fill="none" stroke="var(--fg-muted)" strokeWidth="1.4" strokeLinecap="round"/>
+                  </svg>
+                  当前周期
                 </div>
                 {data.cycle}
               </div>
