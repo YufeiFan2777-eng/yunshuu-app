@@ -48,14 +48,16 @@ export default function App() {
           onSelect={id => { setActiveId(id); setTab('chat'); setShowSessions(false); }}
           onNew={handleNewSession}
           onClose={() => setShowSessions(false)}
-          onXinchao={() => { setTab('xinchao'); setShowSessions(false); }}
+          onXinchao={() => { setTab('his'); setShowSessions(false); }}
         />
       )}
 
       {/* ── View area ── */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         {tab === 'home' && <HomeView />}
-        {tab === 'xinchao' && <XinchaoView onBack={() => setTab('home')} />}
+        {tab === 'his' && <XinchaoView onBack={() => setTab('home')} />}
+        {tab === 'play' && <PlaceholderView label="Play" />}
+        {tab === 'setting' && <PlaceholderView label="Setting" />}
         {tab === 'chat' && (
           activeId
             ? <ChatView sessionId={activeId} onMenu={() => setShowSessions(true)} />
@@ -76,9 +78,11 @@ export default function App() {
         zIndex: 10,
       }}>
         {[
-          { key: 'home',    icon: '⌂',  label: 'Home' },
-          { key: 'chat',    icon: '♧',  label: 'Chat' },
-          { key: 'xinchao', icon: '◉',  label: '状态' },
+          { key: 'home',  icon: '⌂', label: 'Home' },
+          { key: 'chat',  icon: '♧', label: 'Chat' },
+          { key: 'his',   icon: '▤', label: 'His'  },
+          { key: 'play',  icon: '♧', label: 'Play' },
+          { key: 'setting', icon: '⚙', label: 'Setting' },
         ].map(({ key, icon, label }) => (
           <button
             key={key}
@@ -100,6 +104,20 @@ export default function App() {
           </button>
         ))}
       </nav>
+    </div>
+  );
+}
+
+function PlaceholderView({ label }) {
+  return (
+    <div style={{
+      flex: 1, display: 'flex', flexDirection: 'column',
+      alignItems: 'center', justifyContent: 'center',
+      background: '#e6d5b7', fontFamily: "Georgia, serif",
+      color: '#9a8973', gap: 8,
+    }}>
+      <div style={{ fontSize: 36 }}>✦</div>
+      <div style={{ fontSize: 14 }}>{label} · 即将到来</div>
     </div>
   );
 }
