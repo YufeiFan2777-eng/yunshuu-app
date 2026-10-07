@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getMessages, sendMessage, getState } from '../services/api';
+import chatBg from '/chat-bg.jpg';
 
 function getWelcome() {
   const h = new Date().getHours();
@@ -72,7 +73,7 @@ export default function ChatView({ sessionId, onMenu }) {
   }
 
   return (
-    <div className="bny-chat">
+    <div className="bny-chat" style={{ backgroundImage: `url(${chatBg})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
 
       {/* ── Header ── */}
       <header className="bny-header">
@@ -149,7 +150,7 @@ export default function ChatView({ sessionId, onMenu }) {
         .bny-chat {
           flex: 1; display: flex; flex-direction: column;
           height: 100%; overflow: hidden;
-          background: #e8d5b4 url('/chat-bg.jpg') center center / cover no-repeat fixed;
+          background: #e8d5b4;
           font-family: Georgia, 'Songti SC', serif;
           overscroll-behavior: none;
         }
