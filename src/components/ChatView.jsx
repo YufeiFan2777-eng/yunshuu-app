@@ -149,14 +149,17 @@ export default function ChatView({ sessionId, onMenu }) {
         .bny-chat {
           flex: 1; display: flex; flex-direction: column;
           height: 100%; overflow: hidden;
-          background: #e8d5b4;
+          background: #e8d5b4 url('/chat-bg.jpg') center center / cover no-repeat fixed;
           font-family: Georgia, 'Songti SC', serif;
+          overscroll-behavior: none;
         }
         .bny-header {
           display: flex; align-items: center; gap: 8px;
           padding: 18px 14px 12px;
           padding-top: max(18px, env(safe-area-inset-top));
-          background: #ead4b49c;
+          background: rgba(234, 212, 180, 0.82);
+          backdrop-filter: blur(6px);
+          -webkit-backdrop-filter: blur(6px);
           border-bottom: 1px solid #c9aa8050;
           flex-shrink: 0;
         }
@@ -272,7 +275,9 @@ export default function ChatView({ sessionId, onMenu }) {
 
         .bny-dock {
           flex-shrink: 0;
-          background: #e8d1afc9;
+          background: rgba(232, 209, 175, 0.82);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
           border-top: 1px solid #a58a6650;
           padding: 8px 0 max(12px, env(safe-area-inset-bottom));
         }

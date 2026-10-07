@@ -66,6 +66,8 @@ html, body, #root {
   font-family: -apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif;
   font-size: 15px;
   line-height: 1.6;
+  overscroll-behavior: none;
+  overflow: hidden;
 }
 
 button {
