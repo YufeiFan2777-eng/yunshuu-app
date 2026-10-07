@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import ChatView from './components/ChatView';
 import SessionList from './components/SessionList';
+import XinchaoView from './components/XinchaoView';
 import { getSessions, createSession } from './services/api';
 
 export default function App() {
   const [sessions, setSessions] = useState([]);
   const [activeId, setActiveId] = useState(null);
   const [showSessions, setShowSessions] = useState(false);
+  const [view, setView] = useState('chat'); // 'chat' | 'xinchao'
 
   useEffect(() => {
     loadSessions();
@@ -41,14 +43,17 @@ export default function App() {
         <SessionList
           sessions={sessions}
           activeId={activeId}
-          onSelect={id => { setActiveId(id); setShowSessions(false); }}
+          onSelect={id => { setActiveId(id); setView('chat'); setShowSessions(false); }}
           onNew={handleNewSession}
           onClose={() => setShowSessions(false)}
+          onXinchao={() => { setView('xinchao'); setShowSessions(false); }}
         />
       )}
-      {activeId
-        ? <ChatView sessionId={activeId} onMenu={() => setShowSessions(true)} />
-        : <WelcomeScreen onStart={handleNewSession} />
+      {view === 'xinchao'
+        ? <XinchaoView onBack={() => setView('chat')} />
+        : activeId
+          ? <ChatView sessionId={activeId} onMenu={() => setShowSessions(true)} />
+          : <WelcomeScreen onStart={handleNewSession} />
       }
     </div>
   );

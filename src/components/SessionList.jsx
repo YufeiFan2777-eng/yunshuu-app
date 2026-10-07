@@ -82,6 +82,18 @@ function XinchaoPanel() {
               {data.cycle.slice(0, 60)}{data.cycle.length > 60 ? '…' : ''}
             </div>
           )}
+
+          <button
+            onClick={onXinchao}
+            style={{
+              marginTop: 10, width: '100%',
+              padding: '7px 0', borderRadius: 8,
+              background: 'var(--accent-light)',
+              color: 'var(--accent)', fontSize: 12, fontWeight: 500,
+            }}
+          >
+            查看详细数据 →
+          </button>
         </div>
       )}
 
@@ -95,7 +107,7 @@ function XinchaoPanel() {
   );
 }
 
-export default function SessionList({ sessions, activeId, onSelect, onNew, onClose }) {
+export default function SessionList({ sessions, activeId, onSelect, onNew, onClose, onXinchao }) {
   return (
     <div style={{
       position: 'fixed', inset: 0, zIndex: 100,
