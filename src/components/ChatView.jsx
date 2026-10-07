@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { getMessages, sendMessage } from '../services/api';
+import { getMessages, sendMessage, getState } from '../services/api';
 
 function getWelcome() {
   const h = new Date().getHours();
@@ -15,6 +15,7 @@ export default function ChatView({ sessionId, onMenu }) {
   const [input, setInput] = useState('');
   const [streaming, setStreaming] = useState(false);
   const [streamingText, setStreamingText] = useState('');
+  const [stateData, setStateData] = useState(null);
   const bottomRef = useRef(null);
   const textareaRef = useRef(null);
 
@@ -22,6 +23,10 @@ export default function ChatView({ sessionId, onMenu }) {
     setLoaded(false);
     loadMessages();
   }, [sessionId]);
+
+  useEffect(() => {
+    getState().then(d => { if (d.available) setStateData(d); }).catch(() => {});
+  }, []);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -85,7 +90,9 @@ export default function ChatView({ sessionId, onMenu }) {
       }}>
         <button onClick={onMenu} style={{ padding: 8, borderRadius: 8, fontSize: 18 }}>☰</button>
         <div style={{ fontWeight: 600, fontSize: 16 }}>云舒</div>
-        <div style={{ width: 40 }} />
+        <div style={{ width: 40, display: 'flex', justifyContent: 'center' }}>
+          {stateData && <StateDot state={stateData} />}
+        </div>
       </div>
 
       {/* Messages */}
@@ -157,7 +164,51 @@ export default function ChatView({ sessionId, onMenu }) {
           0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
           40% { opacity: 1; transform: scale(1); }
         }
+        @keyframes statePulse {
+          0%, 100% { opacity: 0.6; transform: scale(0.9); }
+          50% { opacity: 1; transform: scale(1.15); }
+        }
       `}</style>
+    </div>
+  );
+}
+
+function StateDot({ state }) {
+  const [open, setOpen] = React.useState(false);
+  const hot = state.state?.['热度'] || '';
+  const dotColor = hot.includes('高') ? '#f87171' : hot.includes('中') ? '#fb923c' : 'var(--accent-light)';
+
+  return (
+    <div style={{ position: 'relative' }}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        title="心潮状态"
+        style={{
+          width: 10, height: 10, borderRadius: '50%',
+          background: dotColor,
+          border: 'none', cursor: 'pointer', padding: 0,
+          animation: 'statePulse 3s ease-in-out infinite',
+        }}
+      />
+      {open && (
+        <div style={{
+          position: 'absolute', right: 0, top: 18,
+          background: 'var(--bg-card)',
+          border: '1px solid var(--border)',
+          borderRadius: 12, padding: '12px 14px',
+          width: 200, boxShadow: 'var(--shadow)',
+          zIndex: 100, fontSize: 12,
+          lineHeight: 1.8,
+        }}>
+          <div style={{ fontWeight: 600, marginBottom: 6, fontSize: 13 }}>心潮</div>
+          {Object.entries(state.state || {}).map(([k, v]) => (
+            <div key={k} style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ color: 'var(--fg-muted)' }}>{k}</span>
+              <span>{v}</span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
