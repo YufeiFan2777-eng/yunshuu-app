@@ -17,6 +17,7 @@ export default function ChatView({ sessionId, onMenu }) {
   const [streaming, setStreaming] = useState(false);
   const [streamingText, setStreamingText] = useState('');
   const [stateData, setStateData] = useState(null);
+  const [extraOpen, setExtraOpen] = useState(false);
   const bottomRef = useRef(null);
   const textareaRef = useRef(null);
 
@@ -118,32 +119,80 @@ export default function ChatView({ sessionId, onMenu }) {
 
       {/* ── Bottom dock ── */}
       <div className="bny-dock">
-        <form className="bny-composer" onSubmit={e => { e.preventDefault(); handleSend(); }}>
-          <textarea
-            ref={textareaRef}
-            className="bny-textarea"
-            value={input}
-            onChange={e => {
-              setInput(e.target.value);
-              e.target.style.height = 'auto';
-              e.target.style.height = Math.min(e.target.scrollHeight, 110) + 'px';
-            }}
-            onKeyDown={handleKeyDown}
-            placeholder="写下一点今天的心事…"
-            rows={1}
-            aria-label="消息内容"
-          />
-          <div className="bny-tools">
-            <button
-              type="submit"
-              className="bny-send"
-              disabled={!input.trim() || streaming}
-              aria-label="发送消息"
-            >
-              <span className="bny-plane" aria-hidden="true">➤</span>
-            </button>
-          </div>
-        </form>
+        <div className="bny-dock-row">
+          <button
+            type="button"
+            className={`bny-plus${extraOpen ? ' bny-plus-open' : ''}`}
+            onClick={() => setExtraOpen(o => !o)}
+            aria-label="更多功能"
+          >
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
+              <line x1="10" y1="3" x2="10" y2="17"/>
+              <line x1="3" y1="10" x2="17" y2="10"/>
+            </svg>
+          </button>
+          <form className="bny-composer" onSubmit={e => { e.preventDefault(); handleSend(); }}>
+            <textarea
+              ref={textareaRef}
+              className="bny-textarea"
+              value={input}
+              onChange={e => {
+                setInput(e.target.value);
+                e.target.style.height = 'auto';
+                e.target.style.height = Math.min(e.target.scrollHeight, 110) + 'px';
+              }}
+              onKeyDown={handleKeyDown}
+              placeholder="写下一点今天的心事…"
+              rows={1}
+              aria-label="消息内容"
+            />
+            <div className="bny-tools">
+              <button
+                type="submit"
+                className="bny-send"
+                disabled={!input.trim() || streaming}
+                aria-label="发送消息"
+              >
+                <span className="bny-plane" aria-hidden="true">➤</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        {/* ── Extra panel ── */}
+        <div className={`bny-extra${extraOpen ? ' bny-extra-open' : ''}`} aria-hidden={!extraOpen}>
+          <button type="button" className="bny-extra-btn" disabled>
+            <span className="bny-extra-icon">
+              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="5" y="9" width="26" height="19" rx="4"/>
+                <path d="M5 15 Q18 24 31 15"/>
+                <circle cx="12" cy="13" r="1.5" fill="currentColor" stroke="none"/>
+              </svg>
+            </span>
+            <span className="bny-extra-label">语音通话</span>
+          </button>
+          <button type="button" className="bny-extra-btn" disabled>
+            <span className="bny-extra-icon">
+              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="4" y="7" width="28" height="22" rx="4"/>
+                <circle cx="13" cy="15" r="3"/>
+                <path d="M4 26 l8-8 5 5 5-5 10 8"/>
+              </svg>
+            </span>
+            <span className="bny-extra-label">照片</span>
+          </button>
+          <button type="button" className="bny-extra-btn" disabled>
+            <span className="bny-extra-icon">
+              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M8 6 h13 l7 7 v17 a2 2 0 0 1-2 2 H8 a2 2 0 0 1-2-2 V8 a2 2 0 0 1 2-2z"/>
+                <path d="M21 6 v7 h7"/>
+                <line x1="12" y1="19" x2="24" y2="19"/>
+                <line x1="12" y1="24" x2="20" y2="24"/>
+              </svg>
+            </span>
+            <span className="bny-extra-label">文件</span>
+          </button>
+        </div>
       </div>
 
       <style>{`
@@ -280,17 +329,85 @@ export default function ChatView({ sessionId, onMenu }) {
           backdrop-filter: blur(8px);
           -webkit-backdrop-filter: blur(8px);
           border-top: 1px solid #a58a6650;
-          padding: 8px 0 max(12px, env(safe-area-inset-bottom));
+          padding: 8px 0 0;
+        }
+        .bny-dock-row {
+          display: flex; align-items: flex-end; gap: 6px;
+          padding: 0 8px 8px;
+        }
+        .bny-plus {
+          flex-shrink: 0;
+          width: 38px; height: 38px; margin-bottom: 3px;
+          border: 2px solid #98734f;
+          border-radius: 50%;
+          background: #fff5e5cc;
+          color: #785438;
+          display: flex; align-items: center; justify-content: center;
+          cursor: pointer;
+          transition: transform 0.22s ease, background 0.15s;
+          box-shadow: 1px 1px 0 #97734f40;
+        }
+        .bny-plus-open {
+          transform: rotate(45deg);
+          background: #e8cba8cc;
         }
         .bny-composer {
           position: relative;
-          margin: 0 12px;
+          flex: 1;
           border: 2px solid #98734f;
           border-radius: 28px 24px 29px 22px;
           box-shadow: 1px 1px 0 #97734f65, -1px .5px 0 #97734f45;
           background: #fff5e5ed;
           display: flex; align-items: flex-end;
           padding: 6px 4px 6px 14px;
+        }
+
+        .bny-extra {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 0;
+          overflow: hidden;
+          max-height: 0;
+          opacity: 0;
+          transition: max-height 0.28s ease, opacity 0.2s ease, padding 0.28s ease;
+          padding: 0 8px;
+          padding-bottom: max(0px, env(safe-area-inset-bottom));
+        }
+        .bny-extra-open {
+          max-height: 130px;
+          opacity: 1;
+          padding: 10px 8px;
+          padding-bottom: max(14px, env(safe-area-inset-bottom));
+        }
+        .bny-extra-btn {
+          display: flex; flex-direction: column; align-items: center; gap: 7px;
+          padding: 8px 4px;
+          background: transparent; border: none; cursor: default;
+          color: #5a3e2b;
+          font-family: Georgia, serif;
+          opacity: 0.45;
+        }
+        .bny-extra-btn:not(:disabled) {
+          cursor: pointer; opacity: 1;
+        }
+        .bny-extra-btn:not(:disabled):active .bny-extra-icon {
+          transform: scale(0.92);
+        }
+        .bny-extra-icon {
+          width: 56px; height: 56px;
+          background: #f4e8d0cc;
+          border: 1.5px solid #b89a72;
+          border-radius: 16px;
+          display: flex; align-items: center; justify-content: center;
+          box-shadow: 1px 1px 0 #b89a7240;
+          transition: transform 0.12s;
+        }
+        .bny-extra-icon svg {
+          width: 28px; height: 28px;
+          color: #7a5538;
+        }
+        .bny-extra-label {
+          font-size: 11px; color: #6b5240; letter-spacing: 0.02em;
         }
         .bny-composer::after {
           content: '';
