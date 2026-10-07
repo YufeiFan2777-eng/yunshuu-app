@@ -212,6 +212,8 @@ export default function ChatView({ sessionId, onMenu }) {
           -webkit-backdrop-filter: blur(6px);
           border-bottom: 1px solid #c9aa8050;
           flex-shrink: 0;
+          z-index: 20;
+          position: relative;
         }
         .bny-icon {
           border: 0; background: transparent;
