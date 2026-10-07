@@ -283,7 +283,7 @@ export default function XinchaoView({ onBack }) {
                   <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
                     {/* Hand-drawn rotating sun */}
                     <svg viewBox="0 0 160 160" width="64" height="64"
-                      style={{ animation: 'xcSunTurn 65s linear infinite', flexShrink: 0 }}
+                      style={{ animation: 'xcSunTurn 65s linear infinite', flexShrink: 0, transformOrigin: '50% 50%' }}
                       role="img" aria-label="手绘太阳">
                       {SUN_ANGLES.map(a => (
                         <path key={a}
