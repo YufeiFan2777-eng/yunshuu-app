@@ -16,7 +16,7 @@ function levelStyle(val) {
   return LEVEL_COLOR['低'];
 }
 
-function XinchaoPanel() {
+function XinchaoPanel({ onXinchao }) {
   const [data, setData] = useState(null);
   const [open, setOpen] = useState(true);
 
@@ -136,7 +136,7 @@ export default function SessionList({ sessions, activeId, onSelect, onNew, onClo
         </div>
 
         {/* 心潮状态 */}
-        <XinchaoPanel />
+        <XinchaoPanel onXinchao={onXinchao} />
 
         {/* 新对话 */}
         <button
