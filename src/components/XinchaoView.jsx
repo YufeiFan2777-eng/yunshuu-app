@@ -106,10 +106,10 @@ export default function XinchaoView({ onBack }) {
           if (!e.target.closest('.petal-g,.label-btn,.detail-panel')) setSelected(-1);
         }}
       >
-        {/* Paper grain overlay */}
+        {/* Paper grain overlay – absolute so it scrolls with content */}
         <svg aria-hidden style={{
-          position: 'fixed', inset: 0, width: '100%', height: '100%',
-          pointerEvents: 'none', zIndex: 0, opacity: 1,
+          position: 'absolute', inset: 0, width: '100%', height: '100%',
+          pointerEvents: 'none', zIndex: 0,
         }}>
           <defs>
             <filter id="xc-grain-f">
@@ -134,11 +134,11 @@ export default function XinchaoView({ onBack }) {
           ) : (
             <>
               {/* ── Garden ── */}
-              <div style={{ position: 'relative', aspectRatio: '1/1.07', margin: '8px 0' }}>
-                {/* Flower SVG */}
+              <div style={{ position: 'relative', aspectRatio: '1/1.07', margin: '8px 0', overflow: 'hidden' }}>
+                {/* Flower SVG – sway is on inner <g>, SVG itself stays fixed */}
                 <svg
                   viewBox="0 0 400 428"
-                  style={{ width: '100%', height: '100%', overflow: 'visible', animation: 'xcSway 8s ease-in-out infinite' }}
+                  style={{ width: '100%', height: '100%', display: 'block' }}
                   role="img" aria-label="七瓣心潮花，点击查看维度详情"
                 >
                   <defs>
@@ -150,6 +150,8 @@ export default function XinchaoView({ onBack }) {
                     </filter>
                   </defs>
 
+                  {/* Sway wrapper – rotates around flower center, contained inside SVG */}
+                  <g style={{ animation: 'xcSway 8s ease-in-out infinite', transformOrigin: '200px 205px' }}>
                   {CN_KEYS.map((key, i) => {
                     const v     = values[i];
                     const scale = 0.43 + v * 0.006;
@@ -185,6 +187,7 @@ export default function XinchaoView({ onBack }) {
                       </g>
                     );
                   })}
+                  </g>{/* end sway wrapper */}
                 </svg>
 
                 {/* Labels – absolutely positioned over garden */}
