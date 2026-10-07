@@ -1,0 +1,129 @@
+import React, { useState } from 'react';
+import XinchaoView from './XinchaoView';
+import paperTex from '/paper-tex.jpg';
+
+const ITEMS = [
+  {
+    key: 'xinchao',
+    title: '身体状态',
+    subtitle: '实时生理维度 · 每小时更新',
+    icon: (
+      <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="28" height="28">
+        <circle cx="18" cy="18" r="13"/>
+        <path d="M18 8 v4 M18 24 v4 M8 18 h4 M24 18 h4"/>
+        <circle cx="18" cy="18" r="4" fill="currentColor" opacity=".25"/>
+      </svg>
+    ),
+  },
+];
+
+export default function HisView() {
+  const [detail, setDetail] = useState(null);
+
+  if (detail === 'xinchao') {
+    return <XinchaoView onBack={() => setDetail(null)} />;
+  }
+
+  return (
+    <div className="his-wrap">
+      <div className="his-page">
+        <div className="his-header">
+          <h2 className="his-title">His</h2>
+          <div className="his-ornament">✦ 关于他的一切 ✦</div>
+        </div>
+
+        <div className="his-list">
+          {ITEMS.map(item => (
+            <button
+              key={item.key}
+              className="his-item"
+              onClick={() => setDetail(item.key)}
+            >
+              <span className="his-item-icon">{item.icon}</span>
+              <span className="his-item-body">
+                <span className="his-item-title">{item.title}</span>
+                <span className="his-item-sub">{item.subtitle}</span>
+              </span>
+              <span className="his-item-arrow">›</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <style>{`
+        .his-wrap {
+          flex: 1; display: flex; flex-direction: column;
+          overflow-y: auto; overflow-x: hidden;
+          background: #e6d5b7 url('${paperTex}');
+          background-size: 240px;
+          color: #513b29;
+          font-family: Georgia, 'Songti SC', 'Noto Serif SC', serif;
+          scrollbar-width: thin; scrollbar-color: #b89970 transparent;
+        }
+        .his-page {
+          max-width: 460px; margin: 0 auto; width: 100%;
+          padding: 28px 16px 32px;
+        }
+        .his-header {
+          text-align: center; margin-bottom: 28px;
+        }
+        .his-title {
+          font: 400 clamp(28px,7vw,36px)/1.2 'Cormorant Garamond', Georgia, serif;
+          letter-spacing: 2px; margin: 0 0 4px; color: #3d2b1a;
+        }
+        .his-ornament {
+          font-size: 12px; letter-spacing: 1.5px; color: #b88578;
+          display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .his-ornament::before, .his-ornament::after {
+          content: ''; height: 1px; background: #a88c66; flex: 1; opacity: .6;
+        }
+
+        .his-list {
+          display: flex; flex-direction: column; gap: 12px;
+        }
+        .his-item {
+          display: flex; align-items: center; gap: 14px;
+          background: #f5e9d5d9;
+          border: 1px solid #bfa58380;
+          box-shadow: 2px 3px 0 #d8c3a17a, 0 4px 10px #71533210;
+          border-radius: 14px 10px 13px 11px;
+          padding: 16px 14px;
+          cursor: pointer; text-align: left;
+          transition: background 0.15s, transform 0.12s;
+          position: relative;
+        }
+        .his-item::after {
+          content: ''; position: absolute; inset: 3px;
+          border: 1px solid #aa8a6428; border-radius: 11px 7px 10px 8px;
+          pointer-events: none;
+        }
+        .his-item:active {
+          background: #eddfc8d9;
+          transform: scale(0.985);
+        }
+        .his-item-icon {
+          width: 48px; height: 48px; flex-shrink: 0;
+          background: #7D5A44;
+          border-radius: 12px 9px 13px 10px;
+          display: flex; align-items: center; justify-content: center;
+          color: #f5ede2;
+          box-shadow: 1px 2px 0 #5a3e2b50;
+        }
+        .his-item-body {
+          flex: 1; display: flex; flex-direction: column; gap: 3px;
+        }
+        .his-item-title {
+          font-size: 16px; color: #3d2b1a; font-weight: 500;
+        }
+        .his-item-sub {
+          font-size: 12px; color: #8f775e;
+        }
+        .his-item-arrow {
+          font-size: 22px; color: #b89a72; line-height: 1;
+          margin-right: 2px;
+        }
+      `}</style>
+    </div>
+  );
+}

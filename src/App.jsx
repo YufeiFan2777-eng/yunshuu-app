@@ -3,6 +3,7 @@ import HomeView from './components/HomeView';
 import ChatView from './components/ChatView';
 import SessionList from './components/SessionList';
 import XinchaoView from './components/XinchaoView';
+import HisView from './components/HisView';
 import { getSessions, createSession } from './services/api';
 
 export default function App() {
@@ -55,7 +56,7 @@ export default function App() {
       {/* ── View area ── */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         {tab === 'home' && <HomeView />}
-        {tab === 'his' && <XinchaoView onBack={() => setTab('home')} />}
+        {tab === 'his' && <HisView />}
         {tab === 'play' && <PlaceholderView label="Play" />}
         {tab === 'setting' && <PlaceholderView label="Setting" />}
         {tab === 'chat' && (
