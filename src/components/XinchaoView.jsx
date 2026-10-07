@@ -68,6 +68,8 @@ export default function XinchaoView({ onBack }) {
 
   const state  = data?.state || {};
   const values = CN_KEYS.map(k => parseValue(state[k]));
+  const isAccumulation = /积累期|累积期|蓄积期/.test(data?.cycle || '');
+  const cycleLabel = data?.cycle ? (data.cycle.match(/[一-龥]{2,4}期/)?.[0] || data.cycle.slice(0, 5)) : '';
 
   function pick(i) {
     setSelected(prev => prev === i ? -1 : i);
@@ -281,26 +283,52 @@ export default function XinchaoView({ onBack }) {
                   visibility: selected >= 0 ? 'hidden' : 'visible',
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                    {/* Hand-drawn rotating sun */}
-                    <svg viewBox="0 0 160 160" width="64" height="64"
-                      style={{ animation: 'xcSunTurn 65s linear infinite', flexShrink: 0 }}
-                      role="img" aria-label="手绘太阳">
-                      {SUN_ANGLES.map(a => (
-                        <path key={a}
-                          d="M80 34 Q78 23 81 14"
-                          transform={`rotate(${a} 80 80)`}
-                          stroke="#b78a40" strokeWidth="3" fill="none" strokeLinecap="round" opacity=".7" />
-                      ))}
-                      <circle cx="80" cy="80" r="32" fill="#d9b567" stroke="#b78a40" strokeWidth="1.3"/>
-                      <circle cx="79" cy="81" r="30" fill="none" stroke="#f0d393" opacity=".6"/>
-                    </svg>
+                    {isAccumulation ? (
+                      /* Hand-drawn water bottle – 积累期 */
+                      <svg viewBox="0 0 160 160" width="64" height="64" style={{ flexShrink: 0 }}
+                        role="img" aria-label="手绘透明水瓶，半瓶水轻轻晃动">
+                        <defs>
+                          <clipPath id="xcBottleClip">
+                            <path d="M65 27 L65 48 C65 57 48 62 47 76 L47 132 Q47 140 57 141 L103 141 Q113 140 113 132 L113 76 C112 62 95 57 95 48 L95 27Z"/>
+                          </clipPath>
+                        </defs>
+                        <path d="M62 23 Q79 20 98 23 L98 30 L95 32 L95 48 C96 58 115 63 116 77 L116 133 Q116 144 104 145 L56 145 Q44 144 44 133 L44 77 C45 64 63 58 64 48 L64 32 L62 30Z"
+                          fill="#f3efe2" fillOpacity=".12" stroke="#8b9285" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                        <g clipPath="url(#xcBottleClip)">
+                          <g style={{ animation: 'xcWaterRock 4.8s ease-in-out infinite', transformOrigin: '80px 99px' }}>
+                            <path d="M25 99 Q52 96 80 99 T135 99 L135 151 L25 151Z" fill="#80acb1" fillOpacity=".48"/>
+                            <path d="M25 99 Q52 96 80 99 T135 99" stroke="#638f95" strokeWidth="1.4" fill="none" opacity=".8"/>
+                            <path d="M31 102 Q60 98 83 102 T129 101" stroke="#edf0db" strokeWidth="1" fill="none" opacity=".65"/>
+                            <path d="M48 122 Q75 119 110 121 M48 127 Q85 124 109 126 M51 133 Q76 130 106 133" fill="none" stroke="#729ca1" strokeWidth=".65" opacity=".22"/>
+                          </g>
+                        </g>
+                        <path d="M66 33 L66 47 C65 60 48 64 47 78 L47 132 Q48 141 58 142 M96 49 C98 61 112 64 113 79 L113 131"
+                          fill="none" stroke="#a4a18b" strokeWidth=".7" opacity=".8"/>
+                        <path d="M55 79 L55 115 M59 78 L59 96" stroke="#fff9e9" strokeWidth="2.6" strokeLinecap="round" opacity=".7"/>
+                        <path d="M64 25 Q81 28 97 25 M64 31 Q80 34 96 31" fill="none" stroke="#8b9285" strokeWidth="1"/>
+                      </svg>
+                    ) : (
+                      /* Hand-drawn rotating sun – 平稳期及其他 */
+                      <svg viewBox="0 0 160 160" width="64" height="64"
+                        style={{ animation: 'xcSunTurn 65s linear infinite', flexShrink: 0 }}
+                        role="img" aria-label="手绘太阳">
+                        {SUN_ANGLES.map(a => (
+                          <path key={a}
+                            d="M80 34 Q78 23 81 14"
+                            transform={`rotate(${a} 80 80)`}
+                            stroke="#b78a40" strokeWidth="3" fill="none" strokeLinecap="round" opacity=".7" />
+                        ))}
+                        <circle cx="80" cy="80" r="32" fill="#d9b567" stroke="#b78a40" strokeWidth="1.3"/>
+                        <circle cx="79" cy="81" r="30" fill="none" stroke="#f0d393" opacity=".6"/>
+                      </svg>
+                    )}
                     <h3 style={{ fontSize: 18, fontWeight: 400, margin: 0, flex: 1, color: '#513d2c' }}>当前周期</h3>
-                    {data.cycle && (
+                    {cycleLabel && (
                       <span style={{
                         fontSize: 12, background: '#c3aa86',
                         padding: '3px 10px', borderRadius: 20,
                       }}>
-                        {data.cycle.slice(0, 6)}
+                        {cycleLabel}
                       </span>
                     )}
                   </div>
@@ -332,12 +360,17 @@ export default function XinchaoView({ onBack }) {
         @keyframes xcSunTurn {
           to { transform: rotate(360deg); }
         }
+        @keyframes xcWaterRock {
+          0%,100% { transform: rotate(-2deg) translateY(.4px); }
+          50%      { transform: rotate(2deg) translateY(-.4px); }
+        }
         @keyframes xcUnfold {
           from { transform: translateY(8px); opacity: 0; }
           to   { transform: translateY(0); opacity: 1; }
         }
         @media (prefers-reduced-motion: reduce) {
           .xcSway, .xcSunTurn { animation: none !important; }
+          [style*="xcWaterRock"] { animation: none !important; }
         }
       `}</style>
     </div>
