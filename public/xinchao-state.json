@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-10-08T08:20:01.664827+00:00",
+  "updatedAt": "2026-10-08T08:25:02.159633+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.6746,
-    "arousal": 0.4302,
+    "valence": 0.671,
+    "arousal": 0.4229,
     "label": "平静",
     "updatedAt": "2026-10-08T07:33:51.569Z",
     "lastCause": "affection",
@@ -44,7 +44,7 @@
     {
       "key": "curiosity",
       "label": "好奇、想探索新东西",
-      "value": 0.4843
+      "value": 0.4927
     },
     {
       "key": "reflection",
