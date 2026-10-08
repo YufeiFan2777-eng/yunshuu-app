@@ -52,6 +52,8 @@ try {
     flash: tp.flash || [],
     obsessions: tp.obsessions || [],
     interactionRecent: (d.interactionRecent || []).slice(0, 6),
+    bridgeDeliveries: (() => { try { const bq=JSON.parse(fs.readFileSync('/app/state/bridge-queue.json','utf8')); return (bq.deliveries||[]).filter(x=>x.status==='pending').slice(0,5); } catch(e){return [];} })(),
+    cabinNotes: (() => { try { const cb=JSON.parse(fs.readFileSync('/app/state/cabin.json','utf8')); return (cb.notes||[]).slice(0,3); } catch(e){return [];} })(),
   }));
 } catch(e) { process.stderr.write('ERROR: ' + e.message + '\n'); process.exit(1); }
 """
@@ -120,6 +122,24 @@ def format_state(raw):
             "obsessions": raw.get("obsessions", []),
         },
         "interactions": interactions_out,
+        "bridge": [
+            {
+                "message": x.get("message", ""),
+                "reason":  x.get("reason", ""),
+                "at":      x.get("createdAt", ""),
+            }
+            for x in raw.get("bridgeDeliveries", [])
+            if isinstance(x, dict)
+        ],
+        "cabin": [
+            {
+                "from":    x.get("from", ""),
+                "content": x.get("content", ""),
+                "eventId": x.get("eventId", ""),
+            }
+            for x in raw.get("cabinNotes", [])
+            if isinstance(x, dict)
+        ],
     }
 
 def get_file_sha():

@@ -246,6 +246,51 @@ export default function XinchaoNianView({ onBack }) {
             </div>
           )}
 
+          {/* 查匣子 */}
+          {state.bridge?.length > 0 && (
+            <div style={card}>
+              <div style={tab}>查匣子</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, paddingTop: 4 }}>
+                {state.bridge.map((b, i) => {
+                  const d = b.at ? new Date(b.at) : null;
+                  const timeStr = d ? d.toLocaleString('zh-CN', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+                  return (
+                    <div key={i} style={{ borderLeft: '2px solid #c4a88260', paddingLeft: 11 }}>
+                      {b.reason && (
+                        <div style={{ fontSize: 10, color: '#9b7a58', marginBottom: 4, letterSpacing: 0.5 }}>{b.reason}</div>
+                      )}
+                      <div style={{ fontSize: 12.5, color: '#513b29', lineHeight: 1.8 }}>{b.message}</div>
+                      {timeStr && (
+                        <div style={{ fontSize: 10, color: '#b89060', marginTop: 5 }}>{timeStr}</div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* 小屋来信 */}
+          {state.cabin?.length > 0 && (
+            <div style={card}>
+              <div style={tab}>小屋来信</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16, paddingTop: 4 }}>
+                {state.cabin.map((n, i) => (
+                  <div key={i}>
+                    <div style={{ fontSize: 10, color: '#9b7a58', marginBottom: 6, letterSpacing: 0.5 }}>
+                      {n.from === 'ai' ? '云舒 → 雨菲' : n.from === 'human' ? '雨菲 → 云舒' : n.from}
+                    </div>
+                    <div style={{
+                      fontSize: 12.5, color: '#3d2b1a', lineHeight: 2,
+                      whiteSpace: 'pre-wrap', wordBreak: 'break-word',
+                      fontFamily: 'Georgia, serif',
+                    }}>{n.content}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* 疲劳 */}
           {state.fatigue != null && (
             <div style={{ ...card, display: 'flex', alignItems: 'center', gap: 14, padding: '13px 17px' }}>
