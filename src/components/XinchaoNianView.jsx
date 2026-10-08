@@ -237,6 +237,36 @@ function FlashView({ state, onBack }) {
             <div style={{ fontSize: 10, color: '#a08060', textAlign: 'center', marginTop: 4, fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: 0.5 }}>
               {drives.length}股潮水，共用一个身体
             </div>
+            {/* 情绪详情框 */}
+            <div style={{
+              marginTop: 14, background: '#ede3d0', border: '1px solid #bfa58345',
+              borderRadius: 4, padding: '10px 14px',
+              display: 'flex', alignItems: 'flex-start', gap: 12,
+            }}>
+              <span style={{
+                fontSize: 18, color: '#3d2b1a', fontFamily: 'Cormorant Garamond, Georgia, serif',
+                lineHeight: 1.2, paddingTop: 2, minWidth: 40,
+              }}>{emotion.shown || emotion.label || '—'}</span>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 9, color: '#9b7a58', letterSpacing: 1.5, textTransform: 'uppercase', fontFamily: 'Georgia, serif' }}>
+                  唤醒 {Math.round((emotion.arousal || 0) * 100)} · 效价 {Math.round((emotion.valence || 0) * 100)}
+                </div>
+                <div style={{ fontSize: 11.5, color: '#5a3e28', marginTop: 5, lineHeight: 1.7, fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
+                  {(() => {
+                    const a = emotion?.arousal || 0, v = emotion?.valence || 0.5;
+                    if (a > 0.65 && v > 0.6) return "激活而愉悦，潮水高涨开阔";
+                    if (a > 0.65 && v < 0.4) return "紧绷而低沉，潮水翻涌不安";
+                    if (a > 0.65)            return "有些激动，潮水起伏明显";
+                    if (a < 0.25 && v > 0.6) return "宁静而温暖，潮水平缓流淌";
+                    if (a < 0.25 && v < 0.4) return "安静而低落，潮水悄悄退落";
+                    if (a < 0.25)            return "近乎平静无波，各片潮水静守";
+                    if (v > 0.6)             return "心情尚好，潮水轻轻流动";
+                    if (v < 0.4)             return "有些沉郁，潮水慢慢低落";
+                    return "海面平，有点起伏，各片潮水照常";
+                  })()}
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
