@@ -208,6 +208,44 @@ export default function XinchaoNianView({ onBack }) {
             </div>
           )}
 
+          {/* 记互动 */}
+          {state.interactions?.length > 0 && (
+            <div style={card}>
+              <div style={tab}>记互动</div>
+              <div style={{ paddingTop: 6 }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                  {state.interactions.map((ix, i) => {
+                    const d = ix.at ? new Date(ix.at) : null;
+                    const now = Date.now();
+                    const diffMs = d ? now - d.getTime() : 0;
+                    const diffMin = Math.floor(diffMs / 60000);
+                    let timeStr;
+                    if (diffMin < 1) timeStr = '刚刚';
+                    else if (diffMin < 60) timeStr = `${diffMin}分钟前`;
+                    else if (diffMin < 1440) timeStr = `${Math.floor(diffMin / 60)}小时前`;
+                    else timeStr = d ? d.toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric' }) : '—';
+                    return (
+                      <div key={i} style={{
+                        fontSize: 11, color: '#7a5a3a',
+                        background: '#e8d9c040', border: '1px solid #bfa58330',
+                        borderRadius: 3, padding: '3px 10px',
+                        fontVariantNumeric: 'tabular-nums',
+                      }}>
+                        {ix.type && <span style={{ color: '#9b7a58', marginRight: 5 }}>{ix.type}</span>}
+                        {timeStr}
+                      </div>
+                    );
+                  })}
+                </div>
+                {state.interactions[0]?.at && (
+                  <div style={{ fontSize: 10, color: '#b89060', marginTop: 10 }}>
+                    共 {state.interactions.length} 次近期互动
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* 疲劳 */}
           {state.fatigue != null && (
             <div style={{ ...card, display: 'flex', alignItems: 'center', gap: 14, padding: '13px 17px' }}>

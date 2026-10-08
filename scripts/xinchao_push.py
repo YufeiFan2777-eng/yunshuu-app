@@ -100,12 +100,13 @@ def format_state(raw):
 
     interactions_out = []
     for ix in raw.get("interactionRecent", []):
-        if isinstance(ix, dict):
+        if isinstance(ix, str):
+            interactions_out.append({"at": ix})
+        elif isinstance(ix, dict):
             interactions_out.append({
-                "type":    ix.get("type") or ix.get("interactionType") or "interaction",
-                "label":   ix.get("label") or ix.get("typeLabel") or "",
-                "at":      ix.get("at") or ix.get("timestamp") or "",
-                "note":    ix.get("note") or ix.get("text") or ix.get("summary") or "",
+                "at":   ix.get("at") or ix.get("timestamp") or "",
+                "type": ix.get("type") or "",
+                "note": ix.get("note") or ix.get("text") or "",
             })
 
     return {
