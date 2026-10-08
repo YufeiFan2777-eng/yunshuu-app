@@ -85,6 +85,18 @@ def format_state(raw):
             label = DRIVE_LABELS.get(key, key)
         top_drives.append({"key": key, "label": label, "value": round(_val(val), 4)})
 
+    flash_out = []
+    for f in raw.get("flash", []):
+        if isinstance(f, dict):
+            key = f.get("key", "")
+            flash_out.append({
+                "key":       key,
+                "label":     DRIVE_LABELS.get(key, key),
+                "text":      f.get("text", ""),
+                "intensity": round(float(f.get("intensity", 0) or 0), 4),
+                "age":       f.get("age", 0),
+            })
+
     return {
         "updatedAt":   datetime.now(timezone.utc).isoformat(),
         "consciousness": raw.get("consciousness", "awake"),
@@ -92,7 +104,7 @@ def format_state(raw):
         "emotion":     raw.get("emotion", {}),
         "topDrives":   top_drives,
         "thoughts": {
-            "flash":      raw.get("flash", []),
+            "flash":      flash_out,
             "obsessions": raw.get("obsessions", []),
         },
     }

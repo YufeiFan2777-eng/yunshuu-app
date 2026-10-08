@@ -173,6 +173,41 @@ export default function XinchaoNianView({ onBack }) {
             </div>
           )}
 
+          {/* 此刻 */}
+          {state.thoughts?.flash?.length > 0 && (
+            <div style={card}>
+              <div style={tab}>此刻</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 14, paddingTop: 4 }}>
+                {state.thoughts.flash.map((f, i) => (
+                  <div key={i}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 5 }}>
+                      <span style={{
+                        fontSize: 10, color: '#9b7a58',
+                        background: '#d4bfa040', border: '1px solid #bfa58340',
+                        borderRadius: 2, padding: '1px 7px', letterSpacing: 1,
+                      }}>{f.label || f.key}</span>
+                      <span style={{ fontSize: 10, color: '#b89060', marginLeft: 'auto', fontVariantNumeric: 'tabular-nums' }}>
+                        {f.age > 0 ? `${f.age}分钟前` : '片刻前'}
+                      </span>
+                    </div>
+                    {f.text && (
+                      <div style={{ fontSize: 12.5, color: '#513b29', lineHeight: 1.8, marginBottom: 6 }}>
+                        {f.text}
+                      </div>
+                    )}
+                    <div style={{ height: 2, background: '#d4bfa050', borderRadius: 1, overflow: 'hidden' }}>
+                      <div style={{
+                        height: '100%', borderRadius: 1,
+                        width: `${Math.min((f.intensity || 0) * 100, 100)}%`,
+                        background: 'linear-gradient(90deg, #9b7a58, #c4a882)',
+                      }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* 疲劳 */}
           {state.fatigue != null && (
             <div style={{ ...card, display: 'flex', alignItems: 'center', gap: 14, padding: '13px 17px' }}>
