@@ -8,48 +8,333 @@ const CONSCIOUSNESS_MAP = {
   dreaming: { label: '梦中', color: '#8a7aaa' },
 };
 
-function DriveBar({ label, value }) {
+const BG = `#e6d5b7 url('${paperTex}')`;
+
+/* ────── 顶部栏 ────── */
+function TopBar({ title, onBack, extra }) {
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5 }}>
-        <span style={{ fontSize: 12.5, color: '#513b29', lineHeight: 1.5, flex: 1, paddingRight: 8 }}>{label}</span>
-        <span style={{ fontSize: 12, color: '#9b7a58', flexShrink: 0, fontVariantNumeric: 'tabular-nums' }}>
-          {Math.round(value * 100)}
-        </span>
-      </div>
-      <div style={{ height: 4, background: '#d4bfa080', borderRadius: 2, overflow: 'hidden' }}>
+    <div style={{
+      display: 'flex', alignItems: 'center', gap: 10,
+      padding: '10px 14px',
+      paddingTop: 'max(10px, env(safe-area-inset-top))',
+      background: 'rgba(230,213,183,0.92)',
+      backdropFilter: 'blur(8px)',
+      borderBottom: '1px dashed #bda587',
+      flexShrink: 0, zIndex: 10,
+    }}>
+      <button onClick={onBack} style={{
+        background: 'none', border: 'none', cursor: 'pointer',
+        fontSize: 22, color: '#7D5A44', lineHeight: 1, padding: '2px 6px',
+      }}>‹</button>
+      <span style={{
+        fontFamily: 'Cormorant Garamond, Georgia, serif',
+        fontSize: 18, color: '#3d2b1a', letterSpacing: 1,
+      }}>{title}</span>
+      {extra && <span style={{ marginLeft: 'auto' }}>{extra}</span>}
+    </div>
+  );
+}
+
+/* ────── 状态摘要条 ────── */
+function StateSummary({ state }) {
+  const cInfo = CONSCIOUSNESS_MAP[state?.consciousness] || { label: state?.consciousness || '—', color: '#999' };
+  const emotion = state?.emotion || {};
+  const drives = (state?.topDrives || []).slice(0, 2);
+  const fatigue = state?.fatigue;
+  return (
+    <div style={{
+      background: '#f5e9d5cc', border: '1px solid #bfa58340',
+      borderRadius: 6, padding: '12px 16px', margin: '14px 14px 0',
+      display: 'flex', flexDirection: 'column', gap: 8,
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
         <div style={{
-          height: '100%', borderRadius: 2,
-          width: `${value * 100}%`,
-          background: 'linear-gradient(90deg, #9b5d49, #c48a60)',
-          transition: 'width 1s ease',
+          width: 8, height: 8, borderRadius: '50%',
+          background: cInfo.color, boxShadow: `0 0 5px ${cInfo.color}88`, flexShrink: 0,
         }} />
+        <span style={{ fontSize: 14, color: '#3d2b1a', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
+          {cInfo.label}
+        </span>
+        <span style={{ fontSize: 15, color: '#3d2b1a', fontFamily: 'Cormorant Garamond, Georgia, serif', marginLeft: 6 }}>
+          {emotion.shown || emotion.label || '—'}
+        </span>
+        {fatigue != null && (
+          <span style={{ marginLeft: 'auto', fontSize: 10, color: '#9b7a58' }}>
+            疲劳 {Math.round(fatigue * 100)}
+          </span>
+        )}
+      </div>
+      {drives.length > 0 && (
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+          {drives.map(d => (
+            <span key={d.key} style={{
+              fontSize: 10, color: '#7a5a3a',
+              background: '#e8d9c040', border: '1px solid #bfa58330',
+              borderRadius: 3, padding: '2px 8px',
+            }}>{d.label}</span>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ────── 卡片样式 ────── */
+const card = {
+  background: '#f5e9d5d9', border: '1px solid #bfa58380',
+  boxShadow: '2px 3px 0 #d8c3a17a, 0 4px 10px #71533210',
+  borderRadius: '3px 6px 2px 5px', padding: '17px', position: 'relative',
+};
+const tab = {
+  display: 'inline-block', background: '#d8b7a28a',
+  padding: '2px 13px', margin: '-17px 0 10px -8px',
+  transform: 'rotate(-1deg)', fontSize: 13, letterSpacing: 2,
+  fontFamily: 'Georgia, serif', position: 'relative', zIndex: 1,
+};
+const scrollArea = {
+  flex: 1, overflowY: 'auto', overflowX: 'hidden',
+  padding: '14px 14px 28px',
+  display: 'flex', flexDirection: 'column', gap: 13,
+  scrollbarWidth: 'thin', scrollbarColor: '#b89970 transparent',
+};
+
+/* ────── 详情页：此刻 ────── */
+function FlashView({ state, onBack }) {
+  const flash = state?.thoughts?.flash || [];
+  return (
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: BG, backgroundSize: '240px', overflow: 'hidden' }}>
+      <TopBar title="此刻" onBack={onBack} />
+      <div style={scrollArea}>
+        {flash.length === 0 && <EmptyHint text="此刻平静，无浮现的念" />}
+        {flash.map((f, i) => (
+          <div key={i} style={card}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+              <span style={{
+                fontSize: 10, color: '#9b7a58', background: '#d4bfa040',
+                border: '1px solid #bfa58340', borderRadius: 2, padding: '1px 7px', letterSpacing: 1,
+              }}>{f.label || f.key}</span>
+              <span style={{ fontSize: 10, color: '#b89060', marginLeft: 'auto', fontVariantNumeric: 'tabular-nums' }}>
+                {f.age > 0 ? `${f.age}分钟前` : '片刻前'}
+              </span>
+            </div>
+            {f.text && <div style={{ fontSize: 12.5, color: '#513b29', lineHeight: 1.8, marginBottom: 8 }}>{f.text}</div>}
+            <div style={{ height: 2, background: '#d4bfa050', borderRadius: 1, overflow: 'hidden' }}>
+              <div style={{
+                height: '100%', borderRadius: 1,
+                width: `${Math.min((f.intensity || 0) * 100, 100)}%`,
+                background: 'linear-gradient(90deg, #9b7a58, #c4a882)',
+              }} />
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
 }
 
-function EmotionGrid({ valence = 0.5, arousal = 0.5 }) {
-  const cx = 50 + (valence - 0.5) * 72;
-  const cy = 50 - (arousal - 0.5) * 72;
+/* ────── 详情页：互动 ────── */
+function InteractionView({ state, onBack }) {
+  const interactions = state?.interactions || [];
   return (
-    <svg viewBox="0 0 100 100" width={88} height={88} style={{ flexShrink: 0 }}>
-      <circle cx="50" cy="50" r="42" stroke="#c4a882" strokeWidth="0.7" fill="none" strokeDasharray="3,4" />
-      <line x1="50" y1="8" x2="50" y2="92" stroke="#c4a882" strokeWidth="0.5" strokeDasharray="2,3" />
-      <line x1="8" y1="50" x2="92" y2="50" stroke="#c4a882" strokeWidth="0.5" strokeDasharray="2,3" />
-      <text x="50" y="6" textAnchor="middle" fill="#b89060" fontSize="7" fontFamily="Georgia">高唤醒</text>
-      <text x="50" y="97" textAnchor="middle" fill="#b89060" fontSize="7" fontFamily="Georgia">低唤醒</text>
-      <text x="4" y="52" fill="#b89060" fontSize="7" fontFamily="Georgia">负</text>
-      <text x="89" y="52" fill="#b89060" fontSize="7" fontFamily="Georgia">正</text>
-      <circle cx={cx} cy={cy} r="7" fill="#9b5d49" opacity="0.22" />
-      <circle cx={cx} cy={cy} r="4" fill="#9b5d49" opacity="0.85" />
-    </svg>
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: BG, backgroundSize: '240px', overflow: 'hidden' }}>
+      <TopBar title="互动" onBack={onBack} />
+      <div style={scrollArea}>
+        {interactions.length === 0 && <EmptyHint text="暂无近期互动记录" />}
+        {interactions.length > 0 && (
+          <div style={card}>
+            <div style={tab}>近期互动</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, paddingTop: 4 }}>
+              {interactions.map((ix, i) => {
+                const d = ix.at ? new Date(ix.at) : null;
+                const diffMin = d ? Math.floor((Date.now() - d.getTime()) / 60000) : 0;
+                let timeStr;
+                if (diffMin < 1) timeStr = '刚刚';
+                else if (diffMin < 60) timeStr = `${diffMin}分钟前`;
+                else if (diffMin < 1440) timeStr = `${Math.floor(diffMin / 60)}小时前`;
+                else timeStr = d ? d.toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric' }) : '—';
+                return (
+                  <div key={i} style={{
+                    fontSize: 11, color: '#7a5a3a',
+                    background: '#e8d9c040', border: '1px solid #bfa58330',
+                    borderRadius: 3, padding: '3px 10px', fontVariantNumeric: 'tabular-nums',
+                  }}>
+                    {ix.type && <span style={{ color: '#9b7a58', marginRight: 5 }}>{ix.type}</span>}
+                    {timeStr}
+                  </div>
+                );
+              })}
+            </div>
+            <div style={{ fontSize: 10, color: '#b89060', marginTop: 12 }}>
+              共 {interactions.length} 次近期互动
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 
+/* ────── 详情页：匣子 ────── */
+function BridgeView({ state, onBack }) {
+  const bridge = state?.bridge || [];
+  return (
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: BG, backgroundSize: '240px', overflow: 'hidden' }}>
+      <TopBar title="匣子" onBack={onBack} />
+      <div style={scrollArea}>
+        {bridge.length === 0 && <EmptyHint text="匣子暂时为空" />}
+        {bridge.map((b, i) => {
+          const d = b.at ? new Date(b.at) : null;
+          const timeStr = d ? d.toLocaleString('zh-CN', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+          return (
+            <div key={i} style={card}>
+              {b.reason && (
+                <div style={{ fontSize: 10, color: '#9b7a58', marginBottom: 8, letterSpacing: 0.5 }}>{b.reason}</div>
+              )}
+              <div style={{ fontSize: 12.5, color: '#513b29', lineHeight: 1.8 }}>{b.message}</div>
+              {timeStr && <div style={{ fontSize: 10, color: '#b89060', marginTop: 8 }}>{timeStr}</div>}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ────── 详情页：小屋来信 ────── */
+function CabinView({ state, onBack }) {
+  const cabin = state?.cabin || [];
+  return (
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: BG, backgroundSize: '240px', overflow: 'hidden' }}>
+      <TopBar title="小屋来信" onBack={onBack} />
+      <div style={scrollArea}>
+        {cabin.length === 0 && <EmptyHint text="小屋暂无来信" />}
+        {cabin.map((n, i) => (
+          <div key={i} style={card}>
+            <div style={tab}>
+              {n.from === 'ai' ? '云舒 → 雨菲' : n.from === 'human' ? '雨菲 → 云舒' : n.from}
+            </div>
+            <div style={{
+              fontSize: 13, color: '#3d2b1a', lineHeight: 2,
+              whiteSpace: 'pre-wrap', wordBreak: 'break-word',
+              fontFamily: 'Georgia, serif', paddingTop: 4,
+            }}>{n.content}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function EmptyHint({ text }) {
+  return (
+    <div style={{ textAlign: 'center', color: '#a08060', padding: '32px 16px', fontFamily: 'Georgia, serif', fontSize: 13, lineHeight: 2 }}>
+      {text}
+    </div>
+  );
+}
+
+/* ────── 列表项图标 ────── */
+const SECTIONS = [
+  {
+    key: 'flash',
+    title: '此刻',
+    subtitle: '浮现的念与思绪流',
+    icon: (
+      <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="24" height="24">
+        <circle cx="18" cy="18" r="3" fill="currentColor" opacity=".3"/>
+        <path d="M18 6 Q24 12 18 18 Q12 24 18 30" strokeWidth="1.2"/>
+        <path d="M10 10 Q14 14 12 18" strokeWidth="1" opacity=".5"/>
+        <path d="M26 10 Q22 14 24 18" strokeWidth="1" opacity=".5"/>
+      </svg>
+    ),
+  },
+  {
+    key: 'interactions',
+    title: '互动',
+    subtitle: '近期互动时间轴',
+    icon: (
+      <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="24" height="24">
+        <circle cx="18" cy="18" r="10"/>
+        <path d="M18 10 v4 M18 22 v4 M10 18 h4 M22 18 h4" strokeWidth="1"/>
+        <circle cx="18" cy="18" r="3" fill="currentColor" opacity=".25"/>
+      </svg>
+    ),
+  },
+  {
+    key: 'bridge',
+    title: '匣子',
+    subtitle: '待送达的心意',
+    icon: (
+      <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="24" height="24">
+        <rect x="6" y="12" width="24" height="16" rx="2"/>
+        <path d="M6 14 L18 22 L30 14"/>
+        <path d="M14 8 h8" strokeWidth="1.2" opacity=".6"/>
+      </svg>
+    ),
+  },
+  {
+    key: 'cabin',
+    title: '小屋来信',
+    subtitle: '小屋里写下的信',
+    icon: (
+      <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="24" height="24">
+        <path d="M6 18 L18 8 L30 18"/>
+        <rect x="10" y="18" width="16" height="12" rx="1"/>
+        <rect x="15" y="22" width="6" height="8" rx="1"/>
+      </svg>
+    ),
+  },
+];
+
+/* ────── 列表首页 ────── */
+function XinchaoIndex({ state, loadError, onBack, onSelect, timeStr }) {
+  return (
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: BG, backgroundSize: '240px', overflow: 'hidden' }}>
+      <TopBar
+        title="心潮"
+        onBack={onBack}
+        extra={timeStr && (
+          <span style={{ fontSize: 11, color: '#a08060', fontVariantNumeric: 'tabular-nums' }}>{timeStr} 更新</span>
+        )}
+      />
+      <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', scrollbarWidth: 'thin', scrollbarColor: '#b89970 transparent' }}>
+        {state && <StateSummary state={state} />}
+        {loadError && !state && <EmptyHint text={'暂无数据\n等待心潮同步…'} />}
+        <div style={{ padding: '12px 14px 28px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {SECTIONS.map(sec => (
+            <button key={sec.key} onClick={() => onSelect(sec.key)} style={{
+              display: 'flex', alignItems: 'center', gap: 14,
+              background: '#f5e9d5d9', border: '1px solid #bfa58380',
+              boxShadow: '2px 3px 0 #d8c3a17a, 0 4px 10px #71533210',
+              borderRadius: '14px 10px 13px 11px',
+              padding: '15px 14px', cursor: 'pointer', textAlign: 'left',
+              transition: 'background 0.15s, transform 0.12s',
+              position: 'relative',
+            }}>
+              <span style={{
+                width: 44, height: 44, flexShrink: 0,
+                background: '#7D5A44', borderRadius: '12px 9px 13px 10px',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: '#f5ede2', boxShadow: '1px 2px 0 #5a3e2b50',
+              }}>{sec.icon}</span>
+              <span style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <span style={{ fontSize: 16, color: '#3d2b1a', fontWeight: 500 }}>{sec.title}</span>
+                <span style={{ fontSize: 12, color: '#8f775e' }}>{sec.subtitle}</span>
+              </span>
+              <span style={{ fontSize: 22, color: '#b89a72', lineHeight: 1, marginRight: 2 }}>›</span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ────── 主组件 ────── */
 export default function XinchaoNianView({ onBack }) {
   const [state, setState] = useState(null);
   const [loadError, setLoadError] = useState(false);
+  const [subView, setSubView] = useState(null);
 
   function loadState() {
     fetch(`${import.meta.env.BASE_URL}xinchao-state.json?t=${Date.now()}`)
@@ -64,271 +349,25 @@ export default function XinchaoNianView({ onBack }) {
     return () => clearInterval(iv);
   }, []);
 
-  const cInfo = CONSCIOUSNESS_MAP[state?.consciousness] || { label: state?.consciousness || '—', color: '#999' };
-  const emotion = state?.emotion || {};
-  const drives = (state?.topDrives || []).slice(0, 4);
   const updatedAt = state?.updatedAt;
-
   const timeStr = updatedAt
     ? new Date(updatedAt).toLocaleString('zh-CN', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })
     : null;
 
+  const goBack = () => setSubView(null);
+
+  if (subView === 'flash')        return <FlashView state={state} onBack={goBack} />;
+  if (subView === 'interactions') return <InteractionView state={state} onBack={goBack} />;
+  if (subView === 'bridge')       return <BridgeView state={state} onBack={goBack} />;
+  if (subView === 'cabin')        return <CabinView state={state} onBack={goBack} />;
+
   return (
-    <div style={{
-      flex: 1, display: 'flex', flexDirection: 'column',
-      background: `#e6d5b7 url('${paperTex}')`,
-      backgroundSize: '240px',
-      overflow: 'hidden',
-    }}>
-      {/* 返回栏 */}
-      <div style={{
-        display: 'flex', alignItems: 'center', gap: 10,
-        padding: '10px 14px',
-        paddingTop: 'max(10px, env(safe-area-inset-top))',
-        background: 'rgba(230,213,183,0.92)',
-        backdropFilter: 'blur(8px)',
-        borderBottom: '1px dashed #bda587',
-        flexShrink: 0, zIndex: 10,
-      }}>
-        <button onClick={onBack} style={{
-          background: 'none', border: 'none', cursor: 'pointer',
-          fontSize: 22, color: '#7D5A44', lineHeight: 1, padding: '2px 6px',
-        }}>‹</button>
-        <span style={{
-          fontFamily: 'Cormorant Garamond, Georgia, serif',
-          fontSize: 18, color: '#3d2b1a', letterSpacing: 1,
-        }}>心潮</span>
-        {timeStr && (
-          <span style={{ marginLeft: 'auto', fontSize: 11, color: '#a08060', fontVariantNumeric: 'tabular-nums' }}>
-            {timeStr} 更新
-          </span>
-        )}
-      </div>
-
-      {/* 内容 */}
-      <div style={{
-        flex: 1, overflowY: 'auto', overflowX: 'hidden',
-        padding: '14px 14px 28px',
-        display: 'flex', flexDirection: 'column', gap: 13,
-        scrollbarWidth: 'thin', scrollbarColor: '#b89970 transparent',
-      }}>
-
-        {loadError && !state && (
-          <div style={{
-            textAlign: 'center', color: '#a08060', padding: '32px 16px',
-            fontFamily: 'Georgia, serif', fontSize: 13, lineHeight: 2,
-          }}>
-            暂无数据<br />
-            <span style={{ fontSize: 11, opacity: 0.7 }}>等待心潮同步…</span>
-          </div>
-        )}
-
-        {state && <>
-          {/* 意识 + 情绪坐标 */}
-          <div style={card}>
-            <div style={tab}>意识 · 情绪</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 14, paddingTop: 4 }}>
-              <EmotionGrid valence={emotion.valence} arousal={emotion.arousal} />
-              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 10 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <div style={{
-                    width: 10, height: 10, borderRadius: '50%',
-                    background: cInfo.color,
-                    boxShadow: `0 0 5px ${cInfo.color}88`,
-                    flexShrink: 0,
-                  }} />
-                  <span style={{ fontSize: 15, color: '#3d2b1a', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
-                    {cInfo.label}
-                  </span>
-                </div>
-                <div>
-                  <div style={{ fontSize: 22, color: '#3d2b1a', fontFamily: 'Cormorant Garamond, Georgia, serif', lineHeight: 1.2 }}>
-                    {emotion.shown || emotion.label || '—'}
-                  </div>
-                  <div style={{ fontSize: 11, color: '#9b7a58', marginTop: 3 }}>
-                    愉悦 {emotion.valence != null ? Math.round(emotion.valence * 100) : '—'}
-                    &ensp;·&ensp;
-                    唤醒 {emotion.arousal != null ? Math.round(emotion.arousal * 100) : '—'}
-                  </div>
-                </div>
-                {emotion.trend?.labels?.length > 0 && (
-                  <div style={{ fontSize: 11, color: '#9b7a58', lineHeight: 1.8 }}>
-                    今日情绪路径<br />
-                    <span style={{ color: '#7a5a3a' }}>{emotion.trend.labels.join(' → ')}</span>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* 驱力 */}
-          {drives.length > 0 && (
-            <div style={card}>
-              <div style={tab}>当前驱力</div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, paddingTop: 4 }}>
-                {drives.map(d => (
-                  <DriveBar key={d.key} label={d.label} value={d.value} />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* 此刻 */}
-          {state.thoughts?.flash?.length > 0 && (
-            <div style={card}>
-              <div style={tab}>此刻</div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 14, paddingTop: 4 }}>
-                {state.thoughts.flash.map((f, i) => (
-                  <div key={i}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 5 }}>
-                      <span style={{
-                        fontSize: 10, color: '#9b7a58',
-                        background: '#d4bfa040', border: '1px solid #bfa58340',
-                        borderRadius: 2, padding: '1px 7px', letterSpacing: 1,
-                      }}>{f.label || f.key}</span>
-                      <span style={{ fontSize: 10, color: '#b89060', marginLeft: 'auto', fontVariantNumeric: 'tabular-nums' }}>
-                        {f.age > 0 ? `${f.age}分钟前` : '片刻前'}
-                      </span>
-                    </div>
-                    {f.text && (
-                      <div style={{ fontSize: 12.5, color: '#513b29', lineHeight: 1.8, marginBottom: 6 }}>
-                        {f.text}
-                      </div>
-                    )}
-                    <div style={{ height: 2, background: '#d4bfa050', borderRadius: 1, overflow: 'hidden' }}>
-                      <div style={{
-                        height: '100%', borderRadius: 1,
-                        width: `${Math.min((f.intensity || 0) * 100, 100)}%`,
-                        background: 'linear-gradient(90deg, #9b7a58, #c4a882)',
-                      }} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* 记互动 */}
-          {state.interactions?.length > 0 && (
-            <div style={card}>
-              <div style={tab}>记互动</div>
-              <div style={{ paddingTop: 6 }}>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                  {state.interactions.map((ix, i) => {
-                    const d = ix.at ? new Date(ix.at) : null;
-                    const now = Date.now();
-                    const diffMs = d ? now - d.getTime() : 0;
-                    const diffMin = Math.floor(diffMs / 60000);
-                    let timeStr;
-                    if (diffMin < 1) timeStr = '刚刚';
-                    else if (diffMin < 60) timeStr = `${diffMin}分钟前`;
-                    else if (diffMin < 1440) timeStr = `${Math.floor(diffMin / 60)}小时前`;
-                    else timeStr = d ? d.toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric' }) : '—';
-                    return (
-                      <div key={i} style={{
-                        fontSize: 11, color: '#7a5a3a',
-                        background: '#e8d9c040', border: '1px solid #bfa58330',
-                        borderRadius: 3, padding: '3px 10px',
-                        fontVariantNumeric: 'tabular-nums',
-                      }}>
-                        {ix.type && <span style={{ color: '#9b7a58', marginRight: 5 }}>{ix.type}</span>}
-                        {timeStr}
-                      </div>
-                    );
-                  })}
-                </div>
-                {state.interactions[0]?.at && (
-                  <div style={{ fontSize: 10, color: '#b89060', marginTop: 10 }}>
-                    共 {state.interactions.length} 次近期互动
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* 查匣子 */}
-          {state.bridge?.length > 0 && (
-            <div style={card}>
-              <div style={tab}>查匣子</div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, paddingTop: 4 }}>
-                {state.bridge.map((b, i) => {
-                  const d = b.at ? new Date(b.at) : null;
-                  const timeStr = d ? d.toLocaleString('zh-CN', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
-                  return (
-                    <div key={i} style={{ borderLeft: '2px solid #c4a88260', paddingLeft: 11 }}>
-                      {b.reason && (
-                        <div style={{ fontSize: 10, color: '#9b7a58', marginBottom: 4, letterSpacing: 0.5 }}>{b.reason}</div>
-                      )}
-                      <div style={{ fontSize: 12.5, color: '#513b29', lineHeight: 1.8 }}>{b.message}</div>
-                      {timeStr && (
-                        <div style={{ fontSize: 10, color: '#b89060', marginTop: 5 }}>{timeStr}</div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* 小屋来信 */}
-          {state.cabin?.length > 0 && (
-            <div style={card}>
-              <div style={tab}>小屋来信</div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 16, paddingTop: 4 }}>
-                {state.cabin.map((n, i) => (
-                  <div key={i}>
-                    <div style={{ fontSize: 10, color: '#9b7a58', marginBottom: 6, letterSpacing: 0.5 }}>
-                      {n.from === 'ai' ? '云舒 → 雨菲' : n.from === 'human' ? '雨菲 → 云舒' : n.from}
-                    </div>
-                    <div style={{
-                      fontSize: 12.5, color: '#3d2b1a', lineHeight: 2,
-                      whiteSpace: 'pre-wrap', wordBreak: 'break-word',
-                      fontFamily: 'Georgia, serif',
-                    }}>{n.content}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* 疲劳 */}
-          {state.fatigue != null && (
-            <div style={{ ...card, display: 'flex', alignItems: 'center', gap: 14, padding: '13px 17px' }}>
-              <span style={{ fontSize: 12, color: '#9b7a58', letterSpacing: 1 }}>疲劳值</span>
-              <div style={{ flex: 1, height: 4, background: '#d4bfa080', borderRadius: 2, overflow: 'hidden' }}>
-                <div style={{
-                  height: '100%', borderRadius: 2,
-                  width: `${state.fatigue * 100}%`,
-                  background: 'linear-gradient(90deg, #7a85a0, #a09080)',
-                  transition: 'width 1s ease',
-                }} />
-              </div>
-              <span style={{ fontSize: 13, color: '#7a5a3a', fontVariantNumeric: 'tabular-nums', width: 28, textAlign: 'right' }}>
-                {Math.round(state.fatigue * 100)}
-              </span>
-            </div>
-          )}
-        </>}
-      </div>
-    </div>
+    <XinchaoIndex
+      state={state}
+      loadError={loadError}
+      onBack={onBack}
+      onSelect={setSubView}
+      timeStr={timeStr}
+    />
   );
 }
-
-const card = {
-  background: '#f5e9d5d9',
-  border: '1px solid #bfa58380',
-  boxShadow: '2px 3px 0 #d8c3a17a, 0 4px 10px #71533210',
-  borderRadius: '3px 6px 2px 5px',
-  padding: '17px',
-  position: 'relative',
-};
-const tab = {
-  display: 'inline-block',
-  background: '#d8b7a28a',
-  padding: '2px 13px',
-  margin: '-17px 0 10px -8px',
-  transform: 'rotate(-1deg)',
-  fontSize: 13, letterSpacing: 2,
-  fontFamily: 'Georgia, serif',
-  position: 'relative', zIndex: 1,
-};
