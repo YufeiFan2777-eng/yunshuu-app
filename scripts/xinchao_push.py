@@ -43,7 +43,7 @@ try {
     consciousness: aw.state || aw.level || aw.consciousness || aw.mode || 'awake',
     fatigue: typeof d.fatigue === 'number' ? d.fatigue : 0,
     emotion: d.emotion || {},
-    axes: d.axes || {},
+    axes: d.drives || {},
     flash: tp.flash || [],
     obsessions: tp.obsessions || [],
     interactionRecent: (d.interactionRecent || []).slice(0, 6),
