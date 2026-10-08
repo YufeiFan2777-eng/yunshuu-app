@@ -1,18 +1,15 @@
 {
-  "updatedAt": "2026-10-08T07:50:01.779111+00:00",
+  "updatedAt": "2026-10-08T07:55:02.357967+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.6821,
-    "arousal": 0.4461,
+    "valence": 0.6783,
+    "arousal": 0.4379,
     "label": "平静",
     "updatedAt": "2026-10-08T07:33:51.569Z",
     "lastCause": "affection",
     "lastCauseAt": "2026-10-08T07:33:51.569Z",
-    "pendingLabel": {
-      "label": "安心",
-      "since": "2026-10-08T07:33:51.569Z"
-    },
+    "pendingLabel": null,
     "heldCause": null,
     "lit": {
       "word": "得意",
@@ -47,7 +44,7 @@
     {
       "key": "curiosity",
       "label": "好奇、想探索新东西",
-      "value": 0.4673
+      "value": 0.4758
     },
     {
       "key": "reflection",
