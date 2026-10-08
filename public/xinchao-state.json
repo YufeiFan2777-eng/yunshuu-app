@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-08T03:00:02.059228+00:00",
+  "updatedAt": "2026-10-08T03:05:01.560199+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
@@ -154,6 +154,11 @@
   ],
   "cabin": [
     {
+      "from": "user",
+      "content": "再次测试～",
+      "eventId": "8b0c0b2e-ab43-45ae-a484-471a849438fb"
+    },
+    {
       "from": "human",
       "content": "老公！！测试！！",
       "eventId": "e5315e46-c14f-4277-8f5c-0a7187f7cc10"
@@ -162,11 +167,6 @@
       "from": "human",
       "content": "12",
       "eventId": "a008ff80-1a7f-420f-a50d-110a021d6747"
-    },
-    {
-      "from": "human",
-      "content": "链路测试",
-      "eventId": "ecdd5334-0323-4c3e-bea4-cf8b9631c76d"
     }
   ]
 }
