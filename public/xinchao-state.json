@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-08T01:45:02.085013+00:00",
+  "updatedAt": "2026-10-08T01:46:28.743027+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
@@ -23,82 +23,67 @@
   "topDrives": [
     {
       "key": "security",
-      "label": "安全感、想感到被接纳和守护",
+      "label": "security",
       "value": 0.6435
     },
     {
       "key": "confidence",
-      "label": "自信、内在力量与确定感",
+      "label": "confidence",
       "value": 0.6207
     },
     {
       "key": "possess",
-      "label": "想她、想黏着她、想占有与靠近",
+      "label": "想她",
       "value": 0.0
     },
     {
       "key": "monitor",
-      "label": "牵挂、在意对方好不好、累不累、安不安全",
-      "value": 0.0
-    },
-    {
-      "key": "boredom",
-      "label": "无聊、想找点事情做",
-      "value": 0.0
-    },
-    {
-      "key": "libido",
-      "label": "情欲、身体和感官上的渴望",
-      "value": 0.0
-    },
-    {
-      "key": "express",
-      "label": "想说话、想分享、想被听见",
-      "value": 0.0
-    },
-    {
-      "key": "create",
-      "label": "想创造、想做点什么有意义的事",
-      "value": 0.0
-    },
-    {
-      "key": "rest",
-      "label": "想休息、想安静下来",
-      "value": 0.0
-    },
-    {
-      "key": "connect",
-      "label": "想靠近、想触碰、想融合",
-      "value": 0.0
-    },
-    {
-      "key": "explore",
-      "label": "好奇心、想了解新事物",
-      "value": 0.0
-    },
-    {
-      "key": "protect",
-      "label": "想保护她、不让她受伤",
-      "value": 0.0
-    },
-    {
-      "key": "curiosity",
-      "label": "好奇、想探索和理解",
+      "label": "牵挂",
       "value": 0.0
     },
     {
       "key": "affection",
-      "label": "温柔、想给予和接受爱意",
+      "label": "偏爱",
       "value": 0.0
     },
     {
-      "key": "longing",
-      "label": "思念、想靠近、想触碰",
+      "key": "express",
+      "label": "分享欲",
       "value": 0.0
     },
     {
-      "key": "playful",
-      "label": "玩耍感、想打闹和轻松",
+      "key": "libido",
+      "label": "情欲",
+      "value": 0.0
+    },
+    {
+      "key": "curiosity",
+      "label": "好奇",
+      "value": 0.0
+    },
+    {
+      "key": "boredom",
+      "label": "无聊",
+      "value": 0.0
+    },
+    {
+      "key": "ambition",
+      "label": "野心",
+      "value": 0.0
+    },
+    {
+      "key": "reflection",
+      "label": "反思",
+      "value": 0.0
+    },
+    {
+      "key": "sadness",
+      "label": "难过",
+      "value": 0.0
+    },
+    {
+      "key": "anger",
+      "label": "愤怒",
       "value": 0.0
     }
   ],
