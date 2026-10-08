@@ -15,7 +15,7 @@ const DIRECTIONS = [
 ];
 
 function WorldDot({ lat, lon }) {
-  if (lat == null || lon == null) return null;
+  if (lat == null || lon == null || isNaN(lat) || isNaN(lon)) return null;
   const x = ((lon + 180) / 360) * 100;
   const y = ((90 - lat) / 180) * 100;
   return (
@@ -127,7 +127,9 @@ export default function NowhereView({ onBack }) {
     }
   }
 
-  const pos = state?.pos;
+  // pos is [lat, lon] array from the API
+  const posArr = state?.pos;
+  const pos = posArr ? { lat: posArr[0], lon: posArr[1] } : null;
   const weather = state?.env?.weather;
   const lastText = state?.last_text;
 
