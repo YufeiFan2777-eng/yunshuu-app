@@ -71,12 +71,10 @@ def format_state(raw):
 
     for key, val in sorted(axes.items(), key=lambda x: _val(x[1]), reverse=True)[:4]:
         if isinstance(val, dict):
-            value = val.get("value", 0)
             label = val.get("label") or DRIVE_LABELS.get(key, key)
         else:
-            value = val
             label = DRIVE_LABELS.get(key, key)
-        top_drives.append({"key": key, "label": label, "value": round(value, 4)})
+        top_drives.append({"key": key, "label": label, "value": round(_val(val), 4)})
 
     return {
         "updatedAt":   datetime.now(timezone.utc).isoformat(),
