@@ -50,7 +50,9 @@ export async function sendMessage(sessionId, content, onDelta) {
     const lines = buffer.split('\n');
     buffer = lines.pop();
 
+    let shouldBreak = false;
     for (const line of lines) {
+      if (line === 'event: done') { shouldBreak = true; continue; }
       if (line.startsWith('event: ')) continue;
       if (!line.startsWith('data: ')) continue;
 
@@ -65,6 +67,7 @@ export async function sendMessage(sessionId, content, onDelta) {
         if (e.message !== 'Unexpected end of JSON input') throw e;
       }
     }
+    if (shouldBreak) break;
   }
 
   return fullContent;
