@@ -78,15 +78,20 @@ def format_state(raw):
         except (TypeError, ValueError):
             return 0.0
 
-    for key, val in sorted(
-        [(k, v) for k, v in axes.items() if _val(v) > 0],
-        key=lambda x: _val(x[1]), reverse=True
-    ):
+    # Always include all DRIVE_LABELS drives so the flower always shows full petals
+    for key, default_label in DRIVE_LABELS.items():
+        val = axes.get(key, 0)
         if isinstance(val, dict):
-            label = val.get("label") or DRIVE_LABELS.get(key, key)
+            label = val.get("label") or default_label
         else:
-            label = DRIVE_LABELS.get(key, key)
+            label = default_label
         top_drives.append({"key": key, "label": label, "value": round(_val(val), 4)})
+    # Also include any axes drives not in DRIVE_LABELS with non-zero values
+    for key, val in axes.items():
+        if key not in DRIVE_LABELS and _val(val) > 0:
+            label = val.get("label") if isinstance(val, dict) else key
+            top_drives.append({"key": key, "label": label or key, "value": round(_val(val), 4)})
+    top_drives.sort(key=lambda x: x["value"], reverse=True)
 
     flash_out = []
     for f in raw.get("flash", []):
