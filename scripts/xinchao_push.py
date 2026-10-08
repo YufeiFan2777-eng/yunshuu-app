@@ -1,34 +1,90 @@
 #!/usr/bin/env python3
 """
 心潮状态推送 - VPS 定时任务
-每 5 分钟拉取心潮状态，推到 GitHub，App 自动更新。
+每 5 分钟从 ombre-dynamic-mind 容器读取 state.json，推到 GitHub，App 自动更新。
 
 使用前：
-1. 运行 `cat /root/xinchao-nian/.env` 确认 MACHINE_TOKEN 变量名
-2. 把 token 加入 /root/daily_message_env：
-     export XINCHAO_MACHINE_TOKEN="your_token_here"
+1. 确认容器名：docker ps | grep ombre-dynamic-mind
+2. 把 GITHUB_PAT 加入 /root/daily_message_env：
+     export GITHUB_PAT="your_pat_here"
 3. 把本文件复制到 VPS：/root/xinchao_push.py
 4. 在 crontab 添加（每 5 分钟）：
      */5 * * * * . /root/daily_message_env && python3 /root/xinchao_push.py >> /root/xinchao_push.log 2>&1
 """
-import base64, json, os, urllib.request, urllib.error
+import base64, json, os, subprocess, urllib.request, urllib.error
 from datetime import datetime, timezone
 
-MACHINE_TOKEN = os.environ["XINCHAO_MACHINE_TOKEN"]
-GITHUB_PAT    = os.environ["GITHUB_PAT"]
-REPO          = "YufeiFan2777-eng/yunshuu-app"
-FILE_PATH     = "public/xinchao-state.json"
+GITHUB_PAT = os.environ["GITHUB_PAT"]
+REPO       = "YufeiFan2777-eng/yunshuu-app"
+FILE_PATH  = "public/xinchao-state.json"
+CONTAINER  = "ombre-dynamic-mind"
 
-# 如果实际端口/路径不同，改这里
-XINCHAO_API   = "http://localhost:18110/api/state"
+DRIVE_LABELS = {
+    "possess": "想她、想黏着她、想占有与靠近",
+    "monitor": "牵挂、在意对方好不好、累不累、安不安全",
+    "boredom": "无聊、想找点事情做",
+    "libido":  "情欲、身体和感官上的渴望",
+    "express": "想说话、想分享、想被听见",
+    "create":  "想创造、想做点什么有意义的事",
+    "rest":    "想休息、想安静下来",
+    "connect": "想靠近、想触碰、想融合",
+    "explore": "好奇心、想了解新事物",
+    "protect": "想保护她、不让她受伤",
+}
 
-def get_xinchao_state():
-    req = urllib.request.Request(
-        XINCHAO_API,
-        headers={"Authorization": f"Bearer {MACHINE_TOKEN}"}
+_NODE_SCRIPT = r"""
+const fs = require('fs');
+try {
+  const d = JSON.parse(fs.readFileSync('/app/state/state.json', 'utf8'));
+  const aw = d.awareness || {};
+  const tp = d.thoughtPool || {};
+  console.log(JSON.stringify({
+    consciousness: aw.state || aw.level || aw.consciousness || aw.mode || 'awake',
+    fatigue: typeof d.fatigue === 'number' ? d.fatigue : 0,
+    emotion: d.emotion || {},
+    axes: d.axes || {},
+    flash: tp.flash || [],
+    obsessions: tp.obsessions || [],
+  }));
+} catch(e) { process.stderr.write('ERROR: ' + e.message + '\n'); process.exit(1); }
+"""
+
+def read_container_state():
+    r = subprocess.run(
+        ["docker", "exec", CONTAINER, "node", "-e", _NODE_SCRIPT],
+        capture_output=True, text=True, timeout=15
     )
-    with urllib.request.urlopen(req, timeout=10) as r:
-        return json.loads(r.read())
+    if r.returncode != 0:
+        raise RuntimeError(f"docker exec failed: {r.stderr.strip()}")
+    return json.loads(r.stdout)
+
+def format_state(raw):
+    axes = raw.get("axes", {})
+    top_drives = []
+    for key, val in sorted(
+        axes.items(),
+        key=lambda x: x[1].get("value", 0) if isinstance(x[1], dict) else x[1],
+        reverse=True,
+    )[:4]:
+        if isinstance(val, dict):
+            value = val.get("value", 0)
+            label = val.get("label") or DRIVE_LABELS.get(key, key)
+        else:
+            value = val
+            label = DRIVE_LABELS.get(key, key)
+        top_drives.append({"key": key, "label": label, "value": round(value, 4)})
+
+    return {
+        "updatedAt":   datetime.now(timezone.utc).isoformat(),
+        "consciousness": raw.get("consciousness", "awake"),
+        "fatigue":     raw.get("fatigue", 0),
+        "emotion":     raw.get("emotion", {}),
+        "topDrives":   top_drives,
+        "thoughts": {
+            "flash":      raw.get("flash", []),
+            "obsessions": raw.get("obsessions", []),
+        },
+    }
 
 def get_file_sha():
     req = urllib.request.Request(
@@ -43,21 +99,12 @@ def get_file_sha():
             return None
         raise
 
-def push_state(raw, sha):
-    now = datetime.now(timezone.utc).isoformat()
-    data = {
-        "updatedAt": now,
-        "consciousness": raw.get("consciousness"),
-        "fatigue": raw.get("fatigue", 0),
-        "emotion": raw.get("emotion", {}),
-        "topDrives": raw.get("topDrives", []),
-        "thoughts": raw.get("thoughts", {}),
-    }
+def push_state(data, sha):
     content = json.dumps(data, ensure_ascii=False, indent=2)
     payload = {
-        "message": f"xinchao: state {now[:16]}",
+        "message": f"xinchao: state {data['updatedAt'][:16]}",
         "content": base64.b64encode(content.encode()).decode(),
-        "branch": "main",
+        "branch":  "main",
     }
     if sha:
         payload["sha"] = sha
@@ -66,8 +113,8 @@ def push_state(raw, sha):
         data=json.dumps(payload).encode(),
         headers={
             "Authorization": f"Bearer {GITHUB_PAT}",
-            "Content-Type": "application/json",
-            "User-Agent": "xinchao-bot",
+            "Content-Type":  "application/json",
+            "User-Agent":    "xinchao-bot",
         },
         method="PUT",
     )
@@ -76,10 +123,12 @@ def push_state(raw, sha):
 
 if __name__ == "__main__":
     try:
-        raw   = get_xinchao_state()
-        sha   = get_file_sha()
-        status = push_state(raw, sha)
-        print(f"[{datetime.now().isoformat()}] OK({status}): {raw.get('consciousness')} / {raw.get('emotion', {}).get('label')}")
+        raw    = read_container_state()
+        data   = format_state(raw)
+        sha    = get_file_sha()
+        status = push_state(data, sha)
+        ts = datetime.now().isoformat()
+        print(f"[{ts}] OK({status}): {data['consciousness']} / {data['emotion'].get('label')}")
     except Exception as e:
         print(f"[{datetime.now().isoformat()}] ERROR: {e}")
         raise
