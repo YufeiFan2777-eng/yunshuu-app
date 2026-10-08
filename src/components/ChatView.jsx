@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getMessages, sendMessage, getState } from '../services/api';
+import CallOverlay from './CallOverlay.jsx';
 import chatBg from '/chat-bg.jpg';
+
+const API_BASE = (import.meta.env.VITE_API_URL || '/api').replace(/\/api\/?$/, '');
 
 const CABIN = 'https://cabin.yunshuyf.com';
 const CABIN_SECRET = 'yfshu-cabin-write-2024';
@@ -30,6 +33,7 @@ export default function ChatView({ sessionId, onMenu }) {
   const [streamingText, setStreamingText] = useState('');
   const [stateData, setStateData] = useState(null);
   const [extraOpen, setExtraOpen] = useState(false);
+  const [callOpen, setCallOpen] = useState(false);
   const bottomRef = useRef(null);
   const textareaRef = useRef(null);
 
@@ -173,7 +177,7 @@ export default function ChatView({ sessionId, onMenu }) {
 
         {/* ── Extra panel ── */}
         <div className={`bny-extra${extraOpen ? ' bny-extra-open' : ''}`} aria-hidden={!extraOpen}>
-          <button type="button" className="bny-extra-btn" disabled>
+          <button type="button" className="bny-extra-btn" onClick={() => { setCallOpen(true); setExtraOpen(false); }}>
             <span className="bny-extra-icon">
               <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="5" y="9" width="26" height="19" rx="4"/>
@@ -207,10 +211,20 @@ export default function ChatView({ sessionId, onMenu }) {
         </div>
       </div>
 
+      <CallOverlay
+        open={callOpen}
+        onClose={() => setCallOpen(false)}
+        apiUrl={API_BASE}
+        sessionId={sessionId}
+        selectedModel="claude-sonnet-4-6"
+        onFinish={() => { loadMessages(); }}
+      />
+
       <style>{`
         .bny-chat {
           flex: 1; display: flex; flex-direction: column;
           height: 100%; overflow: hidden;
+          position: relative;
           background: #e8d5b4;
           font-family: Georgia, 'Songti SC', serif;
           overscroll-behavior: none;
