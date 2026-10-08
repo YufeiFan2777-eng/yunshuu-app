@@ -59,11 +59,25 @@ function CommentThread({ momentId, open }) {
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [replyTo, setReplyTo] = useState(null); // { name: '云舒' }
+  const inputRef = useRef(null);
 
   useEffect(() => {
     if (!open) return;
     getComments(momentId).then(c => { setComments(c); setLoaded(true); });
   }, [open, momentId]);
+
+  const startReply = (c) => {
+    const name = c.author === 'yunshuu' ? '云舒' : '雨菲';
+    setReplyTo({ name });
+    setInput(`@${name} `);
+    setTimeout(() => inputRef.current?.focus(), 0);
+  };
+
+  const cancelReply = () => {
+    setReplyTo(null);
+    setInput('');
+  };
 
   const send = async () => {
     const txt = input.trim();
@@ -71,6 +85,7 @@ function CommentThread({ momentId, open }) {
     setSending(true);
     await postComment(momentId, txt);
     setInput('');
+    setReplyTo(null);
     const updated = await getComments(momentId);
     setComments(updated);
     setSending(false);
@@ -84,15 +99,27 @@ function CommentThread({ momentId, open }) {
         <p className="comments-empty">还没有评论</p>
       )}
       {comments.map(c => (
-        <div key={c.id} className={`comment-row ${c.author === 'yunshuu' ? 'comment-yunshuu' : 'comment-yufei'}`}>
+        <div
+          key={c.id}
+          className={`comment-row ${c.author === 'yunshuu' ? 'comment-yunshuu' : 'comment-yufei'}`}
+          onClick={() => startReply(c)}
+          title="点击回复"
+        >
           <span className="comment-who">{c.author === 'yunshuu' ? '云舒' : '雨菲'}</span>
           <span className="comment-text">{c.content}</span>
         </div>
       ))}
+      {replyTo && (
+        <div className="reply-tag">
+          回复 <span className="reply-tag-name">{replyTo.name}</span>
+          <button className="reply-tag-cancel" onClick={cancelReply}>×</button>
+        </div>
+      )}
       <div className="comment-input-row">
         <input
+          ref={inputRef}
           className="comment-input"
-          placeholder="说点什么…"
+          placeholder={replyTo ? `回复 ${replyTo.name}…` : '说点什么…'}
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && send()}
@@ -437,6 +464,19 @@ export default function MomentsView({ onBack = null }) {
         .comment-yunshuu .comment-who { color: #7D5A44; }
         .comment-yufei .comment-who { color: #b88578; }
         .comment-text { color: #3d2b1a; word-break: break-word; }
+        .comment-row { cursor: pointer; }
+        .comment-row:hover { background: #ece0ca50; border-radius: 6px; margin: 0 -4px; padding: 0 4px; }
+        .reply-tag {
+          display: inline-flex; align-items: center; gap: 4px;
+          background: #7D5A4420; border-radius: 12px;
+          padding: 3px 8px; font-size: 12px; color: #7D5A44;
+          margin: 4px 0;
+        }
+        .reply-tag-name { font-weight: 500; }
+        .reply-tag-cancel {
+          background: none; border: none; cursor: pointer;
+          color: #a08060; font-size: 13px; padding: 0 0 0 2px; line-height: 1;
+        }
         .comment-input-row {
           display: flex; gap: 8px; margin-top: 8px;
         }
