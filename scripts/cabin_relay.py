@@ -2,6 +2,9 @@
 """
 小屋来信中继服务 - VPS 运行，port 18210
 React App → POST https://cabin.yunshuyf.com/note → docker exec 写 cabin.json
+GET /state → 实时从容器读取状态（30s 轮询）
+GET /notes → 实时读 cabin.json
+OB 记忆：/ob/health  /ob/breath  /ob/hold  /ob/dream
 
 启动方式：
   nohup python3 /root/cabin_relay.py >> /root/cabin_relay.log 2>&1 &
@@ -9,7 +12,7 @@ React App → POST https://cabin.yunshuyf.com/note → docker exec 写 cabin.jso
 开机自启（在 crontab -e 里加）：
   @reboot python3 /root/cabin_relay.py >> /root/cabin_relay.log 2>&1 &
 """
-import json, subprocess, uuid
+import json, subprocess, uuid, urllib.request, urllib.error
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from datetime import datetime, timezone
 
@@ -90,10 +93,101 @@ def _format_state(raw):
                   for x in raw.get("cabinNotes", []) if isinstance(x, dict)],
     }
 
-PORT   = 18210
-SECRET = "yfshu-cabin-write-2024"
+# ── Ombre Brain MCP 客户端 ──────────────────────────────────────────────────
+PORT      = 18210
+SECRET    = "yfshu-cabin-write-2024"
 CONTAINER = "ombre-dynamic-mind"
 CABIN_PATH = "/app/state/cabin.json"
+
+OB_URL   = "http://localhost:18001"
+OB_TOKEN = "yfshu-ob-mcp-2024"   # 和 ombre-brain 容器的 OMBRE_MCP_TOKEN 一致
+
+_ob_session_id = None
+_ob_call_id    = 0
+
+
+def _parse_sse(text):
+    """解析 OB 返回的 SSE 或普通 JSON 响应。"""
+    for line in text.split('\n'):
+        if line.startswith('data: '):
+            try:
+                return json.loads(line[6:])
+            except Exception:
+                pass
+    try:
+        return json.loads(text)
+    except Exception:
+        return None
+
+
+def _ob_post(payload, session_id=None, timeout=20):
+    """向 OB /mcp 端点发 POST 请求，返回 (body_text, headers_dict)。"""
+    global _ob_call_id
+    headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json, text/event-stream',
+        'Authorization': f'Bearer {OB_TOKEN}',
+        'Ombre-MCP-Token': OB_TOKEN,
+    }
+    if session_id:
+        headers['Mcp-Session-Id'] = session_id
+    data = json.dumps(payload).encode()
+    req = urllib.request.Request(f"{OB_URL}/mcp", data=data, headers=headers, method='POST')
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        return resp.read().decode(), {k.lower(): v for k, v in resp.headers.items()}
+
+
+def _init_ob_session():
+    """初始化 OB MCP 会话，返回 session_id。"""
+    global _ob_session_id, _ob_call_id
+    _ob_call_id += 1
+    body, hdrs = _ob_post({
+        "jsonrpc": "2.0", "method": "initialize",
+        "params": {
+            "protocolVersion": "2024-11-05",
+            "capabilities": {},
+            "clientInfo": {"name": "xinchao-relay", "version": "1.0"}
+        },
+        "id": _ob_call_id
+    })
+    session_id = hdrs.get('mcp-session-id', '')
+    # 握手第二步
+    _ob_call_id += 1
+    try:
+        _ob_post({"jsonrpc": "2.0", "method": "notifications/initialized"}, session_id=session_id)
+    except Exception:
+        pass
+    _ob_session_id = session_id
+    return session_id
+
+
+def call_ob_tool(tool_name, args=None):
+    """调用 OB 工具，返回文本结果（失败返回 None）。"""
+    global _ob_session_id, _ob_call_id
+    if args is None:
+        args = {}
+    try:
+        if not _ob_session_id:
+            _init_ob_session()
+        _ob_call_id += 1
+        body, _ = _ob_post({
+            "jsonrpc": "2.0", "method": "tools/call",
+            "params": {"name": tool_name, "arguments": args},
+            "id": _ob_call_id
+        }, session_id=_ob_session_id)
+        parsed = _parse_sse(body)
+        if parsed and isinstance(parsed.get('result'), dict):
+            content = parsed['result'].get('content', [])
+            texts = [c['text'] for c in content if isinstance(c, dict) and c.get('type') == 'text']
+            if texts:
+                return '\n'.join(texts)
+        return json.dumps(parsed, ensure_ascii=False) if parsed else None
+    except Exception as e:
+        _ob_session_id = None  # 出错重置，下次重连
+        raise e
+
+
+# ── HTTP 服务 ────────────────────────────────────────────────────────────────
 
 class Handler(BaseHTTPRequestHandler):
     def do_OPTIONS(self):
@@ -102,6 +196,26 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
+        # OB 健康检查
+        if self.path in ("/ob/health", "/ob/health/"):
+            try:
+                req = urllib.request.Request(f"{OB_URL}/health")
+                with urllib.request.urlopen(req, timeout=5) as r:
+                    data = r.read()
+                self.send_response(200)
+                self._cors()
+                self.send_header("Content-Type", "application/json")
+                self.end_headers()
+                self.wfile.write(data)
+            except Exception as e:
+                self.send_response(503)
+                self._cors()
+                self.send_header("Content-Type", "application/json")
+                self.end_headers()
+                self.wfile.write(json.dumps({"ok": False, "error": str(e)}).encode())
+            return
+
+        # 状态读取（30s 轮询用）
         if self.path in ("/state", "/state/"):
             r = subprocess.run(
                 ["docker", "exec", CONTAINER, "node", "-e", _STATE_SCRIPT],
@@ -118,6 +232,8 @@ class Handler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(json.dumps(data, ensure_ascii=False).encode())
             return
+
+        # 小屋来信列表
         if self.path not in ("/notes", "/notes/"):
             self.send_response(404); self.end_headers(); return
         node_script = f"""
@@ -140,6 +256,81 @@ try {{
         self.wfile.write(notes.encode())
 
     def do_POST(self):
+        # OB breath（记忆搜索）
+        if self.path in ("/ob/breath", "/ob/breath/"):
+            if self.headers.get("X-Secret") != SECRET:
+                self.send_response(401); self._cors(); self.end_headers(); return
+            length = int(self.headers.get("Content-Length", 0))
+            body = json.loads(self.rfile.read(length)) if length else {}
+            query = body.get("query", "")
+            try:
+                args = {"query": query} if query else {}
+                result = call_ob_tool("breath", args)
+                self.send_response(200)
+                self._cors()
+                self.send_header("Content-Type", "application/json")
+                self.end_headers()
+                self.wfile.write(json.dumps({"ok": True, "result": result}, ensure_ascii=False).encode())
+            except Exception as e:
+                self.send_response(500)
+                self._cors()
+                self.send_header("Content-Type", "application/json")
+                self.end_headers()
+                self.wfile.write(json.dumps({"ok": False, "error": str(e)}).encode())
+            return
+
+        # OB hold（存入记忆）
+        if self.path in ("/ob/hold", "/ob/hold/"):
+            if self.headers.get("X-Secret") != SECRET:
+                self.send_response(401); self._cors(); self.end_headers(); return
+            length = int(self.headers.get("Content-Length", 0))
+            try:
+                body = json.loads(self.rfile.read(length))
+            except Exception:
+                self.send_response(400); self._cors(); self.end_headers(); return
+            content = (body.get("content") or "").strip()
+            if not content:
+                self.send_response(400); self._cors(); self.end_headers(); return
+            args = {"content": content}
+            if body.get("emotion"):
+                args["emotion"] = body["emotion"]
+            if body.get("importance"):
+                args["importance"] = body["importance"]
+            try:
+                result = call_ob_tool("hold", args)
+                self.send_response(200)
+                self._cors()
+                self.send_header("Content-Type", "application/json")
+                self.end_headers()
+                self.wfile.write(json.dumps({"ok": True, "result": result}, ensure_ascii=False).encode())
+            except Exception as e:
+                self.send_response(500)
+                self._cors()
+                self.send_header("Content-Type", "application/json")
+                self.end_headers()
+                self.wfile.write(json.dumps({"ok": False, "error": str(e)}).encode())
+            return
+
+        # OB dream（会话开始自省）
+        if self.path in ("/ob/dream", "/ob/dream/"):
+            if self.headers.get("X-Secret") != SECRET:
+                self.send_response(401); self._cors(); self.end_headers(); return
+            try:
+                result = call_ob_tool("dream", {})
+                self.send_response(200)
+                self._cors()
+                self.send_header("Content-Type", "application/json")
+                self.end_headers()
+                self.wfile.write(json.dumps({"ok": True, "result": result}, ensure_ascii=False).encode())
+            except Exception as e:
+                self.send_response(500)
+                self._cors()
+                self.send_header("Content-Type", "application/json")
+                self.end_headers()
+                self.wfile.write(json.dumps({"ok": False, "error": str(e)}).encode())
+            return
+
+        # 小屋来信写入
         if self.path not in ("/note", "/note/"):
             self.send_response(404); self.end_headers(); return
 
