@@ -553,6 +553,8 @@ function Bubble({ msg, isNew }) {
   const isError = msg.role === 'error';
   const [saved, setSaved] = React.useState(false);
   const [saving, setSaving] = React.useState(false);
+  const [ttsState, setTtsState] = React.useState('idle'); // 'idle' | 'loading' | 'playing'
+  const audioRef = React.useRef(null);
 
   async function handleSave(e) {
     e.stopPropagation();
@@ -566,6 +568,36 @@ function Bubble({ msg, isNew }) {
       /* silent */
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function handlePlay(e) {
+    e.stopPropagation();
+    if (ttsState === 'loading') return;
+    if (ttsState === 'playing' && audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+      setTtsState('idle');
+      return;
+    }
+    setTtsState('loading');
+    try {
+      const resp = await fetch(`${API_BASE}/api/chat/tts`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: msg.content }),
+      });
+      if (!resp.ok) throw new Error('TTS 失败');
+      const blob = await resp.blob();
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      audioRef.current = audio;
+      audio.onended = () => { setTtsState('idle'); URL.revokeObjectURL(url); audioRef.current = null; };
+      audio.onerror = () => { setTtsState('idle'); URL.revokeObjectURL(url); audioRef.current = null; };
+      await audio.play();
+      setTtsState('playing');
+    } catch {
+      setTtsState('idle');
     }
   }
 
@@ -589,6 +621,23 @@ function Bubble({ msg, isNew }) {
             }}
           >
             {saved ? '✓' : '🔖'}
+          </button>
+        )}
+        {!isMe && !isError && !msg.streaming && (
+          <button
+            onClick={handlePlay}
+            title="播放语音"
+            style={{
+              position: 'absolute', bottom: 6, right: 6,
+              background: 'none', border: 'none',
+              cursor: ttsState === 'loading' ? 'default' : 'pointer',
+              fontSize: 15, lineHeight: 1, padding: 2,
+              opacity: ttsState === 'loading' ? 0.4 : 0.7,
+              color: ttsState === 'playing' ? '#704633' : '#a07458',
+              transition: 'color 0.2s, opacity 0.2s',
+            }}
+          >
+            {ttsState === 'loading' ? '⏳' : ttsState === 'playing' ? '⏹' : '▶'}
           </button>
         )}
       </div>
