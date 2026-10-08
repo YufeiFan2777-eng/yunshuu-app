@@ -5,6 +5,7 @@ React App → POST https://cabin.yunshuyf.com/note → docker exec 写 cabin.jso
 GET /state → 实时从容器读取状态（30s 轮询）
 GET /notes → 实时读 cabin.json
 OB 记忆：/ob/health  /ob/breath  /ob/hold  /ob/dream
+OB 会话启动：/ob/context  （breath + dream 合并，会话开始时一步调用）
 
 启动方式：
   nohup python3 /root/cabin_relay.py >> /root/cabin_relay.log 2>&1 &
@@ -309,6 +310,36 @@ try {{
                 self.send_header("Content-Type", "application/json")
                 self.end_headers()
                 self.wfile.write(json.dumps({"ok": False, "error": str(e)}).encode())
+            return
+
+        # OB context（会话启动：breath + dream 合并，一步注入上下文）
+        if self.path in ("/ob/context", "/ob/context/"):
+            if self.headers.get("X-Secret") != SECRET:
+                self.send_response(401); self._cors(); self.end_headers(); return
+            length = int(self.headers.get("Content-Length", 0))
+            body = json.loads(self.rfile.read(length)) if length else {}
+            query = (body.get("query") or "").strip()
+            include_dream = body.get("dream", True)
+            result = {}
+            errors = []
+            try:
+                if query:
+                    result["memories"] = call_ob_tool("breath", {"query": query})
+            except Exception as e:
+                errors.append(f"breath: {e}")
+            try:
+                if include_dream:
+                    result["digest"] = call_ob_tool("dream", {})
+            except Exception as e:
+                errors.append(f"dream: {e}")
+            self.send_response(200 if result else 500)
+            self._cors()
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps(
+                {"ok": bool(result), "result": result, "errors": errors},
+                ensure_ascii=False
+            ).encode())
             return
 
         # OB dream（会话开始自省）
