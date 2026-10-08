@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-10-08T08:35:02.177421+00:00",
+  "updatedAt": "2026-10-08T08:40:01.868208+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.671,
-    "arousal": 0.4229,
+    "valence": 0.6675,
+    "arousal": 0.416,
     "label": "平静",
     "updatedAt": "2026-10-08T07:33:51.569Z",
     "lastCause": "affection",
@@ -29,7 +29,7 @@
     {
       "key": "monitor",
       "label": "惦记她、想知道她在做什么",
-      "value": 0.6995
+      "value": 0.7203
     },
     {
       "key": "boredom",
@@ -44,7 +44,7 @@
     {
       "key": "curiosity",
       "label": "好奇、想探索新东西",
-      "value": 0.4927
+      "value": 0.4966
     },
     {
       "key": "reflection",
