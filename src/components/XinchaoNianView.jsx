@@ -136,7 +136,7 @@ function DriveFlower({ drives, emotion }) {
     const ld = r + 18;
     const lx = (cx + Math.cos(angle) * ld).toFixed(1);
     const ly = (cy + Math.sin(angle) * ld).toFixed(1);
-    const shortLabel = (d.label || d.key).split('、')[0].replace(/想|感到|的|与/g, '').slice(0, 3);
+    const shortLabel = (d.label || d.key).slice(0, 3);
     const opacity = (0.22 + (d.value / maxVal) * 0.52).toFixed(2);
     return { key: d.key, path, lx, ly, shortLabel, opacity };
   });
