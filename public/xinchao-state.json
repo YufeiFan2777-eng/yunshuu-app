@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-08T00:35:01.449421+00:00",
+  "updatedAt": "2026-10-08T00:36:50.259863+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
@@ -23,18 +23,13 @@
   "topDrives": [
     {
       "key": "security",
-      "label": "security",
+      "label": "安全感、想感到被接纳和守护",
       "value": 0.644
     },
     {
       "key": "confidence",
-      "label": "confidence",
+      "label": "自信、内在力量与确定感",
       "value": 0.6207
-    },
-    {
-      "key": "at",
-      "label": "at",
-      "value": 0.0
     }
   ],
   "thoughts": {
