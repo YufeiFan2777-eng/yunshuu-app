@@ -2,6 +2,18 @@ import React, { useState, useEffect, useRef } from 'react';
 import { getMessages, sendMessage, getState } from '../services/api';
 import chatBg from '/chat-bg.jpg';
 
+const CABIN = 'https://cabin.yunshuyf.com';
+const CABIN_SECRET = 'yfshu-cabin-write-2024';
+
+async function saveToOB(content) {
+  const r = await fetch(`${CABIN}/ob/hold`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Secret': CABIN_SECRET },
+    body: JSON.stringify({ content, importance: 6 }),
+  });
+  return r.json();
+}
+
 function getWelcome() {
   const h = new Date().getHours();
   if (h >= 22 || h < 6) return '这么晚了。\n\n[quietly] 睡不着，还是来找我了？';
@@ -514,14 +526,46 @@ function StateDot({ state }) {
 function Bubble({ msg, isNew }) {
   const isMe = msg.role === 'user';
   const isError = msg.role === 'error';
+  const [saved, setSaved] = React.useState(false);
+  const [saving, setSaving] = React.useState(false);
+
+  async function handleSave(e) {
+    e.stopPropagation();
+    if (saving || saved) return;
+    setSaving(true);
+    try {
+      await saveToOB(msg.content);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch {
+      /* silent */
+    } finally {
+      setSaving(false);
+    }
+  }
 
   return (
     <div className={`bny-message${isMe ? ' out' : ''}${isError ? ' bny-error' : ''}${isNew ? ' new' : ''}`}>
-      <div className="bny-bubble">
+      <div className="bny-bubble" style={{ position: 'relative' }}>
         <span className="bny-ears" aria-hidden="true" />
         {!isMe && <span className="bny-face" aria-hidden="true">• •</span>}
         {msg.content}
         {msg.streaming && <span style={{ opacity: 0.5 }}>▋</span>}
+        {isMe && !msg.streaming && (
+          <button
+            onClick={handleSave}
+            title="存入记忆"
+            style={{
+              position: 'absolute', bottom: 6, right: 6,
+              background: 'none', border: 'none', cursor: saving ? 'default' : 'pointer',
+              fontSize: 14, lineHeight: 1, padding: 2, opacity: saving ? 0.5 : 1,
+              color: saved ? '#5a7a50' : '#c8d4a8',
+              transition: 'color 0.2s',
+            }}
+          >
+            {saved ? '✓' : '🔖'}
+          </button>
+        )}
       </div>
     </div>
   );
