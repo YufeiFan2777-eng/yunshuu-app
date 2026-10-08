@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import XinchaoView from './XinchaoView';
 import XinchaoNianView from './XinchaoNianView';
+import OmbreMemoryView from './OmbreMemoryView';
 import paperTex from '/paper-tex.jpg';
 
 const ITEMS = [
@@ -29,6 +30,18 @@ const ITEMS = [
       </svg>
     ),
   },
+  {
+    key: 'memory',
+    title: '记忆',
+    subtitle: 'Ombre Brain · 长期记忆库',
+    icon: (
+      <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="28" height="28">
+        <path d="M10 12 Q10 7 18 7 Q26 7 26 12 Q30 12 30 17 Q30 22 25 22 L11 22 Q6 22 6 17 Q6 12 10 12Z"/>
+        <path d="M14 22 L14 29 M18 22 L18 29 M22 22 L22 29"/>
+        <path d="M12 29 L24 29" strokeWidth="1.8"/>
+      </svg>
+    ),
+  },
 ];
 
 export default function HisView() {
@@ -39,6 +52,9 @@ export default function HisView() {
   }
   if (detail === 'xinchao-nian') {
     return <XinchaoNianView onBack={() => setDetail(null)} />;
+  }
+  if (detail === 'memory') {
+    return <OmbreMemoryView onBack={() => setDetail(null)} />;
   }
 
   return (
