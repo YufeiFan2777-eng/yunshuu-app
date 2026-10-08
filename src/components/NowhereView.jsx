@@ -17,21 +17,28 @@ const DIRECTIONS = [
 function WorldDot({ lat, lon }) {
   if (lat == null || lon == null || isNaN(lat) || isNaN(lon)) return null;
   const x = ((lon + 180) / 360) * 100;
-  const y = ((90 - lat) / 180) * 100;
+  const y = ((90 - lat) / 180) * 50;
   return (
     <svg viewBox="0 0 100 50" style={{ width: '100%', height: 'auto', display: 'block' }}>
-      <rect width="100" height="50" fill="#c8b99a" rx="4" />
-      {/* simplified continent blobs */}
-      <ellipse cx="20" cy="28" rx="9" ry="7" fill="#a08060" opacity=".7" />
-      <ellipse cx="28" cy="20" rx="8" ry="6" fill="#a08060" opacity=".7" />
-      <ellipse cx="50" cy="25" rx="12" ry="8" fill="#a08060" opacity=".7" />
-      <ellipse cx="65" cy="22" rx="9" ry="7" fill="#a08060" opacity=".7" />
-      <ellipse cx="76" cy="30" rx="5" ry="6" fill="#a08060" opacity=".7" />
-      <ellipse cx="84" cy="38" rx="5" ry="4" fill="#a08060" opacity=".7" />
-      <ellipse cx="43" cy="35" rx="4" ry="3" fill="#a08060" opacity=".6" />
+      <rect width="100" height="50" fill="#b8ccd8" rx="4" opacity=".5" />
+      <rect width="100" height="50" fill="#c8b99a" rx="4" opacity=".3" />
+      {/* North America */}
+      <ellipse cx="15" cy="20" rx="10" ry="8" fill="#a08060" opacity=".75" />
+      {/* South America */}
+      <ellipse cx="22" cy="36" rx="5" ry="7" fill="#a08060" opacity=".75" />
+      {/* Europe */}
+      <ellipse cx="49" cy="19" rx="4" ry="4" fill="#a08060" opacity=".75" />
+      {/* Africa */}
+      <ellipse cx="51" cy="33" rx="6" ry="9" fill="#a08060" opacity=".75" />
+      {/* Asia */}
+      <ellipse cx="68" cy="20" rx="17" ry="9" fill="#a08060" opacity=".75" />
+      {/* Australia */}
+      <ellipse cx="79" cy="40" rx="5" ry="4" fill="#a08060" opacity=".75" />
+      {/* Antarctica hint */}
+      <rect x="0" y="47" width="100" height="3" fill="#a08060" opacity=".3" />
       {/* position dot */}
-      <circle cx={x} cy={y * 0.5} r="2" fill="#a44936" />
-      <circle cx={x} cy={y * 0.5} r="3.5" fill="none" stroke="#a44936" strokeWidth=".8" opacity=".6" />
+      <circle cx={x} cy={y} r="2.2" fill="#a44936" />
+      <circle cx={x} cy={y} r="4" fill="none" stroke="#a44936" strokeWidth=".8" opacity=".7" />
     </svg>
   );
 }
