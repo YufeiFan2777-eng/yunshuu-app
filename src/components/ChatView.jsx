@@ -217,7 +217,18 @@ export default function ChatView({ sessionId, onMenu }) {
         apiUrl={API_BASE}
         sessionId={sessionId}
         selectedModel="claude-sonnet-4-6"
-        onFinish={() => { loadMessages(); }}
+        onFinish={async ({ callId, duration } = {}) => {
+          if (callId && sessionId && Number.isFinite(duration)) {
+            try {
+              await fetch(`${API_BASE}/api/call/finish`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ callId, sessionId, duration: Math.round(duration) }),
+              });
+            } catch {}
+          }
+          loadMessages();
+        }}
       />
 
       <style>{`
