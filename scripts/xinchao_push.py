@@ -46,6 +46,7 @@ try {
     axes: d.drives || {},
     flash: tp.flash || [],
     obsessions: tp.obsessions || [],
+    emotionJournal: (d.emotionJournal || []).slice(0, 6),
     interactionRecent: (d.interactionRecent || []).slice(0, 6),
     bridgeDeliveries: (() => { try { const bq=JSON.parse(fs.readFileSync('/app/state/bridge-queue.json','utf8')); return (bq.deliveries||[]).filter(x=>x.status==='pending').slice(0,5); } catch(e){return [];} })(),
     cabinNotes: (() => { try { const cb=JSON.parse(fs.readFileSync('/app/state/cabin.json','utf8')); return (cb.notes||[]).slice(0,3); } catch(e){return [];} })(),
@@ -116,6 +117,17 @@ def format_state(raw):
             "flash":      flash_out,
             "obsessions": raw.get("obsessions", []),
         },
+        "emotionJournal": [
+            {
+                "label":   x.get("label") or x.get("word") or "",
+                "at":      x.get("at") or x.get("updatedAt") or "",
+                "valence": round(float(x.get("valence") or 0), 3),
+                "arousal": round(float(x.get("arousal") or 0), 3),
+                "cause":   x.get("cause") or x.get("lastCause") or "",
+            }
+            for x in raw.get("emotionJournal", [])
+            if isinstance(x, dict) and (x.get("label") or x.get("word"))
+        ],
         "interactions": interactions_out,
         "bridge": [
             {
