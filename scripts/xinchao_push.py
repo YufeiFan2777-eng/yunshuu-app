@@ -81,7 +81,7 @@ def format_state(raw):
     for key, val in sorted(
         [(k, v) for k, v in axes.items() if _val(v) > 0],
         key=lambda x: _val(x[1]), reverse=True
-    )[:4]:
+    ):
         if isinstance(val, dict):
             label = val.get("label") or DRIVE_LABELS.get(key, key)
         else:
