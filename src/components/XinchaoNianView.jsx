@@ -113,6 +113,7 @@ function EmotionWave({ emotion }) {
 
 /* ────── 驱力花瓣图 ────── */
 function DriveFlower({ drives, emotion }) {
+  const [selectedKey, setSelectedKey] = useState(null);
   const n = drives.length;
   if (n === 0) return null;
   const cx = 110, cy = 110, minR = 22, maxR = 78;
@@ -137,27 +138,60 @@ function DriveFlower({ drives, emotion }) {
     const lx = (cx + Math.cos(angle) * ld).toFixed(1);
     const ly = (cy + Math.sin(angle) * ld).toFixed(1);
     const shortLabel = (d.label || d.key).slice(0, 3);
-    const opacity = (0.22 + (d.value / maxVal) * 0.52).toFixed(2);
-    return { key: d.key, path, lx, ly, shortLabel, opacity };
+    const isSelected = selectedKey === d.key;
+    const opacity = isSelected
+      ? Math.min(0.22 + (d.value / maxVal) * 0.52 + 0.28, 0.95).toFixed(2)
+      : (0.22 + (d.value / maxVal) * 0.52).toFixed(2);
+    return { key: d.key, label: d.label, value: d.value, path, lx, ly, shortLabel, opacity, isSelected };
   });
 
   const emotionLabel = emotion?.shown || emotion?.label || '—';
+  const selected = drives.find(d => d.key === selectedKey);
+
   return (
-    <svg viewBox="0 0 220 220" style={{ width: '100%', maxWidth: 220, margin: '0 auto', display: 'block' }}>
-      {petals.map(p => (
-        <path key={p.key} d={p.path}
-          fill={`rgba(175,138,88,${p.opacity})`}
-          stroke="rgba(155,122,88,0.45)" strokeWidth="0.5"/>
-      ))}
-      <circle cx={cx} cy={cy} r="19" fill="#f5ece0" stroke="#c4a07860" strokeWidth="0.8"/>
-      <text x={cx} y={cy+1} textAnchor="middle" dominantBaseline="middle"
-        fontSize="9" fill="#5a3e28" fontFamily="Cormorant Garamond, Georgia, serif">{emotionLabel}</text>
-      {petals.map(p => (
-        <text key={`l-${p.key}`} x={p.lx} y={p.ly}
-          textAnchor="middle" dominantBaseline="middle"
-          fontSize="8" fill="#7a5a3a">{p.shortLabel}</text>
-      ))}
-    </svg>
+    <div>
+      <svg viewBox="0 0 220 220" style={{ width: '100%', maxWidth: 220, margin: '0 auto', display: 'block' }}>
+        {petals.map(p => (
+          <g key={p.key} onClick={() => setSelectedKey(p.isSelected ? null : p.key)} style={{ cursor: 'pointer' }}>
+            <path d={p.path}
+              fill={`rgba(175,138,88,${p.opacity})`}
+              stroke={p.isSelected ? 'rgba(125,90,60,0.9)' : 'rgba(155,122,88,0.45)'}
+              strokeWidth={p.isSelected ? '1.2' : '0.5'}/>
+            <text x={p.lx} y={p.ly} textAnchor="middle" dominantBaseline="middle"
+              fontSize="8" fill={p.isSelected ? '#3d2b1a' : '#7a5a3a'}
+              fontWeight={p.isSelected ? 'bold' : 'normal'}>{p.shortLabel}</text>
+          </g>
+        ))}
+        <circle cx={cx} cy={cy} r="19" fill="#f5ece0" stroke="#c4a07860" strokeWidth="0.8"/>
+        <text x={cx} y={cy+1} textAnchor="middle" dominantBaseline="middle"
+          fontSize="9" fill="#5a3e28" fontFamily="Cormorant Garamond, Georgia, serif">{emotionLabel}</text>
+      </svg>
+
+      {/* 点击花瓣后的详情 */}
+      {selected && (
+        <div style={{
+          marginTop: 10, background: '#ede3d0', border: '1px solid #bfa58360',
+          borderRadius: 4, padding: '10px 14px',
+          animation: 'fadeIn 0.15s ease',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 7 }}>
+            <span style={{ fontSize: 15, color: '#3d2b1a', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
+              {selected.label}
+            </span>
+            <span style={{ marginLeft: 'auto', fontSize: 11, color: '#9b7a58', fontVariantNumeric: 'tabular-nums' }}>
+              {Math.round(selected.value * 100)}
+            </span>
+          </div>
+          <div style={{ height: 2, background: '#d4bfa060', borderRadius: 1, overflow: 'hidden' }}>
+            <div style={{
+              height: '100%', borderRadius: 1,
+              width: `${Math.round((selected.value / maxVal) * 100)}%`,
+              background: 'linear-gradient(90deg, #9b7a58, #c4a882)',
+            }}/>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
