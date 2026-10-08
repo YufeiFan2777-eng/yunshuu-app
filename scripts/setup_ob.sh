@@ -6,12 +6,12 @@ set -e
 
 OB_TOKEN="yfshu-ob-mcp-2024"
 OB_CONTAINER="ombre-brain"
-XINTHAO_DIR="/root/xinchao-nian"
+XINCHAO_DIR="/root/xinchao-nian"
 
 echo "=== 步骤 1：检查 ombre-brain 容器 ==="
 if ! docker ps --format '{{.Names}}' | grep -q "^${OB_CONTAINER}$"; then
     echo "[ERROR] ombre-brain 容器未运行！先确认 xinchao-nian 已启动："
-    echo "  cd $XINTHAO_DIR && docker compose up -d"
+    echo "  cd $XINCHAO_DIR && docker compose up -d"
     exit 1
 fi
 echo "[OK] ombre-brain 容器运行中"
@@ -26,12 +26,14 @@ fi
 
 echo ""
 echo "=== 步骤 3：配置 OB 使用 token 鉴权 ==="
-ENV_FILE="$XINTHAO_DIR/.env"
+# 找到 xinchao-nian 的 env 文件
+ENV_FILE="$XINCHAO_DIR/.env"
 if [ ! -f "$ENV_FILE" ]; then
     touch "$ENV_FILE"
     echo "[INFO] 创建 $ENV_FILE"
 fi
 
+# 添加或更新 OB token 相关环境变量
 update_env() {
     local key="$1"
     local val="$2"
@@ -46,11 +48,12 @@ update_env() {
 
 update_env "OMBRE_MCP_AUTH_MODE" "token"
 update_env "OMBRE_MCP_TOKEN" "$OB_TOKEN"
+# AI 显示名
 update_env "AI_NAME" "云舒"
 
 echo ""
 echo "=== 步骤 4：重启 ombre-brain 容器 ==="
-cd "$XINTHAO_DIR"
+cd "$XINCHAO_DIR"
 docker compose restart ombre-brain
 echo "[OK] ombre-brain 重启完成"
 
