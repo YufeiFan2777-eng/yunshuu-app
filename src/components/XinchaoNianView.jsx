@@ -499,7 +499,7 @@ function CabinView({ state, onBack }) {
 
               <button
                 disabled={sending || !content.trim()}
-                onClick={() => handleSend('human')}
+                onClick={() => handleSend('user')}
                 style={{
                   width: '100%', padding: '11px 0', border: 'none', borderRadius: 6, cursor: 'pointer',
                   background: sending ? '#d4bfa0' : '#9b7a58', color: '#fff', fontSize: 13.5,
