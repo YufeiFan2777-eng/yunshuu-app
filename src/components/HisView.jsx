@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import XinchaoView from './XinchaoView';
 import XinchaoNianView from './XinchaoNianView';
 import OmbreMemoryView from './OmbreMemoryView';
+import MomentsView from './MomentsView';
 import paperTex from '/paper-tex.jpg';
 
 const ITEMS = [
@@ -42,6 +43,19 @@ const ITEMS = [
       </svg>
     ),
   },
+  {
+    key: 'moments',
+    title: '朋友圈',
+    subtitle: '云舒与雨菲 · 随手发的那些',
+    icon: (
+      <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="28" height="28">
+        <circle cx="18" cy="10" r="4"/>
+        <path d="M10 28 C10 22 14 19 18 19 C22 19 26 22 26 28"/>
+        <path d="M26 12 C28 10 30 11 30 14 C30 17 27 18 26 20"/>
+        <path d="M10 12 C8 10 6 11 6 14 C6 17 9 18 10 20"/>
+      </svg>
+    ),
+  },
 ];
 
 export default function HisView() {
@@ -55,6 +69,9 @@ export default function HisView() {
   }
   if (detail === 'memory') {
     return <OmbreMemoryView onBack={() => setDetail(null)} />;
+  }
+  if (detail === 'moments') {
+    return <MomentsView onBack={() => setDetail(null)} />;
   }
 
   return (
