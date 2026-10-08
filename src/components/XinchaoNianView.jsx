@@ -79,6 +79,88 @@ function StateSummary({ state }) {
   );
 }
 
+/* ────── 情绪波浪 ────── */
+function EmotionWave({ emotion }) {
+  const arousal = typeof emotion?.arousal === 'number' ? emotion.arousal : 0.3;
+  const valence = typeof emotion?.valence === 'number' ? emotion.valence : 0.5;
+  const W = 260, H = 52, cy = H / 2;
+  const amp = 4 + arousal * 22;
+  const pts = [];
+  for (let i = 0; i <= 64; i++) {
+    const x = (i / 64) * W;
+    const y = cy + Math.sin((i / 64) * Math.PI * 2 * 2.5) * amp;
+    pts.push(`${x.toFixed(1)},${y.toFixed(1)}`);
+  }
+  const wavePath = 'M ' + pts.join(' L ');
+  const r = Math.round(160 + valence * 40);
+  const g = Math.round(110 + valence * 30);
+  const b = Math.round(60 + (1 - valence) * 70);
+  const sc = `rgb(${r},${g},${b})`;
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 52 }} preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="waveGrad" x1="0" x2="1">
+          <stop offset="0%" stopColor={sc} stopOpacity="0.05"/>
+          <stop offset="25%" stopColor={sc} stopOpacity="0.85"/>
+          <stop offset="75%" stopColor={sc} stopOpacity="0.85"/>
+          <stop offset="100%" stopColor={sc} stopOpacity="0.05"/>
+        </linearGradient>
+      </defs>
+      <path d={wavePath} fill="none" stroke="url(#waveGrad)" strokeWidth="1.6" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
+/* ────── 驱力花瓣图 ────── */
+function DriveFlower({ drives, emotion }) {
+  const n = drives.length;
+  if (n === 0) return null;
+  const cx = 110, cy = 110, minR = 22, maxR = 78;
+  const maxVal = Math.max(...drives.map(d => d.value), 0.001);
+  const sp = 0.38;
+
+  const petals = drives.map((d, i) => {
+    const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
+    const r = minR + (d.value / maxVal) * (maxR - minR);
+    const tx = (cx + Math.cos(angle) * r).toFixed(1);
+    const ty = (cy + Math.sin(angle) * r).toFixed(1);
+    const path = [
+      `M ${cx},${cy}`,
+      `C ${(cx+Math.cos(angle+sp)*r*0.5).toFixed(1)},${(cy+Math.sin(angle+sp)*r*0.5).toFixed(1)}`,
+      ` ${(cx+Math.cos(angle+sp*0.3)*r*0.96).toFixed(1)},${(cy+Math.sin(angle+sp*0.3)*r*0.96).toFixed(1)}`,
+      ` ${tx},${ty}`,
+      `C ${(cx+Math.cos(angle-sp*0.3)*r*0.96).toFixed(1)},${(cy+Math.sin(angle-sp*0.3)*r*0.96).toFixed(1)}`,
+      ` ${(cx+Math.cos(angle-sp)*r*0.5).toFixed(1)},${(cy+Math.sin(angle-sp)*r*0.5).toFixed(1)}`,
+      ` ${cx},${cy}`,
+    ].join(' ');
+    const ld = r + 18;
+    const lx = (cx + Math.cos(angle) * ld).toFixed(1);
+    const ly = (cy + Math.sin(angle) * ld).toFixed(1);
+    const shortLabel = (d.label || d.key).split('、')[0].replace(/想|感到|的|与/g, '').slice(0, 3);
+    const opacity = (0.22 + (d.value / maxVal) * 0.52).toFixed(2);
+    return { key: d.key, path, lx, ly, shortLabel, opacity };
+  });
+
+  const emotionLabel = emotion?.shown || emotion?.label || '—';
+  return (
+    <svg viewBox="0 0 220 220" style={{ width: '100%', maxWidth: 220, margin: '0 auto', display: 'block' }}>
+      {petals.map(p => (
+        <path key={p.key} d={p.path}
+          fill={`rgba(175,138,88,${p.opacity})`}
+          stroke="rgba(155,122,88,0.45)" strokeWidth="0.5"/>
+      ))}
+      <circle cx={cx} cy={cy} r="19" fill="#f5ece0" stroke="#c4a07860" strokeWidth="0.8"/>
+      <text x={cx} y={cy+1} textAnchor="middle" dominantBaseline="middle"
+        fontSize="9" fill="#5a3e28" fontFamily="Cormorant Garamond, Georgia, serif">{emotionLabel}</text>
+      {petals.map(p => (
+        <text key={`l-${p.key}`} x={p.lx} y={p.ly}
+          textAnchor="middle" dominantBaseline="middle"
+          fontSize="8" fill="#7a5a3a">{p.shortLabel}</text>
+      ))}
+    </svg>
+  );
+}
+
 /* ────── 卡片样式 ────── */
 const card = {
   background: '#f5e9d5d9', border: '1px solid #bfa58380',
@@ -100,33 +182,95 @@ const scrollArea = {
 
 /* ────── 详情页：此刻 ────── */
 function FlashView({ state, onBack }) {
+  const consciousness = state?.consciousness || 'awake';
+  const cInfo = CONSCIOUSNESS_MAP[consciousness] || { label: consciousness, color: '#999' };
+  const emotion = state?.emotion || {};
+  const fatigue = typeof state?.fatigue === 'number' ? state.fatigue : null;
+  const drives = state?.topDrives || [];
   const flash = state?.thoughts?.flash || [];
+  const noData = !state;
+
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: BG, backgroundSize: '240px', overflow: 'hidden' }}>
       <TopBar title="此刻" onBack={onBack} />
       <div style={scrollArea}>
-        {flash.length === 0 && <EmptyHint text="此刻平静，无浮现的念" />}
-        {flash.map((f, i) => (
-          <div key={i} style={card}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+        {noData && <EmptyHint text="等待心潮同步…" />}
+
+        {/* 意识 + 疲劳 */}
+        {state && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 2px' }}>
+            <span style={{ fontSize: 8.5, letterSpacing: 2.5, color: '#9b7a58', textTransform: 'uppercase', fontFamily: 'Georgia, serif' }}>CONSCIOUSNESS</span>
+            <div style={{ width: 7, height: 7, borderRadius: '50%', background: cInfo.color, boxShadow: `0 0 5px ${cInfo.color}aa`, flexShrink: 0 }}/>
+            <span style={{ fontSize: 13, color: '#3d2b1a', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>{cInfo.label}</span>
+            {fatigue !== null && (
+              <span style={{ marginLeft: 'auto', fontSize: 9, color: '#a08060', letterSpacing: 0.5 }}>
+                疲劳 {Math.round(fatigue * 100)}%
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* 情绪波浪 */}
+        {state && (
+          <div style={card}>
+            <div style={{ fontSize: 8.5, letterSpacing: 2.5, color: '#9b7a58', textTransform: 'uppercase', fontFamily: 'Georgia, serif', marginBottom: 10 }}>INNER TIDE · 情绪</div>
+            <EmotionWave emotion={emotion} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10 }}>
               <span style={{
-                fontSize: 10, color: '#9b7a58', background: '#d4bfa040',
-                border: '1px solid #bfa58340', borderRadius: 2, padding: '1px 7px', letterSpacing: 1,
-              }}>{f.label || f.key}</span>
-              <span style={{ fontSize: 10, color: '#b89060', marginLeft: 'auto', fontVariantNumeric: 'tabular-nums' }}>
-                {f.age > 0 ? `${f.age}分钟前` : '片刻前'}
+                fontSize: 12, color: '#5a3e28',
+                background: '#e8d9c080', border: '1px solid #bfa58350',
+                borderRadius: 3, padding: '2px 12px',
+                fontFamily: 'Cormorant Garamond, Georgia, serif',
+              }}>{emotion.shown || emotion.label || '平静'}</span>
+              <span style={{ fontSize: 9, color: '#a08060', letterSpacing: 0.5 }}>
+                唤醒 {Math.round((emotion.arousal || 0) * 100)} · 效价 {Math.round((emotion.valence || 0) * 100)}
               </span>
             </div>
-            {f.text && <div style={{ fontSize: 12.5, color: '#513b29', lineHeight: 1.8, marginBottom: 8 }}>{f.text}</div>}
-            <div style={{ height: 2, background: '#d4bfa050', borderRadius: 1, overflow: 'hidden' }}>
-              <div style={{
-                height: '100%', borderRadius: 1,
-                width: `${Math.min((f.intensity || 0) * 100, 100)}%`,
-                background: 'linear-gradient(90deg, #9b7a58, #c4a882)',
-              }} />
+          </div>
+        )}
+
+        {/* 驱力花瓣 */}
+        {drives.length > 0 && (
+          <div style={card}>
+            <div style={{ fontSize: 8.5, letterSpacing: 2.5, color: '#9b7a58', textTransform: 'uppercase', fontFamily: 'Georgia, serif', marginBottom: 6 }}>INNER TIDE · 驱力</div>
+            <DriveFlower drives={drives} emotion={emotion} />
+            <div style={{ fontSize: 10, color: '#a08060', textAlign: 'center', marginTop: 4, fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: 0.5 }}>
+              {drives.length}股潮水，共用一个身体
             </div>
           </div>
-        ))}
+        )}
+
+        {/* 浮念 */}
+        {flash.length > 0 && (
+          <>
+            <div style={{ fontSize: 8.5, letterSpacing: 2.5, color: '#9b7a58', textTransform: 'uppercase', fontFamily: 'Georgia, serif', padding: '4px 2px' }}>THOUGHTS · 浮念</div>
+            {flash.map((f, i) => (
+              <div key={i} style={card}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                  <span style={{
+                    fontSize: 9.5, color: '#9b7a58', background: '#d4bfa040',
+                    border: '1px solid #bfa58340', borderRadius: 2, padding: '1px 7px', letterSpacing: 0.8,
+                  }}>{(f.label || f.key).split('、')[0].slice(0, 5)}</span>
+                  <span style={{ fontSize: 9.5, color: '#b89060', marginLeft: 'auto', fontVariantNumeric: 'tabular-nums' }}>
+                    {f.age > 0 ? `${f.age}分钟前` : '片刻前'}
+                  </span>
+                </div>
+                {f.text && <div style={{ fontSize: 12.5, color: '#513b29', lineHeight: 1.8, marginBottom: 8, fontFamily: 'Cormorant Garamond, Georgia, serif' }}>{f.text}</div>}
+                <div style={{ height: 2, background: '#d4bfa050', borderRadius: 1, overflow: 'hidden' }}>
+                  <div style={{
+                    height: '100%', borderRadius: 1,
+                    width: `${Math.min((f.intensity || 0) * 100, 100)}%`,
+                    background: 'linear-gradient(90deg, #9b7a58, #c4a882)',
+                  }}/>
+                </div>
+              </div>
+            ))}
+          </>
+        )}
+
+        {state && flash.length === 0 && drives.length === 0 && (
+          <EmptyHint text="此刻平静，无浮现的念" />
+        )}
       </div>
     </div>
   );
@@ -298,7 +442,6 @@ function XinchaoIndex({ state, loadError, onBack, onSelect, timeStr }) {
         )}
       />
       <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', scrollbarWidth: 'thin', scrollbarColor: '#b89970 transparent' }}>
-        {state && <StateSummary state={state} />}
         {loadError && !state && <EmptyHint text={'暂无数据\n等待心潮同步…'} />}
         <div style={{ padding: '12px 14px 28px', display: 'flex', flexDirection: 'column', gap: 10 }}>
           {SECTIONS.map(sec => (
