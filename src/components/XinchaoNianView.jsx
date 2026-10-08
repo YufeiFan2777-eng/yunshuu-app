@@ -386,25 +386,169 @@ function BridgeView({ state, onBack }) {
 }
 
 /* ────── 详情页：小屋来信 ────── */
+const CABIN_RELAY = 'https://cabin.yunshuyf.com/note';
+const CABIN_SECRET = 'yfshu-cabin-write-2024';
+
 function CabinView({ state, onBack }) {
   const cabin = state?.cabin || [];
+  const [activeTab, setActiveTab] = useState('his'); // 'his' | 'mine' | 'write'
+  const [content, setContent] = useState('');
+  const [locked, setLocked] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sendStatus, setSendStatus] = useState(null); // null | 'ok' | 'err'
+
+  const hisCabin  = cabin.filter(n => n.from === 'ai');
+  const mineCabin = cabin.filter(n => n.from !== 'ai');
+
+  async function handleSend(fromVal) {
+    if (!content.trim()) return;
+    setSending(true);
+    setSendStatus(null);
+    try {
+      const res = await fetch(CABIN_RELAY, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Secret': CABIN_SECRET },
+        body: JSON.stringify({ content: content.trim(), from: fromVal, locked }),
+      });
+      if (res.ok) {
+        setSendStatus('ok');
+        setContent('');
+        setLocked(false);
+      } else {
+        setSendStatus('err');
+      }
+    } catch {
+      setSendStatus('err');
+    }
+    setSending(false);
+  }
+
+  const tabBtn = (key, label) => (
+    <button onClick={() => setActiveTab(key)} style={{
+      flex: 1, border: 'none', cursor: 'pointer', padding: '9px 0',
+      fontSize: 12.5, fontFamily: 'Georgia, serif', letterSpacing: '.04em',
+      background: activeTab === key ? '#f0e6d4' : 'transparent',
+      color: activeTab === key ? '#5a3820' : '#9b7a58',
+      borderBottom: activeTab === key ? '2px solid #9b7a58' : '2px solid transparent',
+      transition: 'all .15s',
+    }}>{label}</button>
+  );
+
+  const noteList = (notes, emptyText) => (
+    <>
+      {notes.length === 0 && <EmptyHint text={emptyText} />}
+      {notes.map((n, i) => (
+        <div key={i} style={card}>
+          <div style={tab}>
+            {n.from === 'ai' ? '云舒 → 雨菲' : n.from === 'human' ? '雨菲 → 云舒' : n.from}
+          </div>
+          <div style={{
+            fontSize: 13, color: '#3d2b1a', lineHeight: 2,
+            whiteSpace: 'pre-wrap', wordBreak: 'break-word',
+            fontFamily: 'Georgia, serif', paddingTop: 4,
+          }}>{n.content}</div>
+        </div>
+      ))}
+    </>
+  );
+
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: BG, backgroundSize: '240px', overflow: 'hidden' }}>
       <TopBar title="小屋来信" onBack={onBack} />
+
+      {/* Tab bar */}
+      <div style={{ display: 'flex', background: '#f8f3ec', borderBottom: '1px solid #e0cdb8', flexShrink: 0 }}>
+        {tabBtn('his',   '他的信')}
+        {tabBtn('mine',  '你的信')}
+        {tabBtn('write', '写信')}
+      </div>
+
       <div style={scrollArea}>
-        {cabin.length === 0 && <EmptyHint text="小屋暂无来信" />}
-        {cabin.map((n, i) => (
-          <div key={i} style={card}>
-            <div style={tab}>
-              {n.from === 'ai' ? '云舒 → 雨菲' : n.from === 'human' ? '雨菲 → 云舒' : n.from}
+        {activeTab === 'his'  && noteList(hisCabin,  '云舒还没有写信')}
+        {activeTab === 'mine' && noteList(mineCabin, '你还没有写过信')}
+        {activeTab === 'write' && (
+          <div style={{ padding: '16px 0', display: 'flex', flexDirection: 'column', gap: 14 }}>
+            {/* 谁写 */}
+            <div style={{ ...card, display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <div style={{ fontSize: 12, color: '#9b7a58', letterSpacing: '.06em' }}>写给</div>
+              <div style={{ display: 'flex', gap: 10 }}>
+                {['user', 'ai'].map(v => (
+                  <button key={v} style={{
+                    flex: 1, padding: '8px 0', border: '1px solid #d4bfa0',
+                    borderRadius: 6, cursor: 'pointer', fontSize: 12.5,
+                    fontFamily: 'Georgia, serif',
+                    background: '#f8f3ec', color: '#5a3820',
+                  }}>{v === 'user' ? '雨菲 → 云舒（你写）' : '云舒 → 雨菲（云舒写）'}</button>
+                ))}
+              </div>
+
+              <textarea
+                value={content}
+                onChange={e => setContent(e.target.value)}
+                placeholder="把想说的话写下来……"
+                style={{
+                  width: '100%', minHeight: 130, resize: 'vertical', padding: '10px 12px',
+                  border: '1px solid #d4bfa0', borderRadius: 6, fontSize: 13,
+                  fontFamily: 'Georgia, serif', lineHeight: 2, color: '#3d2b1a',
+                  background: '#fdf9f4', outline: 'none', boxSizing: 'border-box',
+                }}
+              />
+
+              {/* Lock toggle */}
+              <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', userSelect: 'none' }}>
+                <div style={{
+                  width: 36, height: 20, borderRadius: 10, background: locked ? '#9b7a58' : '#d4bfa0',
+                  position: 'relative', transition: 'background .2s', flexShrink: 0,
+                }} onClick={() => setLocked(v => !v)}>
+                  <div style={{
+                    position: 'absolute', top: 2, left: locked ? 18 : 2, width: 16, height: 16,
+                    borderRadius: 8, background: '#fff', transition: 'left .2s',
+                  }}/>
+                </div>
+                <span style={{ fontSize: 12, color: '#9b7a58' }}>
+                  {locked ? '上锁（对方需主动解锁才能看）' : '不加锁（直接可读）'}
+                </span>
+              </label>
+
+              {/* Send buttons */}
+              <div style={{ display: 'flex', gap: 10 }}>
+                <button
+                  disabled={sending || !content.trim()}
+                  onClick={() => handleSend('human')}
+                  style={{
+                    flex: 1, padding: '10px 0', border: 'none', borderRadius: 6, cursor: 'pointer',
+                    background: sending ? '#d4bfa0' : '#9b7a58', color: '#fff', fontSize: 13,
+                    fontFamily: 'Georgia, serif', opacity: content.trim() ? 1 : 0.5,
+                  }}
+                >
+                  {sending ? '发送中…' : '你写给云舒'}
+                </button>
+                <button
+                  disabled={sending || !content.trim()}
+                  onClick={() => handleSend('ai')}
+                  style={{
+                    flex: 1, padding: '10px 0', border: 'none', borderRadius: 6, cursor: 'pointer',
+                    background: sending ? '#d4bfa0' : '#7a5230', color: '#fff', fontSize: 13,
+                    fontFamily: 'Georgia, serif', opacity: content.trim() ? 1 : 0.5,
+                  }}
+                >
+                  {sending ? '发送中…' : '以云舒名义写'}
+                </button>
+              </div>
+
+              {sendStatus === 'ok' && (
+                <div style={{ textAlign: 'center', color: '#5a9a6a', fontSize: 12.5, fontFamily: 'Georgia, serif' }}>
+                  ✓ 信已送达小屋
+                </div>
+              )}
+              {sendStatus === 'err' && (
+                <div style={{ textAlign: 'center', color: '#c05040', fontSize: 12.5, fontFamily: 'Georgia, serif' }}>
+                  × 发送失败，请确认 VPS 中继服务在运行
+                </div>
+              )}
             </div>
-            <div style={{
-              fontSize: 13, color: '#3d2b1a', lineHeight: 2,
-              whiteSpace: 'pre-wrap', wordBreak: 'break-word',
-              fontFamily: 'Georgia, serif', paddingTop: 4,
-            }}>{n.content}</div>
           </div>
-        ))}
+        )}
       </div>
     </div>
   );
