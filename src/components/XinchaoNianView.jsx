@@ -440,7 +440,7 @@ function CabinView({ state, onBack }) {
       {notes.map((n, i) => (
         <div key={i} style={card}>
           <div style={tab}>
-            {n.from === 'ai' ? '云舒 → 雨菲' : n.from === 'human' ? '雨菲 → 云舒' : n.from}
+            {n.from === 'ai' ? '云舒 → 雨菲' : (n.from === 'human' || n.from === 'user') ? '雨菲 → 云舒' : n.from}
           </div>
           <div style={{
             fontSize: 13, color: '#3d2b1a', lineHeight: 2,
