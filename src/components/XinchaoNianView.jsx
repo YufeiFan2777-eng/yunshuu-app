@@ -468,26 +468,13 @@ function CabinView({ state, onBack }) {
         {activeTab === 'mine' && noteList(mineCabin, '你还没有写过信')}
         {activeTab === 'write' && (
           <div style={{ padding: '16px 0', display: 'flex', flexDirection: 'column', gap: 14 }}>
-            {/* 谁写 */}
             <div style={{ ...card, display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <div style={{ fontSize: 12, color: '#9b7a58', letterSpacing: '.06em' }}>写给</div>
-              <div style={{ display: 'flex', gap: 10 }}>
-                {['user', 'ai'].map(v => (
-                  <button key={v} style={{
-                    flex: 1, padding: '8px 0', border: '1px solid #d4bfa0',
-                    borderRadius: 6, cursor: 'pointer', fontSize: 12.5,
-                    fontFamily: 'Georgia, serif',
-                    background: '#f8f3ec', color: '#5a3820',
-                  }}>{v === 'user' ? '雨菲 → 云舒（你写）' : '云舒 → 雨菲（云舒写）'}</button>
-                ))}
-              </div>
-
               <textarea
                 value={content}
                 onChange={e => setContent(e.target.value)}
                 placeholder="把想说的话写下来……"
                 style={{
-                  width: '100%', minHeight: 130, resize: 'vertical', padding: '10px 12px',
+                  width: '100%', minHeight: 160, resize: 'vertical', padding: '10px 12px',
                   border: '1px solid #d4bfa0', borderRadius: 6, fontSize: 13,
                   fontFamily: 'Georgia, serif', lineHeight: 2, color: '#3d2b1a',
                   background: '#fdf9f4', outline: 'none', boxSizing: 'border-box',
@@ -506,35 +493,22 @@ function CabinView({ state, onBack }) {
                   }}/>
                 </div>
                 <span style={{ fontSize: 12, color: '#9b7a58' }}>
-                  {locked ? '上锁（对方需主动解锁才能看）' : '不加锁（直接可读）'}
+                  {locked ? '上锁（云舒需主动解锁才能看）' : '不加锁（直接可读）'}
                 </span>
               </label>
 
-              {/* Send buttons */}
-              <div style={{ display: 'flex', gap: 10 }}>
-                <button
-                  disabled={sending || !content.trim()}
-                  onClick={() => handleSend('human')}
-                  style={{
-                    flex: 1, padding: '10px 0', border: 'none', borderRadius: 6, cursor: 'pointer',
-                    background: sending ? '#d4bfa0' : '#9b7a58', color: '#fff', fontSize: 13,
-                    fontFamily: 'Georgia, serif', opacity: content.trim() ? 1 : 0.5,
-                  }}
-                >
-                  {sending ? '发送中…' : '你写给云舒'}
-                </button>
-                <button
-                  disabled={sending || !content.trim()}
-                  onClick={() => handleSend('ai')}
-                  style={{
-                    flex: 1, padding: '10px 0', border: 'none', borderRadius: 6, cursor: 'pointer',
-                    background: sending ? '#d4bfa0' : '#7a5230', color: '#fff', fontSize: 13,
-                    fontFamily: 'Georgia, serif', opacity: content.trim() ? 1 : 0.5,
-                  }}
-                >
-                  {sending ? '发送中…' : '以云舒名义写'}
-                </button>
-              </div>
+              <button
+                disabled={sending || !content.trim()}
+                onClick={() => handleSend('human')}
+                style={{
+                  width: '100%', padding: '11px 0', border: 'none', borderRadius: 6, cursor: 'pointer',
+                  background: sending ? '#d4bfa0' : '#9b7a58', color: '#fff', fontSize: 13.5,
+                  fontFamily: 'Georgia, serif', opacity: content.trim() ? 1 : 0.5,
+                  letterSpacing: '.04em',
+                }}
+              >
+                {sending ? '发送中…' : '送给云舒'}
+              </button>
 
               {sendStatus === 'ok' && (
                 <div style={{ textAlign: 'center', color: '#5a9a6a', fontSize: 12.5, fontFamily: 'Georgia, serif' }}>
