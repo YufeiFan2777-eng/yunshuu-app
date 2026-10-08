@@ -51,6 +51,7 @@ try {
     axes: d.axes || {},
     flash: tp.flash || [],
     obsessions: tp.obsessions || [],
+    interactionRecent: (d.interactionRecent || []).slice(0, 6),
   }));
 } catch(e) { process.stderr.write('ERROR: ' + e.message + '\n'); process.exit(1); }
 """
@@ -97,6 +98,16 @@ def format_state(raw):
                 "age":       f.get("age", 0),
             })
 
+    interactions_out = []
+    for ix in raw.get("interactionRecent", []):
+        if isinstance(ix, dict):
+            interactions_out.append({
+                "type":    ix.get("type") or ix.get("interactionType") or "interaction",
+                "label":   ix.get("label") or ix.get("typeLabel") or "",
+                "at":      ix.get("at") or ix.get("timestamp") or "",
+                "note":    ix.get("note") or ix.get("text") or ix.get("summary") or "",
+            })
+
     return {
         "updatedAt":   datetime.now(timezone.utc).isoformat(),
         "consciousness": raw.get("consciousness", "awake"),
@@ -107,6 +118,7 @@ def format_state(raw):
             "flash":      flash_out,
             "obsessions": raw.get("obsessions", []),
         },
+        "interactions": interactions_out,
     }
 
 def get_file_sha():
