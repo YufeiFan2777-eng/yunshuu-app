@@ -224,7 +224,7 @@ function PostBox({ onPosted }) {
   );
 }
 
-export default function MomentsView({ onBack }) {
+export default function MomentsView({ onBack = null }) {
   const [moments, setMoments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [composing, setComposing] = useState(false);
@@ -247,7 +247,7 @@ export default function MomentsView({ onBack }) {
     <div className="mw-wrap">
       <div className="mw-page">
         <div className="mw-header">
-          <button className="mw-back" onClick={onBack}>‹ 返回</button>
+          {onBack && <button className="mw-back" onClick={onBack}>‹ 返回</button>}
           <h2 className="mw-title">朋友圈</h2>
           <button className="mw-post-btn" onClick={() => setComposing(v => !v)}>
             {composing ? '取消' : '+ 发动态'}
