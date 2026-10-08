@@ -658,15 +658,21 @@ export default function XinchaoNianView({ onBack }) {
   const [subView, setSubView] = useState(null);
 
   function loadState() {
-    fetch(`${import.meta.env.BASE_URL}xinchao-state.json?t=${Date.now()}`)
-      .then(r => r.json())
+    fetch('https://cabin.yunshuyf.com/state')
+      .then(r => r.ok ? r.json() : Promise.reject())
       .then(d => { setState(d); setLoadError(false); })
-      .catch(() => setLoadError(true));
+      .catch(() => {
+        // fallback to GitHub snapshot
+        fetch(`${import.meta.env.BASE_URL}xinchao-state.json?t=${Date.now()}`)
+          .then(r => r.json())
+          .then(d => { setState(d); setLoadError(false); })
+          .catch(() => setLoadError(true));
+      });
   }
 
   useEffect(() => {
     loadState();
-    const iv = setInterval(loadState, 5 * 60 * 1000);
+    const iv = setInterval(loadState, 30 * 1000);
     return () => clearInterval(iv);
   }, []);
 
