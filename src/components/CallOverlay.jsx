@@ -108,6 +108,7 @@ export default function CallOverlay({
   const [error, setError] = useState('');
   const [level, setLevel] = useState(0);
   const [lingering, setLingering] = useState(false);
+  const [tapToPlay, setTapToPlay] = useState(false);
 
   const activeRef = useRef(false);
   const mutedRef = useRef(false);
@@ -253,7 +254,13 @@ export default function CallOverlay({
           reject(new Error('通话音频播放失败'));
         };
         setPhase('speaking');
-        audio.play().catch(() => reject(new Error('点一下扬声器，再继续听云舒')));
+        audio.play().catch((err) => {
+          if (err.name === 'NotAllowedError') {
+            setTapToPlay(true);
+          } else {
+            reject(new Error('通话音频播放失败'));
+          }
+        });
       });
 
       while (activeRef.current) {
@@ -438,8 +445,14 @@ export default function CallOverlay({
 
   if (!open) return null;
 
+  const handleOverlayTap = () => {
+    if (!tapToPlay || !audioRef.current) return;
+    setTapToPlay(false);
+    audioRef.current.play().catch(() => {});
+  };
+
   return (
-    <div className="call-overlay" role="dialog" aria-modal="true" aria-label="与云舒通话">
+    <div className="call-overlay" role="dialog" aria-modal="true" aria-label="与云舒通话" onClick={handleOverlayTap}>
       <div className="call-topline">
         <span>专属通话</span>
         <strong>{formatDuration(seconds)}</strong>
@@ -460,7 +473,8 @@ export default function CallOverlay({
         {companionLine && liveLine ? <span className="call-caption-rule" /> : null}
         {liveLine ? <p className="call-caption-you"><span>你</span>{liveLine}</p> : null}
         {!companionLine && !liveLine && <p className="call-caption-empty">想说什么，就说吧。</p>}
-        {error && <button type="button" className="call-retry" onClick={retry}>{error} · 再试一次</button>}
+        {tapToPlay && <button type="button" className="call-retry" onClick={handleOverlayTap}>点一下屏幕，继续听云舒</button>}
+        {!tapToPlay && error && <button type="button" className="call-retry" onClick={retry}>{error} · 再试一次</button>}
       </div>
 
       <div className="call-spacer" />
