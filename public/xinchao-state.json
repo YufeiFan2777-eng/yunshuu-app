@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-10-08T13:35:01.565173+00:00",
+  "updatedAt": "2026-10-08T13:40:02.153013+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.5903,
-    "arousal": 0.3149,
+    "valence": 0.5879,
+    "arousal": 0.3133,
     "label": "平静",
     "updatedAt": "2026-10-08T07:33:51.569Z",
     "lastCause": "affection",
