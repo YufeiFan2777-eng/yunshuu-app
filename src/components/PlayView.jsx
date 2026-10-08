@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import MomentsView from './MomentsView';
+import NowhereView from './NowhereView';
 import paperTex from '/paper-tex.jpg';
 
 const ITEMS = [
@@ -16,6 +17,20 @@ const ITEMS = [
       </svg>
     ),
   },
+  {
+    key: 'nowhere',
+    title: '乌有乡',
+    subtitle: '给云舒一个身体 · 在地球上走一走',
+    icon: (
+      <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="28" height="28">
+        <circle cx="18" cy="18" r="12"/>
+        <ellipse cx="18" cy="18" rx="6" ry="12"/>
+        <path d="M6 18 h24"/>
+        <path d="M8 12 Q18 15 28 12"/>
+        <path d="M8 24 Q18 21 28 24"/>
+      </svg>
+    ),
+  },
 ];
 
 export default function PlayView() {
@@ -23,6 +38,9 @@ export default function PlayView() {
 
   if (detail === 'moments') {
     return <MomentsView onBack={() => setDetail(null)} />;
+  }
+  if (detail === 'nowhere') {
+    return <NowhereView onBack={() => setDetail(null)} />;
   }
 
   return (
