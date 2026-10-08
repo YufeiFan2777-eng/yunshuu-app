@@ -61,11 +61,15 @@ def read_container_state():
 def format_state(raw):
     axes = raw.get("axes", {})
     top_drives = []
-    for key, val in sorted(
-        axes.items(),
-        key=lambda x: x[1].get("value", 0) if isinstance(x[1], dict) else x[1],
-        reverse=True,
-    )[:4]:
+    def _val(v):
+        if isinstance(v, dict):
+            return float(v.get("value", 0) or 0)
+        try:
+            return float(v)
+        except (TypeError, ValueError):
+            return 0.0
+
+    for key, val in sorted(axes.items(), key=lambda x: _val(x[1]), reverse=True)[:4]:
         if isinstance(val, dict):
             value = val.get("value", 0)
             label = val.get("label") or DRIVE_LABELS.get(key, key)
