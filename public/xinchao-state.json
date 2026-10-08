@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-10-08T01:35:01.964670+00:00",
+  "updatedAt": "2026-10-08T01:40:01.463697+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.5626,
-    "arousal": 0.3065,
+    "valence": 0.5617,
+    "arousal": 0.3058,
     "label": "平静",
     "updatedAt": "2026-10-07T19:21:25.598Z",
     "lastCause": "sharing",
@@ -24,7 +24,7 @@
     {
       "key": "security",
       "label": "安全感、想感到被接纳和守护",
-      "value": 0.6436
+      "value": 0.6435
     },
     {
       "key": "confidence",
