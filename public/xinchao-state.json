@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-08T01:46:28.743027+00:00",
+  "updatedAt": "2026-10-08T01:49:52.937676+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
@@ -21,16 +21,6 @@
     ]
   },
   "topDrives": [
-    {
-      "key": "security",
-      "label": "security",
-      "value": 0.6435
-    },
-    {
-      "key": "confidence",
-      "label": "confidence",
-      "value": 0.6207
-    },
     {
       "key": "possess",
       "label": "想她",
