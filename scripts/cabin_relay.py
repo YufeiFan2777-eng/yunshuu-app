@@ -24,6 +24,28 @@ class Handler(BaseHTTPRequestHandler):
         self._cors()
         self.end_headers()
 
+    def do_GET(self):
+        if self.path not in ("/notes", "/notes/"):
+            self.send_response(404); self.end_headers(); return
+        node_script = f"""
+const fs = require('fs');
+const p = {json.dumps(CABIN_PATH)};
+try {{
+  const c = JSON.parse(fs.readFileSync(p, 'utf8'));
+  console.log(JSON.stringify(c.notes || []));
+}} catch(e) {{ console.log('[]'); }}
+"""
+        r = subprocess.run(
+            ["docker", "exec", CONTAINER, "node", "-e", node_script],
+            capture_output=True, text=True, timeout=10
+        )
+        notes = r.stdout.strip() if r.returncode == 0 else "[]"
+        self.send_response(200)
+        self._cors()
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+        self.wfile.write(notes.encode())
+
     def do_POST(self):
         if self.path not in ("/note", "/note/"):
             self.send_response(404); self.end_headers(); return
@@ -86,7 +108,7 @@ console.log('OK');
 
     def _cors(self):
         self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type, X-Secret")
 
     def log_message(self, fmt, *args):

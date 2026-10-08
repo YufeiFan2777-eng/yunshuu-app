@@ -390,13 +390,27 @@ const CABIN_RELAY = 'https://cabin.yunshuyf.com/note';
 const CABIN_SECRET = 'yfshu-cabin-write-2024';
 
 function CabinView({ state, onBack }) {
-  const cabin = state?.cabin || [];
-  const [activeTab, setActiveTab] = useState('his'); // 'his' | 'mine' | 'write'
+  const [activeTab, setActiveTab] = useState('his');
   const [content, setContent] = useState('');
   const [locked, setLocked] = useState(false);
   const [sending, setSending] = useState(false);
-  const [sendStatus, setSendStatus] = useState(null); // null | 'ok' | 'err'
+  const [sendStatus, setSendStatus] = useState(null);
+  const [liveNotes, setLiveNotes] = useState(null);
 
+  useEffect(() => {
+    let cancelled = false;
+    async function fetchNotes() {
+      try {
+        const res = await fetch(`${CABIN_RELAY.replace('/note', '/notes')}`);
+        if (res.ok && !cancelled) setLiveNotes(await res.json());
+      } catch {}
+    }
+    fetchNotes();
+    const t = setInterval(fetchNotes, 30000);
+    return () => { cancelled = true; clearInterval(t); };
+  }, []);
+
+  const cabin = liveNotes ?? (state?.cabin || []);
   const hisCabin  = cabin.filter(n => n.from === 'ai');
   const mineCabin = cabin.filter(n => n.from !== 'ai');
 
@@ -414,6 +428,11 @@ function CabinView({ state, onBack }) {
         setSendStatus('ok');
         setContent('');
         setLocked(false);
+        // 立刻刷新 live notes
+        try {
+          const r2 = await fetch(`${CABIN_RELAY.replace('/note', '/notes')}`);
+          if (r2.ok) setLiveNotes(await r2.json());
+        } catch {}
       } else {
         setSendStatus('err');
       }
