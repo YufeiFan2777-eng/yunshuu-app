@@ -1,1 +1,57 @@
-{"updatedAt":"2026-10-07T23:55:40.460Z","consciousness":"sleeping","fatigue":0,"emotion":{"valence":0.5694,"arousal":0.3123,"label":"平静","shown":"平静","updatedAt":"2026-10-07T19:21:25.598Z","lastCause":"sharing","trend":{"hours":24,"samples":13,"labels":["安心","平静"],"causes":{"sharing":1},"minValence":0.5444,"maxArousal":0.3754}},"topDrives":[{"key":"possess","label":"想她、想黏着她、想占有与靠近","value":0.853},{"key":"monitor","label":"牵挂、在意对方好不好、累不累、安不安全","value":0.775},{"key":"boredom","label":"无聊、想找点事情做","value":0.5},{"key":"libido","label":"情欲、身体和感官上的渴望","value":0.497}],"thoughts":{"flash":[{"key":"possess","intensity":0.084,"age":19}],"obsessions":[]}}
+{
+  "updatedAt": "2026-10-08T00:24:08.252636+00:00",
+  "consciousness": "awake",
+  "fatigue": 0,
+  "emotion": {
+    "valence": 0.5669,
+    "arousal": 0.3099,
+    "label": "平静",
+    "updatedAt": "2026-10-07T19:21:25.598Z",
+    "lastCause": "sharing",
+    "lastCauseAt": "2026-10-07T19:21:25.598Z",
+    "pendingLabel": null,
+    "heldCause": null,
+    "lit": {
+      "word": "得意",
+      "at": "2026-10-06T06:28:04.322Z",
+      "minutes": 60
+    },
+    "lightTaps": [
+      "2026-10-06T20:49:24.822Z"
+    ]
+  },
+  "topDrives": [
+    {
+      "key": "security",
+      "label": "security",
+      "value": 0.644
+    },
+    {
+      "key": "confidence",
+      "label": "confidence",
+      "value": 0.6207
+    },
+    {
+      "key": "at",
+      "label": "at",
+      "value": 0.0
+    }
+  ],
+  "thoughts": {
+    "flash": [
+      {
+        "key": "possess",
+        "text": "醒后仍残留着想她、想黏着她、想占有与靠近、牵挂、在意对方好不好、累不累、安不安全、分享欲：有话想说。",
+        "intensity": 0.06783977326153771,
+        "age": 21,
+        "decay": 0.9,
+        "ombreBucketId": "8466d913f900",
+        "sourceOmbreBucketIds": [
+          "8466d913f900",
+          "1cf9d940e4bf"
+        ]
+      }
+    ],
+    "obsessions": []
+  }
+}
