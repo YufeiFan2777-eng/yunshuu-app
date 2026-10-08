@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import XinchaoView from './XinchaoView';
 import XinchaoNianView from './XinchaoNianView';
 import OmbreMemoryView from './OmbreMemoryView';
+import DesireDetailView from './DesireDetailView';
 import paperTex from '/paper-tex.jpg';
 
 const ITEMS = [
@@ -31,6 +32,17 @@ const ITEMS = [
     ),
   },
   {
+    key: 'desire',
+    title: '欲望系统',
+    subtitle: '驱动状态 · 念头池 · 决策层',
+    icon: (
+      <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="28" height="28">
+        <path d="M18 8 Q22 6 26 10 Q30 14 26 18 Q22 22 18 28 Q14 22 10 18 Q6 14 10 10 Q14 6 18 8Z"/>
+        <path d="M18 12 Q20 10 22 12 Q24 14 22 16 Q20 18 18 22 Q16 18 14 16 Q12 14 14 12 Q16 10 18 12Z" opacity=".35" fill="currentColor"/>
+      </svg>
+    ),
+  },
+  {
     key: 'memory',
     title: '记忆',
     subtitle: 'Ombre Brain · 长期记忆库',
@@ -55,6 +67,9 @@ export default function HisView() {
   }
   if (detail === 'memory') {
     return <OmbreMemoryView onBack={() => setDetail(null)} />;
+  }
+  if (detail === 'desire') {
+    return <DesireDetailView onBack={() => setDetail(null)} />;
   }
 
 
