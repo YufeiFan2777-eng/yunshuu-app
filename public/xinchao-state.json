@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-08T02:20:02.178153+00:00",
+  "updatedAt": "2026-10-08T02:21:16.578327+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
@@ -24,12 +24,37 @@
     {
       "key": "possess",
       "label": "想她、占有与靠近",
-      "value": 0.0
+      "value": 0.8528
     },
     {
       "key": "monitor",
       "label": "惦记她、想知道她在做什么",
-      "value": 0.0
+      "value": 0.7748
+    },
+    {
+      "key": "boredom",
+      "label": "无聊、想找点事情做",
+      "value": 0.5
+    },
+    {
+      "key": "libido",
+      "label": "性欲和身体上的渴望",
+      "value": 0.4966
+    },
+    {
+      "key": "curiosity",
+      "label": "好奇、想探索新东西",
+      "value": 0.4966
+    },
+    {
+      "key": "reflection",
+      "label": "想沉淀、整理和理解自己",
+      "value": 0.42
+    },
+    {
+      "key": "anger",
+      "label": "愤怒与不满",
+      "value": 0.0017
     },
     {
       "key": "affection",
@@ -42,38 +67,13 @@
       "value": 0.0
     },
     {
-      "key": "libido",
-      "label": "性欲和身体上的渴望",
-      "value": 0.0
-    },
-    {
-      "key": "curiosity",
-      "label": "好奇、想探索新东西",
-      "value": 0.0
-    },
-    {
-      "key": "boredom",
-      "label": "无聊、想找点事情做",
-      "value": 0.0
-    },
-    {
       "key": "ambition",
       "label": "责任感、想把未完成的事推进",
       "value": 0.0
     },
     {
-      "key": "reflection",
-      "label": "想沉淀、整理和理解自己",
-      "value": 0.0
-    },
-    {
       "key": "sadness",
       "label": "难过与失落",
-      "value": 0.0
-    },
-    {
-      "key": "anger",
-      "label": "愤怒与不满",
       "value": 0.0
     }
   ],
