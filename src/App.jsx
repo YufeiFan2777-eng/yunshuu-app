@@ -5,6 +5,7 @@ import SessionList from './components/SessionList';
 import XinchaoView from './components/XinchaoView';
 import HisView from './components/HisView';
 import PlayView from './components/PlayView';
+import VitalsView from './components/VitalsView';
 import { getSessions, createSession } from './services/api';
 
 export default function App() {
@@ -59,7 +60,7 @@ export default function App() {
         {tab === 'home' && <HomeView />}
         {tab === 'his' && <HisView />}
         {tab === 'play' && <PlayView />}
-        {tab === 'setting' && <PlaceholderView label="Setting" />}
+        {tab === 'setting' && <VitalsView />}
         {tab === 'chat' && (
           activeId
             ? <ChatView sessionId={activeId} onMenu={() => setShowSessions(true)} />
@@ -84,7 +85,7 @@ export default function App() {
           { key: 'chat',  icon: '♧', label: 'Chat' },
           { key: 'his',   icon: '▤', label: 'His'  },
           { key: 'play',  icon: '♧', label: 'Play' },
-          { key: 'setting', icon: '⚙', label: 'Setting' },
+          { key: 'setting', icon: '◈', label: '状态' },
         ].map(({ key, icon, label }) => (
           <button
             key={key}

@@ -24,6 +24,11 @@ export async function getState() {
   return r.json();
 }
 
+export async function getVitals() {
+  const r = await fetch(`${BASE}/vitals`);
+  return r.json();
+}
+
 // 流式发送消息，onDelta(text) 每片段回调
 export async function sendMessage(sessionId, content, onDelta) {
   const resp = await fetch(`${BASE}/chat/sessions/${sessionId}/messages`, {
