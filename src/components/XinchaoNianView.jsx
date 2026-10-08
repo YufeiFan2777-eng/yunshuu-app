@@ -111,86 +111,52 @@ function EmotionWave({ emotion }) {
   );
 }
 
-/* ────── 驱力花瓣图 ────── */
-function DriveFlower({ drives, emotion }) {
-  const [selectedKey, setSelectedKey] = useState(null);
-  const n = drives.length;
-  if (n === 0) return null;
-  const cx = 110, cy = 110, minR = 22, maxR = 78;
-  const maxVal = Math.max(...drives.map(d => d.value), 0.001);
-  const sp = 0.38;
-
-  const petals = drives.map((d, i) => {
-    const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
-    const r = minR + (d.value / maxVal) * (maxR - minR);
-    const tx = (cx + Math.cos(angle) * r).toFixed(1);
-    const ty = (cy + Math.sin(angle) * r).toFixed(1);
-    const path = [
-      `M ${cx},${cy}`,
-      `C ${(cx+Math.cos(angle+sp)*r*0.5).toFixed(1)},${(cy+Math.sin(angle+sp)*r*0.5).toFixed(1)}`,
-      ` ${(cx+Math.cos(angle+sp*0.3)*r*0.96).toFixed(1)},${(cy+Math.sin(angle+sp*0.3)*r*0.96).toFixed(1)}`,
-      ` ${tx},${ty}`,
-      `C ${(cx+Math.cos(angle-sp*0.3)*r*0.96).toFixed(1)},${(cy+Math.sin(angle-sp*0.3)*r*0.96).toFixed(1)}`,
-      ` ${(cx+Math.cos(angle-sp)*r*0.5).toFixed(1)},${(cy+Math.sin(angle-sp)*r*0.5).toFixed(1)}`,
-      ` ${cx},${cy}`,
-    ].join(' ');
-    const ld = r + 18;
-    const lx = (cx + Math.cos(angle) * ld).toFixed(1);
-    const ly = (cy + Math.sin(angle) * ld).toFixed(1);
-    const shortLabel = (d.label || d.key).slice(0, 3);
-    const isSelected = selectedKey === d.key;
-    const opacity = isSelected
-      ? Math.min(0.22 + (d.value / maxVal) * 0.52 + 0.28, 0.95).toFixed(2)
-      : (0.22 + (d.value / maxVal) * 0.52).toFixed(2);
-    return { key: d.key, label: d.label, value: d.value, path, lx, ly, shortLabel, opacity, isSelected };
-  });
-
-  const emotionLabel = emotion?.shown || emotion?.label || '—';
-  const selected = drives.find(d => d.key === selectedKey);
-
+/* ────── 驱力排行榜 ────── */
+function DriveRankList({ drives }) {
+  if (!drives || drives.length === 0) return null;
+  const medals = ['🥇', '🥈', '🥉'];
   return (
-    <div>
-      <svg viewBox="0 0 220 220" style={{ width: '100%', maxWidth: 220, margin: '0 auto', display: 'block' }}>
-        {petals.map(p => (
-          <g key={p.key} onClick={() => setSelectedKey(p.isSelected ? null : p.key)} style={{ cursor: 'pointer' }}>
-            <path d={p.path}
-              fill={`rgba(175,138,88,${p.opacity})`}
-              stroke={p.isSelected ? 'rgba(125,90,60,0.9)' : 'rgba(155,122,88,0.45)'}
-              strokeWidth={p.isSelected ? '1.2' : '0.5'}/>
-            <text x={p.lx} y={p.ly} textAnchor="middle" dominantBaseline="middle"
-              fontSize="8" fill={p.isSelected ? '#3d2b1a' : '#7a5a3a'}
-              fontWeight={p.isSelected ? 'bold' : 'normal'}>{p.shortLabel}</text>
-          </g>
-        ))}
-        <circle cx={cx} cy={cy} r="19" fill="#f5ece0" stroke="#c4a07860" strokeWidth="0.8"/>
-        <text x={cx} y={cy+1} textAnchor="middle" dominantBaseline="middle"
-          fontSize="9" fill="#5a3e28" fontFamily="Cormorant Garamond, Georgia, serif">{emotionLabel}</text>
-      </svg>
-
-      {/* 点击花瓣后的详情 */}
-      {selected && (
-        <div style={{
-          marginTop: 10, background: '#ede3d0', border: '1px solid #bfa58360',
-          borderRadius: 4, padding: '10px 14px',
-          animation: 'fadeIn 0.15s ease',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 7 }}>
-            <span style={{ fontSize: 15, color: '#3d2b1a', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
-              {selected.label}
-            </span>
-            <span style={{ marginLeft: 'auto', fontSize: 11, color: '#9b7a58', fontVariantNumeric: 'tabular-nums' }}>
-              {Math.round(selected.value * 100)}
-            </span>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+      {drives.map((d, i) => {
+        const pct = Math.round(d.value * 100);
+        const isTop3 = i < 3;
+        return (
+          <div key={d.key} style={{
+            display: 'flex', alignItems: 'center', gap: 10,
+            background: isTop3 ? '#e8d5b580' : 'transparent',
+            border: isTop3 ? '1px solid #c4a07845' : '1px solid transparent',
+            borderRadius: 5, padding: isTop3 ? '9px 10px' : '6px 10px',
+          }}>
+            <div style={{ width: 22, textAlign: 'center', flexShrink: 0 }}>
+              {isTop3
+                ? <span style={{ fontSize: 15, lineHeight: 1 }}>{medals[i]}</span>
+                : <span style={{ fontSize: 10.5, color: '#9b7a58', fontVariantNumeric: 'tabular-nums' }}>{i + 1}</span>}
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 5 }}>
+                <span style={{
+                  fontSize: isTop3 ? 13 : 12, color: '#3d2b1a',
+                  fontFamily: 'Cormorant Garamond, Georgia, serif',
+                  lineHeight: 1.35, wordBreak: 'keep-all',
+                }}>{d.label}</span>
+                <span style={{
+                  fontSize: 11.5, color: isTop3 ? '#7a5230' : '#9b7a58',
+                  fontVariantNumeric: 'tabular-nums', marginLeft: 8, flexShrink: 0,
+                  fontWeight: isTop3 ? 600 : 400,
+                }}>{pct}%</span>
+              </div>
+              <div style={{ height: 3, background: '#d4bfa050', borderRadius: 2, overflow: 'hidden' }}>
+                <div style={{
+                  height: '100%', borderRadius: 2, width: `${pct}%`,
+                  background: isTop3
+                    ? 'linear-gradient(90deg, #9b7a58, #c4a882)'
+                    : 'linear-gradient(90deg, #b8a07a, #d0bc9a)',
+                }}/>
+              </div>
+            </div>
           </div>
-          <div style={{ height: 2, background: '#d4bfa060', borderRadius: 1, overflow: 'hidden' }}>
-            <div style={{
-              height: '100%', borderRadius: 1,
-              width: `${Math.round((selected.value / maxVal) * 100)}%`,
-              background: 'linear-gradient(90deg, #9b7a58, #c4a882)',
-            }}/>
-          </div>
-        </div>
-      )}
+        );
+      })}
     </div>
   );
 }
@@ -263,44 +229,19 @@ function FlashView({ state, onBack }) {
           </div>
         )}
 
-        {/* 驱力花瓣 */}
+        {/* 驱力排行 */}
         {drives.length > 0 && (
           <div style={card}>
-            <div style={{ fontSize: 8.5, letterSpacing: 2.5, color: '#9b7a58', textTransform: 'uppercase', fontFamily: 'Georgia, serif', marginBottom: 6 }}>INNER TIDE · 驱力</div>
-            <DriveFlower drives={drives} emotion={emotion} />
-            <div style={{ fontSize: 10, color: '#a08060', textAlign: 'center', marginTop: 4, fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: 0.5 }}>
-              {drives.length}股潮水，共用一个身体
-            </div>
-            {/* 情绪详情框 */}
-            <div style={{
-              marginTop: 14, background: '#ede3d0', border: '1px solid #bfa58345',
-              borderRadius: 4, padding: '10px 14px',
-              display: 'flex', alignItems: 'flex-start', gap: 12,
-            }}>
-              <span style={{
-                fontSize: 18, color: '#3d2b1a', fontFamily: 'Cormorant Garamond, Georgia, serif',
-                lineHeight: 1.2, paddingTop: 2, minWidth: 40,
-              }}>{emotion.shown || emotion.label || '—'}</span>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 9, color: '#9b7a58', letterSpacing: 1.5, textTransform: 'uppercase', fontFamily: 'Georgia, serif' }}>
-                  唤醒 {Math.round((emotion.arousal || 0) * 100)} · 效价 {Math.round((emotion.valence || 0) * 100)}
-                </div>
-                <div style={{ fontSize: 11.5, color: '#5a3e28', marginTop: 5, lineHeight: 1.7, fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
-                  {(() => {
-                    const a = emotion?.arousal || 0, v = emotion?.valence || 0.5;
-                    if (a > 0.65 && v > 0.6) return "激活而愉悦，潮水高涨开阔";
-                    if (a > 0.65 && v < 0.4) return "紧绷而低沉，潮水翻涌不安";
-                    if (a > 0.65)            return "有些激动，潮水起伏明显";
-                    if (a < 0.25 && v > 0.6) return "宁静而温暖，潮水平缓流淌";
-                    if (a < 0.25 && v < 0.4) return "安静而低落，潮水悄悄退落";
-                    if (a < 0.25)            return "近乎平静无波，各片潮水静守";
-                    if (v > 0.6)             return "心情尚好，潮水轻轻流动";
-                    if (v < 0.4)             return "有些沉郁，潮水慢慢低落";
-                    return "海面平，有点起伏，各片潮水照常";
-                  })()}
-                </div>
+            <div style={{ marginBottom: 3 }}>
+              <div style={{ fontSize: 15, color: '#3d2b1a', fontFamily: 'Cormorant Garamond, Georgia, serif', fontWeight: 600, letterSpacing: 0.5 }}>
+                十一维驱动力 · 实时排行
+              </div>
+              <div style={{ fontSize: 9.5, color: '#a08060', marginTop: 3, letterSpacing: 0.3 }}>
+                各维度为独立强度（0～100%），非占比，合计可超 100%
               </div>
             </div>
+            <div style={{ height: 1, background: '#c4a07830', margin: '10px 0' }}/>
+            <DriveRankList drives={drives} />
           </div>
         )}
 

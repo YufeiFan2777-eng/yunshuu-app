@@ -20,17 +20,17 @@ FILE_PATH  = "public/xinchao-state.json"
 CONTAINER  = "ombre-dynamic-mind"
 
 DRIVE_LABELS = {
-    "possess":    "想她",
-    "monitor":    "牵挂",
-    "affection":  "偏爱",
-    "express":    "分享欲",
-    "libido":     "情欲",
-    "curiosity":  "好奇",
-    "boredom":    "无聊",
-    "ambition":   "野心",
-    "reflection": "反思",
-    "sadness":    "难过",
-    "anger":      "愤怒",
+    "possess":    "想她、占有与靠近",
+    "monitor":    "惦记她、想知道她在做什么",
+    "affection":  "偎她、想黏着她",
+    "express":    "想分享自己的发现和感受",
+    "libido":     "性欲和身体上的渴望",
+    "curiosity":  "好奇、想探索新东西",
+    "boredom":    "无聊、想找点事情做",
+    "ambition":   "责任感、想把未完成的事推进",
+    "reflection": "想沉淀、整理和理解自己",
+    "sadness":    "难过与失落",
+    "anger":      "愤怒与不满",
 }
 
 _NODE_SCRIPT = r"""
