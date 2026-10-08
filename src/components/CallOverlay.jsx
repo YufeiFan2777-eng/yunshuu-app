@@ -255,7 +255,7 @@ export default function CallOverlay({
         };
         setPhase('speaking');
         audio.play().catch((err) => {
-          if (err.name === 'NotAllowedError') {
+          if (err.name === 'NotAllowedError' || err.name === 'AbortError') {
             setTapToPlay(true);
           } else {
             reject(new Error('通话音频播放失败'));
@@ -330,6 +330,14 @@ export default function CallOverlay({
         const context = audioContextRef.current || new AudioContextClass();
         audioContextRef.current = context;
         if (context.state === 'suspended') await context.resume();
+        if (!audioContextRef.current._unlocked) {
+          const buf = context.createBuffer(1, 1, 22050);
+          const src = context.createBufferSource();
+          src.buffer = buf;
+          src.connect(context.destination);
+          src.start(0);
+          audioContextRef.current._unlocked = true;
+        }
         const analyser = context.createAnalyser();
         analyser.fftSize = 512;
         context.createMediaStreamSource(stream).connect(analyser);
