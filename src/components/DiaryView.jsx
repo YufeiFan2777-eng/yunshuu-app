@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
+const API_BASE = import.meta.env.VITE_API_URL || '/api';
+
 const S = {
   view: {
     minHeight: '100%',
@@ -70,7 +72,7 @@ export default function DiaryView({ onBack }) {
   const [err, setErr]         = useState(null);
 
   useEffect(() => {
-    fetch('/api/journals?limit=30')
+    fetch(`${API_BASE}/journals?limit=30`)
       .then(r => r.json())
       .then(d => {
         const j = d.journals || [];
@@ -84,7 +86,7 @@ export default function DiaryView({ onBack }) {
   function fetchBody(date) {
     if (body[date] !== undefined) return;
     setBody(p => ({ ...p, [date]: null }));
-    fetch(`/api/journals/${date}`)
+    fetch(`${API_BASE}/journals/${date}`)
       .then(r => r.json())
       .then(d => setBody(p => ({ ...p, [date]: d.content || '' })))
       .catch(()  => setBody(p => ({ ...p, [date]: '(加载失败)' })));
