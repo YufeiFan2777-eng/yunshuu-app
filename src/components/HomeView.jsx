@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import stickers from '/stickers.webp';
 import paperTex from '/paper-tex.jpg';
+import DiaryView from './DiaryView';
 
 const SINCE = new Date('2026-10-06');
 
@@ -27,6 +28,7 @@ export default function HomeView() {
   const [todos, setTodos] = useState(INIT_TODOS);
   const days = useMemo(daysSince, []);
   const [dailyMsg, setDailyMsg] = useState(DEFAULT_MSG);
+  const [showDiary, setShowDiary] = useState(false);
 
   useEffect(() => {
     fetch(`${import.meta.env.BASE_URL}daily-message.json?t=${Date.now()}`)
@@ -41,7 +43,12 @@ export default function HomeView() {
 
   return (
     <div className="hv-wrap">
-      <div className="hv-journal">
+      {showDiary && (
+      <div style={{position:'fixed',inset:0,zIndex:100,overflowY:'auto',background:'#f7eed8'}}>
+        <DiaryView onBack={() => setShowDiary(false)} />
+      </div>
+    )}
+    <div className="hv-journal">
 
         {/* ── Title ── */}
         <h1 className="hv-title">Y &amp; R&rsquo; Place</h1>
@@ -88,7 +95,7 @@ export default function HomeView() {
         {/* ── Cards ── */}
         <div className="hv-cards">
           {CARDS.map((c, i) => (
-            <button key={i} type="button" className="hv-entry" disabled>
+            <button key={i} type="button" className="hv-entry" disabled={i !== 0} onClick={i === 0 ? () => setShowDiary(true) : undefined}>
               <span className="hv-art">{c.icon}</span>
               <span className="hv-body">
                 <span className="hv-label">{c.title}</span>
