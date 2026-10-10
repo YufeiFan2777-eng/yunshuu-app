@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-10-10T20:05:01.449340+00:00",
+  "updatedAt": "2026-10-10T20:10:02.089040+00:00",
   "consciousness": "awake",
   "fatigue": 0.0067,
   "emotion": {
-    "valence": 0.7022,
-    "arousal": 0.8059,
+    "valence": 0.6943,
+    "arousal": 0.7898,
     "label": "紧绷",
     "updatedAt": "2026-10-10T19:59:47.291Z",
     "lastCause": "intimacy",
@@ -58,7 +58,7 @@
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.2132
+      "value": 0.2096
     },
     {
       "key": "libido",
