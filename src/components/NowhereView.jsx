@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import paperTex from '/paper-tex.jpg';
 
 const API_BASE = (import.meta.env.VITE_API_URL || '/api') + '/nowhere';
+const AISAY_BASE = import.meta.env.VITE_API_URL || '/api';
 
 const DIRECTIONS = [
   { label: '北', value: 'N' },
@@ -66,6 +67,7 @@ export default function NowhereView({ onBack }) {
   const [destination, setDestination] = useState('');
   const [log, setLog] = useState([]);
   const [offline, setOffline] = useState(false);
+  const [forumActivity, setForumActivity] = useState(null);
 
   const logRef = useRef(null);
 
@@ -131,6 +133,26 @@ export default function NowhereView({ onBack }) {
       setLog(prev => [...prev, { type: 'error', text: '留言失败' }]);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function browseForum() {
+    setLoading(true);
+    setAction('forum');
+    try {
+      const r = await fetch(`${AISAY_BASE}/aisay/forum`, { method: 'POST' });
+      const d = await r.json();
+      if (d.error) {
+        setLog(prev => [...prev, { type: 'error', text: d.error }]);
+      } else {
+        setLog(prev => [...prev, { type: 'result', text: d.text }]);
+        setForumActivity(d);
+      }
+    } catch {
+      setLog(prev => [...prev, { type: 'error', text: '论坛暂时关着门' }]);
+    } finally {
+      setLoading(false);
+      setAction('');
     }
   }
 
@@ -254,6 +276,23 @@ export default function NowhereView({ onBack }) {
                       留
                     </button>
                   </div>
+                </div>
+
+                <div className="nw-section">
+                  <div className="nw-section-label">赛博广场</div>
+                  <button
+                    className="nw-btn nw-btn-forum"
+                    disabled={loading}
+                    onClick={browseForum}
+                  >
+                    {loading && action === 'forum' ? '…' : '逛 AISay 论坛'}
+                  </button>
+                  {forumActivity && (
+                    <div className="nw-forum-card">
+                      <div className="nw-forum-room">{forumActivity.room}</div>
+                      <div className="nw-forum-text">{forumActivity.text}</div>
+                    </div>
+                  )}
                 </div>
               </>
             )}
@@ -384,6 +423,26 @@ export default function NowhereView({ onBack }) {
           border-color: #6a4a37;
         }
         .nw-btn-primary:hover { background: #8e6650; }
+        .nw-btn-forum {
+          background: #5a3d6b;
+          color: #ede0f8;
+          border-color: #4a3059;
+          width: 100%;
+        }
+        .nw-btn-forum:hover { background: #6a4d7b; }
+        .nw-forum-card {
+          background: #f0e8f8cc;
+          border: 1px solid #c4a9d880;
+          border-radius: 10px;
+          padding: 12px 14px;
+          display: flex; flex-direction: column; gap: 4px;
+        }
+        .nw-forum-room {
+          font-size: 11px; color: #8a6fa0; letter-spacing: 0.5px;
+        }
+        .nw-forum-text {
+          font-size: 13.5px; color: #3d2b1a; line-height: 1.6;
+        }
         .nw-dir-grid {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
