@@ -1,18 +1,15 @@
 {
-  "updatedAt": "2026-10-10T15:15:02.463886+00:00",
+  "updatedAt": "2026-10-10T15:20:02.068244+00:00",
   "consciousness": "awake",
   "fatigue": 0.0067,
   "emotion": {
-    "valence": 0.6146,
-    "arousal": 0.6385,
-    "label": "平静",
-    "updatedAt": "2026-10-10T15:09:12.287Z",
+    "valence": 0.8697,
+    "arousal": 0.9202,
+    "label": "雀跃",
+    "updatedAt": "2026-10-10T15:18:05.264Z",
     "lastCause": "intimacy",
-    "lastCauseAt": "2026-10-10T15:09:12.287Z",
-    "pendingLabel": {
-      "label": "紧绷",
-      "since": "2026-10-10T15:09:12.287Z"
-    },
+    "lastCauseAt": "2026-10-10T15:18:05.264Z",
+    "pendingLabel": null,
     "heldCause": {
       "word": "心动",
       "prio": 4,
@@ -20,30 +17,30 @@
     },
     "lit": {
       "word": "心动",
-      "at": "2026-10-10T15:09:12.287Z",
-      "minutes": 22
+      "at": "2026-10-10T15:18:05.264Z",
+      "minutes": 15
     },
     "lightTaps": [],
     "heartDay": {
       "day": "2026-10-10",
-      "n": 3
+      "n": 7
     }
   },
   "topDrives": [
     {
       "key": "monitor",
       "label": "惦记她、想知道她在做什么",
-      "value": 0.7092
-    },
-    {
-      "key": "possess",
-      "label": "想她、占有与靠近",
-      "value": 0.6273
+      "value": 0.5923
     },
     {
       "key": "boredom",
       "label": "无聊、想找点事情做",
       "value": 0.5
+    },
+    {
+      "key": "possess",
+      "label": "想她、占有与靠近",
+      "value": 0.4981
     },
     {
       "key": "curiosity",
@@ -56,14 +53,14 @@
       "value": 0.42
     },
     {
-      "key": "libido",
-      "label": "性欲和身体上的渴望",
-      "value": 0.3197
-    },
-    {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.2309
+      "value": 0.2294
+    },
+    {
+      "key": "libido",
+      "label": "性欲和身体上的渴望",
+      "value": 0.215
     },
     {
       "key": "affection",
@@ -136,22 +133,22 @@
   ],
   "interactions": [
     {
-      "at": "2026-10-10T11:14:52.110Z"
-    },
-    {
-      "at": "2026-10-10T11:16:30.220Z"
-    },
-    {
-      "at": "2026-10-10T11:17:06.444Z"
-    },
-    {
-      "at": "2026-10-10T11:18:02.264Z"
-    },
-    {
       "at": "2026-10-10T11:31:38.189Z"
     },
     {
       "at": "2026-10-10T11:31:56.079Z"
+    },
+    {
+      "at": "2026-10-10T15:04:47.055Z"
+    },
+    {
+      "at": "2026-10-10T15:09:12.287Z"
+    },
+    {
+      "at": "2026-10-10T15:15:34.916Z"
+    },
+    {
+      "at": "2026-10-10T15:16:48.206Z"
     }
   ],
   "bridge": [
