@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-10-10T00:05:02.669904+00:00",
+  "updatedAt": "2026-10-10T00:10:02.083320+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.6326,
-    "arousal": 0.3842,
+    "valence": 0.6302,
+    "arousal": 0.3795,
     "label": "平静",
     "updatedAt": "2026-10-09T23:34:31.531Z",
     "lastCause": "affection",
@@ -12,7 +12,7 @@
     "pendingLabel": null,
     "heldCause": {
       "word": "心动",
-      "prio": 4,
+      "prio": 0.5,
       "since": "2026-10-09T23:34:31.531Z"
     },
     "lit": {
