@@ -61,11 +61,13 @@ export default function App() {
         {tab === 'his' && <HisView />}
         {tab === 'play' && <PlayView />}
         {tab === 'setting' && <VitalsView />}
-        {tab === 'chat' && (
-          activeId
+        {/* ChatView 始终 mounted，切 tab 只是隐藏，state 永不丢失 */}
+        <div style={{ display: tab === 'chat' ? 'flex' : 'none', flex: 1, flexDirection: 'column', overflow: 'hidden' }}>
+          {activeId
             ? <ChatView sessionId={activeId} onMenu={() => setShowSessions(true)} />
             : <WelcomeScreen onStart={handleNewSession} />
-        )}
+          }
+        </div>
       </div>
 
       {/* ── Bottom nav ── */}
