@@ -52,6 +52,7 @@ export async function sendMessage(sessionId, content, onDelta) {
     const decoder = new TextDecoder();
     let buffer = '';
     let fullContent = '';
+    let doneSent = false;
 
     while (true) {
       const { done, value } = await reader.read();
@@ -63,7 +64,7 @@ export async function sendMessage(sessionId, content, onDelta) {
 
       let shouldBreak = false;
       for (const line of lines) {
-        if (line === 'event: done') { shouldBreak = true; continue; }
+        if (line === 'event: done') { doneSent = true; shouldBreak = true; continue; }
         if (line.startsWith('event: ')) continue;
         if (!line.startsWith('data: ')) continue;
 
@@ -81,7 +82,7 @@ export async function sendMessage(sessionId, content, onDelta) {
       if (shouldBreak) break;
     }
 
-    return fullContent;
+    return { content: fullContent, doneSent };
   } finally {
     clearTimeout(timer);
   }

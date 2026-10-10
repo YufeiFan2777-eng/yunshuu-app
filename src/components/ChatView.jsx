@@ -134,9 +134,15 @@ export default function ChatView({ sessionId, onMenu }) {
       if (json.error) throw new Error(json.error);
       const content = `[file:${json.url} ${file.name}]`;
       setMessages(prev => [...prev, { id: Date.now(), role: 'user', content }]);
-      await sendMessage(sessionId, content, (delta) => setStreamingText(prev => prev + delta));
-      await loadMessages();
-      setStreamingText('');
+      const { content: replyText, doneSent } = await sendMessage(sessionId, content, (delta) => setStreamingText(prev => prev + delta));
+      if (doneSent) {
+        await loadMessages();
+        setStreamingText('');
+      } else {
+        if (replyText) setMessages(prev => [...prev, { id: Date.now() + 1, role: 'assistant', content: replyText }]);
+        setStreamingText('');
+        setTimeout(() => loadMessages(), 2000);
+      }
     } catch (err) {
       setMessages(prev => [...prev, { id: Date.now() + 1, role: 'error', content: err.message }]);
     } finally {
@@ -168,11 +174,22 @@ export default function ChatView({ sessionId, onMenu }) {
 
     setMessages(prev => [...prev, { id: Date.now(), role: 'user', content }]);
     try {
-      await sendMessage(sessionId, content, (delta) => {
+      const { content: replyText, doneSent } = await sendMessage(sessionId, content, (delta) => {
         setStreamingText(prev => prev + delta);
       });
-      await loadMessages();
-      setStreamingText('');
+      if (doneSent) {
+        // 后端确认已保存，从DB刷新
+        await loadMessages();
+        setStreamingText('');
+      } else {
+        // SSE提前关闭，后端还在等stop hook保存，把流式内容固化到state
+        if (replyText) {
+          setMessages(prev => [...prev, { id: Date.now() + 1, role: 'assistant', content: replyText }]);
+        }
+        setStreamingText('');
+        // 延迟2s再刷一次，给后端时间写入DB
+        setTimeout(() => loadMessages(), 2000);
+      }
     } catch (e) {
       setMessages(prev => [...prev, { id: Date.now() + 1, role: 'error', content: e.message }]);
     } finally {
