@@ -34,8 +34,11 @@ export default function ChatView({ sessionId, onMenu }) {
   const [stateData, setStateData] = useState(null);
   const [extraOpen, setExtraOpen] = useState(false);
   const [callOpen, setCallOpen] = useState(false);
+  const [pendingImg, setPendingImg] = useState(null); // { localUrl, file }
   const bottomRef = useRef(null);
   const textareaRef = useRef(null);
+  const photoInputRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     setLoaded(false);
@@ -61,16 +64,111 @@ export default function ChatView({ sessionId, onMenu }) {
     }
   }
 
-  async function handleSend() {
-    const text = input.trim();
-    if (!text || streaming) return;
-    setInput('');
-    if (textareaRef.current) textareaRef.current.style.height = 'auto';
-    setMessages(prev => [...prev, { id: Date.now(), role: 'user', content: text }]);
+  async function resizeAndUpload(file) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        img.src = e.target.result;
+        img.onload = () => {
+          const MAX = 1200;
+          let w = img.width, h = img.height;
+          if (w > MAX || h > MAX) {
+            if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+            else { w = Math.round(w * MAX / h); h = MAX; }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          canvas.toBlob(async (blob) => {
+            const r2 = new FileReader();
+            r2.onload = async (ev) => {
+              try {
+                const b64 = ev.target.result.split(',')[1];
+                const resp = await fetch(`${API_BASE}/api/chat/upload`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ data: b64, mime: 'image/jpeg', filename: file.name }),
+                });
+                const json = await resp.json();
+                if (json.error) throw new Error(json.error);
+                resolve(json.url);
+              } catch (err) { reject(err); }
+            };
+            r2.readAsDataURL(blob);
+          }, 'image/jpeg', 0.85);
+        };
+        img.onerror = reject;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function handlePhotoChange(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const localUrl = URL.createObjectURL(file);
+    setPendingImg({ localUrl, file });
+    e.target.value = '';
+  }
+
+  async function handleFileChange(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
     setStreaming(true);
     setStreamingText('');
     try {
-      await sendMessage(sessionId, text, (delta) => {
+      const r = new FileReader();
+      const b64 = await new Promise((res, rej) => {
+        r.onload = ev => res(ev.target.result.split(',')[1]);
+        r.onerror = rej;
+        r.readAsDataURL(file);
+      });
+      const resp = await fetch(`${API_BASE}/api/chat/upload`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data: b64, mime: file.type || 'application/octet-stream', filename: file.name }),
+      });
+      const json = await resp.json();
+      if (json.error) throw new Error(json.error);
+      const content = `[file:${json.url} ${file.name}]`;
+      setMessages(prev => [...prev, { id: Date.now(), role: 'user', content }]);
+      await sendMessage(sessionId, content, (delta) => setStreamingText(prev => prev + delta));
+      await loadMessages();
+      setStreamingText('');
+    } catch (err) {
+      setMessages(prev => [...prev, { id: Date.now() + 1, role: 'error', content: err.message }]);
+    } finally {
+      setStreaming(false);
+      e.target.value = '';
+    }
+  }
+
+  async function handleSend() {
+    const text = input.trim();
+    if ((!text && !pendingImg) || streaming) return;
+    setInput('');
+    if (textareaRef.current) textareaRef.current.style.height = 'auto';
+    setStreaming(true);
+    setStreamingText('');
+
+    let content = text;
+    if (pendingImg) {
+      setPendingImg(null);
+      try {
+        const url = await resizeAndUpload(pendingImg.file);
+        content = text ? `${text}\n[img:${url}]` : `[img:${url}]`;
+      } catch {
+        content = text || '';
+      }
+      URL.revokeObjectURL(pendingImg.localUrl);
+    }
+    if (!content.trim()) { setStreaming(false); return; }
+
+    setMessages(prev => [...prev, { id: Date.now(), role: 'user', content }]);
+    try {
+      await sendMessage(sessionId, content, (delta) => {
         setStreamingText(prev => prev + delta);
       });
       await loadMessages();
@@ -148,6 +246,16 @@ export default function ChatView({ sessionId, onMenu }) {
             </svg>
           </button>
           <form className="bny-composer" onSubmit={e => { e.preventDefault(); handleSend(); }}>
+            {pendingImg && (
+              <div style={{ position: 'relative', display: 'inline-block', margin: '4px 8px 4px 0' }}>
+                <img src={pendingImg.localUrl} alt="待发送" style={{ height: 60, borderRadius: 8, display: 'block' }} />
+                <button
+                  type="button"
+                  onClick={() => { URL.revokeObjectURL(pendingImg.localUrl); setPendingImg(null); }}
+                  style={{ position: 'absolute', top: -6, right: -6, width: 18, height: 18, borderRadius: '50%', background: 'rgba(0,0,0,0.55)', border: 'none', color: '#fff', fontSize: 11, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1 }}
+                >✕</button>
+              </div>
+            )}
             <textarea
               ref={textareaRef}
               className="bny-textarea"
@@ -166,7 +274,7 @@ export default function ChatView({ sessionId, onMenu }) {
               <button
                 type="submit"
                 className="bny-send"
-                disabled={!input.trim() || streaming}
+                disabled={!input.trim() && !pendingImg || streaming}
                 aria-label="发送消息"
               >
                 <span className="bny-plane" aria-hidden="true">➤</span>
@@ -187,7 +295,7 @@ export default function ChatView({ sessionId, onMenu }) {
             </span>
             <span className="bny-extra-label">语音通话</span>
           </button>
-          <button type="button" className="bny-extra-btn" disabled>
+          <button type="button" className="bny-extra-btn" onClick={() => { photoInputRef.current?.click(); setExtraOpen(false); }}>
             <span className="bny-extra-icon">
               <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="4" y="7" width="28" height="22" rx="4"/>
@@ -197,7 +305,7 @@ export default function ChatView({ sessionId, onMenu }) {
             </span>
             <span className="bny-extra-label">照片</span>
           </button>
-          <button type="button" className="bny-extra-btn" disabled>
+          <button type="button" className="bny-extra-btn" onClick={() => { fileInputRef.current?.click(); setExtraOpen(false); }}>
             <span className="bny-extra-icon">
               <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M8 6 h13 l7 7 v17 a2 2 0 0 1-2 2 H8 a2 2 0 0 1-2-2 V8 a2 2 0 0 1 2-2z"/>
@@ -209,6 +317,10 @@ export default function ChatView({ sessionId, onMenu }) {
             <span className="bny-extra-label">文件</span>
           </button>
         </div>
+
+        {/* Hidden file inputs */}
+        <input ref={photoInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handlePhotoChange} />
+        <input ref={fileInputRef} type="file" style={{ display: 'none' }} onChange={handleFileChange} />
       </div>
 
       <CallOverlay
@@ -548,12 +660,36 @@ function StateDot({ state }) {
   );
 }
 
+function renderBubbleContent(text) {
+  if (!text) return null;
+  const IMG_RE = /\[img:(https?:\/\/[^\]]+)\]/g;
+  const FILE_RE = /\[file:(https?:\/\/\S+) ([^\]]+)\]/g;
+  const combined = /\[img:(https?:\/\/[^\]]+)\]|\[file:(https?:\/\/\S+) ([^\]]+)\]/g;
+  if (!IMG_RE.test(text) && !FILE_RE.test(text)) return text;
+
+  const parts = [];
+  let last = 0, key = 0;
+  combined.lastIndex = 0;
+  let m;
+  while ((m = combined.exec(text)) !== null) {
+    if (m.index > last) parts.push(<span key={key++}>{text.slice(last, m.index)}</span>);
+    if (m[1]) {
+      parts.push(<img key={key++} src={m[1]} alt="图片" style={{ maxWidth: '100%', borderRadius: 8, display: 'block', marginTop: 4 }} />);
+    } else {
+      parts.push(<a key={key++} href={m[2]} target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '4px 8px', borderRadius: 6, background: 'rgba(0,0,0,0.12)', textDecoration: 'none', color: 'inherit', fontSize: 13 }}>📎 {m[3]}</a>);
+    }
+    last = m.index + m[0].length;
+  }
+  if (last < text.length) parts.push(<span key={key++}>{text.slice(last)}</span>);
+  return parts;
+}
+
 function Bubble({ msg, isNew }) {
   const isMe = msg.role === 'user';
   const isError = msg.role === 'error';
   const [saved, setSaved] = React.useState(false);
   const [saving, setSaving] = React.useState(false);
-  const [ttsState, setTtsState] = React.useState('idle'); // 'idle' | 'loading' | 'playing'
+  const [ttsState, setTtsState] = React.useState('idle');
   const audioRef = React.useRef(null);
 
   async function handleSave(e) {
@@ -606,7 +742,7 @@ function Bubble({ msg, isNew }) {
       <div className="bny-bubble" style={{ position: 'relative' }}>
         <span className="bny-ears" aria-hidden="true" />
         {!isMe && <span className="bny-face" aria-hidden="true">• •</span>}
-        {msg.content}
+        {renderBubbleContent(msg.content)}
         {msg.streaming && <span style={{ opacity: 0.5 }}>▋</span>}
         {isMe && !msg.streaming && (
           <button
