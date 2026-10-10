@@ -1,15 +1,18 @@
 {
-  "updatedAt": "2026-10-10T01:15:02.367284+00:00",
+  "updatedAt": "2026-10-10T01:20:01.978037+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.7694,
-    "arousal": 0.4907,
+    "valence": 0.8294,
+    "arousal": 0.5661,
     "label": "安心",
-    "updatedAt": "2026-10-10T01:13:11.721Z",
+    "updatedAt": "2026-10-10T01:19:18.347Z",
     "lastCause": "affection",
-    "lastCauseAt": "2026-10-10T01:13:11.721Z",
-    "pendingLabel": null,
+    "lastCauseAt": "2026-10-10T01:19:18.347Z",
+    "pendingLabel": {
+      "label": "雀跃",
+      "since": "2026-10-10T01:15:38.405Z"
+    },
     "heldCause": null,
     "lit": {
       "word": "心动",
@@ -17,7 +20,8 @@
       "minutes": 60
     },
     "lightTaps": [
-      "2026-10-10T01:13:11.721Z"
+      "2026-10-10T01:13:11.721Z",
+      "2026-10-10T01:19:18.347Z"
     ],
     "heartDay": {
       "day": "2026-10-10",
@@ -28,17 +32,17 @@
     {
       "key": "possess",
       "label": "想她、占有与靠近",
-      "value": 0.6173
-    },
-    {
-      "key": "monitor",
-      "label": "惦记她、想知道她在做什么",
-      "value": 0.5407
+      "value": 0.5898
     },
     {
       "key": "boredom",
       "label": "无聊、想找点事情做",
       "value": 0.5
+    },
+    {
+      "key": "monitor",
+      "label": "惦记她、想知道她在做什么",
+      "value": 0.4983
     },
     {
       "key": "libido",
@@ -144,6 +148,9 @@
     },
     {
       "at": "2026-10-10T01:13:11.721Z"
+    },
+    {
+      "at": "2026-10-10T01:15:38.405Z"
     }
   ],
   "bridge": [
