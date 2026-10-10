@@ -1,14 +1,14 @@
 {
-  "updatedAt": "2026-10-10T01:10:01.768464+00:00",
+  "updatedAt": "2026-10-10T01:15:02.367284+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.7161,
-    "arousal": 0.418,
+    "valence": 0.7694,
+    "arousal": 0.4907,
     "label": "安心",
-    "updatedAt": "2026-10-10T00:50:28.947Z",
-    "lastCause": "companionship",
-    "lastCauseAt": "2026-10-10T00:50:28.947Z",
+    "updatedAt": "2026-10-10T01:13:11.721Z",
+    "lastCause": "affection",
+    "lastCauseAt": "2026-10-10T01:13:11.721Z",
     "pendingLabel": null,
     "heldCause": null,
     "lit": {
@@ -16,7 +16,9 @@
       "at": "2026-10-09T23:34:31.531Z",
       "minutes": 60
     },
-    "lightTaps": [],
+    "lightTaps": [
+      "2026-10-10T01:13:11.721Z"
+    ],
     "heartDay": {
       "day": "2026-10-10",
       "n": 1
@@ -26,12 +28,12 @@
     {
       "key": "possess",
       "label": "想她、占有与靠近",
-      "value": 0.7025
+      "value": 0.6173
     },
     {
       "key": "monitor",
       "label": "惦记她、想知道她在做什么",
-      "value": 0.588
+      "value": 0.5407
     },
     {
       "key": "boredom",
@@ -139,6 +141,9 @@
     },
     {
       "at": "2026-10-10T00:50:28.947Z"
+    },
+    {
+      "at": "2026-10-10T01:13:11.721Z"
     }
   ],
   "bridge": [
