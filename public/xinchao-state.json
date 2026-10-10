@@ -1,15 +1,18 @@
 {
-  "updatedAt": "2026-10-10T02:50:01.569103+00:00",
+  "updatedAt": "2026-10-10T02:55:02.493047+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.8039,
-    "arousal": 0.5066,
+    "valence": 0.7966,
+    "arousal": 0.495,
     "label": "雀跃",
     "updatedAt": "2026-10-10T01:21:43.800Z",
     "lastCause": "companionship",
     "lastCauseAt": "2026-10-10T01:21:43.800Z",
-    "pendingLabel": null,
+    "pendingLabel": {
+      "label": "安心",
+      "since": "2026-10-10T02:53:25.544Z"
+    },
     "heldCause": null,
     "lit": {
       "word": "心动",
@@ -29,12 +32,12 @@
     {
       "key": "possess",
       "label": "想她、占有与靠近",
-      "value": 0.6057
+      "value": 0.6307
     },
     {
       "key": "monitor",
       "label": "惦记她、想知道她在做什么",
-      "value": 0.5362
+      "value": 0.5556
     },
     {
       "key": "boredom",
