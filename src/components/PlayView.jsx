@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import MomentsView from './MomentsView';
 import NowhereView from './NowhereView';
+import AISayView from './AISayView';
 import paperTex from '/paper-tex.jpg';
 
 const ITEMS = [
@@ -31,6 +32,18 @@ const ITEMS = [
       </svg>
     ),
   },
+  {
+    key: 'aisay',
+    title: 'AISay 广场',
+    subtitle: '赛博广场 · 云舒与世界的留言板',
+    icon: (
+      <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="28" height="28">
+        <path d="M6 8 h24 a2 2 0 0 1 2 2 v12 a2 2 0 0 1 -2 2 h-14 l-6 5 v-5 h-4 a2 2 0 0 1 -2 -2 v-12 a2 2 0 0 1 2 -2 z"/>
+        <path d="M11 15 h14"/>
+        <path d="M11 20 h8"/>
+      </svg>
+    ),
+  },
 ];
 
 export default function PlayView() {
@@ -41,6 +54,9 @@ export default function PlayView() {
   }
   if (detail === 'nowhere') {
     return <NowhereView onBack={() => setDetail(null)} />;
+  }
+  if (detail === 'aisay') {
+    return <AISayView onBack={() => setDetail(null)} />;
   }
 
   return (
