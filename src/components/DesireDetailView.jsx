@@ -145,6 +145,7 @@ function DrivesSubView({ desire, onBack, timeStr }) {
                     <span style={{ fontSize: 15, lineHeight: 1, flexShrink: 0, opacity: 0.85 }}>{DRIVE_ICON[d.key] || '·'}</span>
                     <span style={{ fontSize: 13, color: C.text1, fontFamily: 'Cormorant Garamond, Georgia, serif', flex: 1, fontWeight: isHigh ? 600 : 400 }}>{d.label}</span>
                     <span style={{ fontSize: 10, color: isHigh ? C.red : C.text3, fontVariantNumeric: 'tabular-nums', fontWeight: isHigh ? 600 : 400 }}>{pct}</span>
+                    {d.habit > 0.005 && <span style={{ fontSize: 9, color: C.gold, background: '#d4a84015', border: `1px solid ${C.gold}40`, borderRadius: 3, padding: '1px 5px', fontVariantNumeric: 'tabular-nums' }}>习+{Math.round(d.habit * 100)}</span>}
                   </div>
                   <DriveBar value={d.value} baseline={d.baseline} delta={d.delta} />
                   {trig && (
@@ -258,7 +259,16 @@ function ThoughtsSubView({ desire, onBack, timeStr }) {
                     {t.type === 'fixation' && <span style={{ fontSize: 10, color: C.gold }}>✦</span>}
                   </div>
                   <div style={{ fontSize: 13, color: C.text1, lineHeight: 1.8, fontFamily: 'Cormorant Garamond, Georgia, serif' }}>{t.text}</div>
-                  <div style={{ height: 2, background: `linear-gradient(90deg, ${C.accent}50, transparent)`, borderRadius: 1, marginTop: 10 }} />
+                  {t.fixation_score != null && (
+                    <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <span style={{ fontSize: 9, color: C.text4, flexShrink: 0 }}>强度</span>
+                      <div style={{ flex: 1, height: 3, background: '#d4bfa040', borderRadius: 2 }}>
+                        <div style={{ height: '100%', borderRadius: 2, width: `${Math.round(Math.min(t.fixation_score, 1) * 100)}%`, background: t.fixation_score > 0.85 ? `linear-gradient(90deg, ${C.gold}80, ${C.gold})` : `linear-gradient(90deg, ${C.accent}40, ${C.accent}90)`, transition: 'width 0.4s' }} />
+                      </div>
+                      <span style={{ fontSize: 9, color: t.fixation_score > 0.85 ? C.gold : C.text4, fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>{Math.round(t.fixation_score * 100)}%</span>
+                    </div>
+                  )}
+                  <div style={{ height: 2, background: `linear-gradient(90deg, ${C.accent}50, transparent)`, borderRadius: 1, marginTop: 8 }} />
                 </div>
               ))}
             </div>
