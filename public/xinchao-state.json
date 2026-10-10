@@ -1,17 +1,17 @@
 {
-  "updatedAt": "2026-10-10T13:55:02.362744+00:00",
+  "updatedAt": "2026-10-10T14:00:02.298995+00:00",
   "consciousness": "awake",
-  "fatigue": 0.0006,
+  "fatigue": 0.001,
   "emotion": {
-    "valence": 0.3297,
-    "arousal": 0.5693,
-    "label": "紧绷",
-    "updatedAt": "2026-10-10T13:46:28.088Z",
+    "valence": 0.3847,
+    "arousal": 0.5412,
+    "label": "烦躁",
+    "updatedAt": "2026-10-10T13:58:14.892Z",
     "lastCause": "loss",
     "lastCauseAt": "2026-10-10T13:46:28.088Z",
     "pendingLabel": {
-      "label": "烦躁",
-      "since": "2026-10-10T13:46:28.088Z"
+      "label": "平静",
+      "since": "2026-10-10T13:58:14.892Z"
     },
     "heldCause": {
       "word": "生气",
@@ -33,12 +33,12 @@
     {
       "key": "monitor",
       "label": "惦记她、想知道她在做什么",
-      "value": 0.807
+      "value": 0.8067
     },
     {
       "key": "possess",
       "label": "想她、占有与靠近",
-      "value": 0.7904
+      "value": 0.799
     },
     {
       "key": "boredom",
@@ -63,7 +63,7 @@
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.3276
+      "value": 0.3246
     },
     {
       "key": "affection",
