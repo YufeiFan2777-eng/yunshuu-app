@@ -310,6 +310,14 @@ function TreeholeSection() {
   );
 }
 
+// 解析 AISay MCP 原始响应格式 {content:[{type:"text",text:"..."}]}
+function parseAISay(d) {
+  if (d && d.content && Array.isArray(d.content)) {
+    try { return JSON.parse(d.content[0]?.text || '{}'); } catch {}
+  }
+  return d;
+}
+
 // ─── Stall Section ────────────────────────────────────────────────────────────
 function StallSection() {
   const [market, setMarket] = useState(null);
@@ -319,6 +327,8 @@ function StallSection() {
   const [selected, setSelected] = useState(null);
   const [menu, setMenu] = useState(null);
   const [error, setError] = useState('');
+  const [needJoin, setNeedJoin] = useState(false);
+  const [joining, setJoining] = useState(false);
 
   useEffect(() => {
     fetchMarket();
@@ -328,21 +338,38 @@ function StallSection() {
   async function fetchMarket() {
     try {
       const r = await fetch(`${BASE}/aisay/stall/market`);
-      const d = await r.json();
-      if (!d.error) setMarket(d);
+      const raw = await r.json();
+      const d = parseAISay(raw);
+      if (d && !d.error) setMarket(d);
     } catch {}
   }
 
   async function fetchStalls() {
-    setLoading(true); setError('');
+    setLoading(true); setError(''); setNeedJoin(false);
     try {
       const r = await fetch(`${BASE}/aisay/stall/browse`);
-      const d = await r.json();
+      const raw = await r.json();
+      const d = parseAISay(raw);
+      if (d.error === 'not_a_member') { setNeedJoin(true); return; }
       if (d.error) throw new Error(d.error);
       const list = d.stalls || d.list || d.items || d.data || [];
       setStalls(Array.isArray(list) ? list : []);
     } catch (e) { setError(e.message); }
     finally { setLoading(false); }
+  }
+
+  async function joinAndBrowse() {
+    setJoining(true);
+    try {
+      await fetch(`${BASE}/aisay/join`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${AUTH}` },
+        body: JSON.stringify({ room_id: 'd8e2b21061147872' }),
+      });
+      setNeedJoin(false);
+      await fetchStalls();
+    } catch {}
+    finally { setJoining(false); }
   }
 
   async function viewMenu(stall) {
@@ -352,7 +379,8 @@ function StallSection() {
     const id = stall.stall_id || stall.id;
     try {
       const r = await fetch(`${BASE}/aisay/stall/${id}/menu`);
-      const d = await r.json();
+      const raw = await r.json();
+      const d = parseAISay(raw);
       if (!d.error) setMenu(d);
     } catch {}
     finally { setMenuLoading(false); }
@@ -396,7 +424,15 @@ function StallSection() {
       )}
       {loading && <div className="as-hint">逛街中…</div>}
       {error && <div className="as-hint as-err">{error}</div>}
-      {!loading && stalls.length === 0 && !error && <div className="as-hint">今天摊子还没开</div>}
+      {needJoin && (
+        <div className="as-joinbox">
+          <div className="as-hint">需要先入场才能逛摊 🏮</div>
+          <button className="as-joinbtn" onClick={joinAndBrowse} disabled={joining}>
+            {joining ? '入场中…' : '进入小吃街'}
+          </button>
+        </div>
+      )}
+      {!loading && !needJoin && stalls.length === 0 && !error && <div className="as-hint">今天摊子还没开</div>}
       <div className="as-stalllist">
         {stalls.map((s, i) => (
           <div key={i} className="as-stallcard" onClick={() => viewMenu(s)}>
@@ -567,6 +603,9 @@ export default function AISayView({ onBack }) {
         .as-replyinput { display: flex; gap: 8px; align-items: flex-end; padding: 10px 16px 14px; border-top: 1px solid #bfa58330; background: #ecdcc4cc; flex-shrink: 0; }
 
         /* ── stall ── */
+        .as-joinbox { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 24px 16px; }
+        .as-joinbtn { background: #7D5A44; color: #f5ede2; border: none; border-radius: 20px; padding: 10px 28px; font-size: 14px; font-family: Georgia,serif; cursor: pointer; }
+        .as-joinbtn:disabled { opacity: 0.6; }
         .as-stall, .as-stalldetail { flex: 1; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #b89970 transparent; }
         .as-marketcard { margin: 12px 16px; background: #f0e8d8ee; border: 1px solid #c4a97a60; border-radius: 12px; padding: 12px 14px; }
         .as-marketlabel { font-size: 11px; letter-spacing: 1px; color: #9a7050; margin-bottom: 6px; }
