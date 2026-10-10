@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-10-10T02:05:01.956519+00:00",
+  "updatedAt": "2026-10-10T02:10:01.584539+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.827,
-    "arousal": 0.5457,
+    "valence": 0.8191,
+    "arousal": 0.5319,
     "label": "雀跃",
     "updatedAt": "2026-10-10T01:21:43.800Z",
     "lastCause": "companionship",
@@ -37,6 +37,11 @@
       "value": 0.5
     },
     {
+      "key": "monitor",
+      "label": "惦记她、想知道她在做什么",
+      "value": 0.4974
+    },
+    {
       "key": "libido",
       "label": "性欲和身体上的渴望",
       "value": 0.4966
@@ -45,11 +50,6 @@
       "key": "curiosity",
       "label": "好奇、想探索新东西",
       "value": 0.4966
-    },
-    {
-      "key": "monitor",
-      "label": "惦记她、想知道她在做什么",
-      "value": 0.478
     },
     {
       "key": "reflection",
