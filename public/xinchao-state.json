@@ -1,15 +1,18 @@
 {
-  "updatedAt": "2026-10-10T00:50:01.964429+00:00",
+  "updatedAt": "2026-10-10T00:55:01.483314+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.66,
-    "arousal": 0.3881,
+    "valence": 0.721,
+    "arousal": 0.425,
     "label": "平静",
-    "updatedAt": "2026-10-10T00:49:54.253Z",
+    "updatedAt": "2026-10-10T00:50:28.947Z",
     "lastCause": "companionship",
-    "lastCauseAt": "2026-10-10T00:49:54.253Z",
-    "pendingLabel": null,
+    "lastCauseAt": "2026-10-10T00:50:28.947Z",
+    "pendingLabel": {
+      "label": "安心",
+      "since": "2026-10-10T00:50:06.886Z"
+    },
     "heldCause": null,
     "lit": {
       "word": "心动",
@@ -26,12 +29,12 @@
     {
       "key": "possess",
       "label": "想她、占有与靠近",
-      "value": 0.7018
+      "value": 0.6773
     },
     {
       "key": "monitor",
       "label": "惦记她、想知道她在做什么",
-      "value": 0.6533
+      "value": 0.588
     },
     {
       "key": "boredom",
@@ -133,6 +136,12 @@
     },
     {
       "at": "2026-10-10T00:49:54.253Z"
+    },
+    {
+      "at": "2026-10-10T00:50:06.886Z"
+    },
+    {
+      "at": "2026-10-10T00:50:28.947Z"
     }
   ],
   "bridge": [
