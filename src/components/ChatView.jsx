@@ -56,7 +56,7 @@ export default function ChatView({ sessionId, onMenu }) {
   async function loadMessages() {
     try {
       const { messages: data } = await getMessages(sessionId);
-      setMessages(data || []);
+      if (data != null) setMessages(data);
     } catch (e) {
       console.error(e);
     } finally {

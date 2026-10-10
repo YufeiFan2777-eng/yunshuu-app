@@ -16,6 +16,7 @@ export async function createSession(name) {
 
 export async function getMessages(sessionId) {
   const r = await fetch(`${BASE}/chat/sessions/${sessionId}/messages`);
+  if (!r.ok) throw new Error(`getMessages failed: ${r.status}`);
   return r.json();
 }
 
