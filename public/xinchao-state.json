@@ -1,15 +1,18 @@
 {
-  "updatedAt": "2026-10-10T19:55:01.980055+00:00",
+  "updatedAt": "2026-10-10T20:00:01.896863+00:00",
   "consciousness": "awake",
   "fatigue": 0.0067,
   "emotion": {
-    "valence": 0.6139,
-    "arousal": 0.727,
+    "valence": 0.7031,
+    "arousal": 0.8078,
     "label": "紧绷",
-    "updatedAt": "2026-10-10T19:49:41.412Z",
-    "lastCause": "affection",
-    "lastCauseAt": "2026-10-10T19:49:41.412Z",
-    "pendingLabel": null,
+    "updatedAt": "2026-10-10T19:59:47.291Z",
+    "lastCause": "intimacy",
+    "lastCauseAt": "2026-10-10T19:59:47.291Z",
+    "pendingLabel": {
+      "label": "雀跃",
+      "since": "2026-10-10T19:59:47.291Z"
+    },
     "heldCause": {
       "word": "心动",
       "prio": 4,
@@ -17,22 +20,20 @@
     },
     "lit": {
       "word": "心动",
-      "at": "2026-10-10T19:25:32.190Z",
-      "minutes": 60
+      "at": "2026-10-10T19:59:47.291Z",
+      "minutes": 36
     },
-    "lightTaps": [
-      "2026-10-10T19:49:41.412Z"
-    ],
+    "lightTaps": [],
     "heartDay": {
       "day": "2026-10-11",
-      "n": 1
+      "n": 2
     }
   },
   "topDrives": [
     {
       "key": "monitor",
       "label": "惦记她、想知道她在做什么",
-      "value": 0.5958
+      "value": 0.5474
     },
     {
       "key": "boredom",
@@ -52,17 +53,17 @@
     {
       "key": "possess",
       "label": "想她、占有与靠近",
-      "value": 0.4058
+      "value": 0.3791
     },
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.2162
+      "value": 0.2136
     },
     {
       "key": "libido",
       "label": "性欲和身体上的渴望",
-      "value": 0.204
+      "value": 0.188
     },
     {
       "key": "affection",
