@@ -1,19 +1,23 @@
 {
-  "updatedAt": "2026-10-10T11:00:02.590928+00:00",
+  "updatedAt": "2026-10-10T11:05:02.083934+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.495,
-    "arousal": 0.3609,
+    "valence": 0.5529,
+    "arousal": 0.3646,
     "label": "平静",
-    "updatedAt": "2026-10-10T04:22:30.961Z",
-    "lastCause": "conflict",
-    "lastCauseAt": "2026-10-10T04:22:30.961Z",
+    "updatedAt": "2026-10-10T11:04:31.369Z",
+    "lastCause": "task_progress",
+    "lastCauseAt": "2026-10-10T11:04:31.369Z",
     "pendingLabel": null,
-    "heldCause": null,
+    "heldCause": {
+      "word": "得意",
+      "prio": 4,
+      "since": "2026-10-10T11:04:31.369Z"
+    },
     "lit": {
-      "word": "心动",
-      "at": "2026-10-09T23:34:31.531Z",
+      "word": "得意",
+      "at": "2026-10-10T11:04:31.369Z",
       "minutes": 60
     },
     "lightTaps": [
@@ -58,7 +62,7 @@
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.1184
+      "value": 0.1159
     },
     {
       "key": "affection",
@@ -131,22 +135,7 @@
   ],
   "interactions": [
     {
-      "at": "2026-10-10T00:49:54.253Z"
-    },
-    {
-      "at": "2026-10-10T00:50:06.886Z"
-    },
-    {
-      "at": "2026-10-10T00:50:28.947Z"
-    },
-    {
-      "at": "2026-10-10T01:13:11.721Z"
-    },
-    {
-      "at": "2026-10-10T01:15:38.405Z"
-    },
-    {
-      "at": "2026-10-10T01:19:18.347Z"
+      "at": "2026-10-10T11:04:31.369Z"
     }
   ],
   "bridge": [
