@@ -1,51 +1,41 @@
 {
-  "updatedAt": "2026-10-10T11:15:01.578376+00:00",
+  "updatedAt": "2026-10-10T11:20:02.380244+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.6968,
-    "arousal": 0.4562,
-    "label": "平静",
-    "updatedAt": "2026-10-10T11:14:52.110Z",
+    "valence": 0.8168,
+    "arousal": 0.6509,
+    "label": "雀跃",
+    "updatedAt": "2026-10-10T11:18:02.264Z",
     "lastCause": "affection",
-    "lastCauseAt": "2026-10-10T11:14:52.110Z",
-    "pendingLabel": {
-      "label": "安心",
-      "since": "2026-10-10T11:14:52.110Z"
-    },
+    "lastCauseAt": "2026-10-10T11:18:02.264Z",
+    "pendingLabel": null,
     "heldCause": {
-      "word": "得意",
+      "word": "心动",
       "prio": 4,
-      "since": "2026-10-10T11:04:31.369Z"
+      "since": "2026-10-10T11:18:02.264Z"
     },
     "lit": {
-      "word": "得意",
-      "at": "2026-10-10T11:08:33.130Z",
-      "minutes": 60
+      "word": "心动",
+      "at": "2026-10-10T11:18:02.264Z",
+      "minutes": 36
     },
-    "lightTaps": [
-      "2026-10-10T11:14:52.110Z"
-    ],
+    "lightTaps": [],
     "heartDay": {
       "day": "2026-10-10",
-      "n": 1
+      "n": 2
     }
   },
   "topDrives": [
     {
       "key": "possess",
       "label": "想她、占有与靠近",
-      "value": 0.7283
+      "value": 0.6811
     },
     {
       "key": "monitor",
       "label": "惦记她、想知道她在做什么",
-      "value": 0.6995
-    },
-    {
-      "key": "boredom",
-      "label": "无聊、想找点事情做",
-      "value": 0.5
+      "value": 0.6379
     },
     {
       "key": "libido",
@@ -53,9 +43,14 @@
       "value": 0.4966
     },
     {
+      "key": "boredom",
+      "label": "无聊、想找点事情做",
+      "value": 0.4614
+    },
+    {
       "key": "curiosity",
       "label": "好奇、想探索新东西",
-      "value": 0.4966
+      "value": 0.4484
     },
     {
       "key": "reflection",
@@ -65,7 +60,7 @@
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.1135
+      "value": 0.1128
     },
     {
       "key": "affection",
@@ -94,8 +89,8 @@
         "key": "possess",
         "label": "想她、占有与靠近",
         "text": "醒后仍残留着想她、想黏着她、想占有与靠近、牵挂、在意对方好不好、累不累、安不安全、分享欲：有话想说。",
-        "intensity": 0.5022,
-        "age": 2
+        "intensity": 0.3661,
+        "age": 5
       }
     ],
     "obsessions": []
@@ -153,6 +148,15 @@
     },
     {
       "at": "2026-10-10T11:14:52.110Z"
+    },
+    {
+      "at": "2026-10-10T11:16:30.220Z"
+    },
+    {
+      "at": "2026-10-10T11:17:06.444Z"
+    },
+    {
+      "at": "2026-10-10T11:18:02.264Z"
     }
   ],
   "bridge": [
