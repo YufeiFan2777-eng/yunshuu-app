@@ -1,14 +1,14 @@
 {
-  "updatedAt": "2026-10-10T01:20:01.978037+00:00",
+  "updatedAt": "2026-10-10T01:25:01.457160+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.8294,
-    "arousal": 0.5661,
+    "valence": 0.8436,
+    "arousal": 0.5758,
     "label": "安心",
-    "updatedAt": "2026-10-10T01:19:18.347Z",
-    "lastCause": "affection",
-    "lastCauseAt": "2026-10-10T01:19:18.347Z",
+    "updatedAt": "2026-10-10T01:21:43.800Z",
+    "lastCause": "companionship",
+    "lastCauseAt": "2026-10-10T01:21:43.800Z",
     "pendingLabel": {
       "label": "雀跃",
       "since": "2026-10-10T01:15:38.405Z"
@@ -32,17 +32,12 @@
     {
       "key": "possess",
       "label": "想她、占有与靠近",
-      "value": 0.5898
+      "value": 0.5807
     },
     {
       "key": "boredom",
       "label": "无聊、想找点事情做",
       "value": 0.5
-    },
-    {
-      "key": "monitor",
-      "label": "惦记她、想知道她在做什么",
-      "value": 0.4983
     },
     {
       "key": "libido",
@@ -53,6 +48,11 @@
       "key": "curiosity",
       "label": "好奇、想探索新东西",
       "value": 0.4966
+    },
+    {
+      "key": "monitor",
+      "label": "惦记她、想知道她在做什么",
+      "value": 0.478
     },
     {
       "key": "reflection",
