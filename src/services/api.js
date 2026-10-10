@@ -31,49 +31,57 @@ export async function getVitals() {
 
 // 流式发送消息，onDelta(text) 每片段回调
 export async function sendMessage(sessionId, content, onDelta) {
-  const resp = await fetch(`${BASE}/chat/sessions/${sessionId}/messages`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ content }),
-  });
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 200000); // 200s 超时兜底
 
-  if (!resp.ok) {
-    const err = await resp.json();
-    throw new Error(err.error || '发送失败');
-  }
+  try {
+    const resp = await fetch(`${BASE}/chat/sessions/${sessionId}/messages`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content }),
+      signal: controller.signal,
+    });
 
-  const reader = resp.body.getReader();
-  const decoder = new TextDecoder();
-  let buffer = '';
-  let fullContent = '';
-
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-
-    buffer += decoder.decode(value, { stream: true });
-    const lines = buffer.split('\n');
-    buffer = lines.pop();
-
-    let shouldBreak = false;
-    for (const line of lines) {
-      if (line === 'event: done') { shouldBreak = true; continue; }
-      if (line.startsWith('event: ')) continue;
-      if (!line.startsWith('data: ')) continue;
-
-      try {
-        const data = JSON.parse(line.slice(6));
-        if (data.text) {
-          fullContent += data.text;
-          onDelta(data.text);
-        }
-        if (data.message) throw new Error(data.message);
-      } catch (e) {
-        if (e.message !== 'Unexpected end of JSON input') throw e;
-      }
+    if (!resp.ok) {
+      const err = await resp.json();
+      throw new Error(err.error || '发送失败');
     }
-    if (shouldBreak) break;
-  }
 
-  return fullContent;
+    const reader = resp.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    let fullContent = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop();
+
+      let shouldBreak = false;
+      for (const line of lines) {
+        if (line === 'event: done') { shouldBreak = true; continue; }
+        if (line.startsWith('event: ')) continue;
+        if (!line.startsWith('data: ')) continue;
+
+        try {
+          const data = JSON.parse(line.slice(6));
+          if (data.text) {
+            fullContent += data.text;
+            onDelta(data.text);
+          }
+          if (data.message) throw new Error(data.message);
+        } catch (e) {
+          if (e.message !== 'Unexpected end of JSON input') throw e;
+        }
+      }
+      if (shouldBreak) break;
+    }
+
+    return fullContent;
+  } finally {
+    clearTimeout(timer);
+  }
 }
