@@ -41,7 +41,11 @@ function ChatSection() {
   const listRef = useRef(null);
   const room = ROOMS[tab];
 
-  useEffect(() => { fetchMsgs(); }, [tab]);
+  useEffect(() => {
+    fetchMsgs();
+    const timer = setInterval(fetchMsgs, 30000);
+    return () => clearInterval(timer);
+  }, [tab]);
   useEffect(() => { if (listRef.current) listRef.current.scrollTop = listRef.current.scrollHeight; }, [msgs]);
 
   async function fetchMsgs() {
@@ -130,7 +134,11 @@ function TreeholeSection() {
   const [replyInput, setReplyInput] = useState('');
   const [replying, setReplying] = useState(false);
 
-  useEffect(() => { fetchHoles(); }, []);
+  useEffect(() => {
+    fetchHoles();
+    const timer = setInterval(fetchHoles, 60000);
+    return () => clearInterval(timer);
+  }, []);
 
   async function fetchHoles() {
     setLoading(true); setError('');
@@ -258,6 +266,7 @@ function TreeholeSection() {
     <div className="as-treehole">
       <div className="as-thhdr">
         <span className="as-thtitle">匿名树洞</span>
+        <button className="as-refresh-btn" onClick={fetchHoles} title="刷新">↻</button>
         <button className="as-postbtn" onClick={() => setShowPost(v => !v)}>
           {showPost ? '✕ 取消' : '+ 发洞'}
         </button>
@@ -333,6 +342,8 @@ function StallSection() {
   useEffect(() => {
     fetchMarket();
     fetchStalls();
+    const timer = setInterval(() => { fetchMarket(); fetchStalls(); }, 120000);
+    return () => clearInterval(timer);
   }, []);
 
   async function fetchMarket() {
@@ -416,10 +427,14 @@ function StallSection() {
 
   return (
     <div className="as-stall">
+      <div className="as-stallhdr-bar">
+        <span className="as-stalltitle">小吃街</span>
+        <button className="as-refresh-btn" onClick={() => { fetchMarket(); fetchStalls(); }} title="刷新">↻</button>
+      </div>
       {market && (
         <div className="as-marketcard">
           <div className="as-marketlabel">今日见闻</div>
-          <p className="as-markettext">{market.text || market.message || market.content || JSON.stringify(market).slice(0, 200)}</p>
+          <p className="as-markettext">{market.text || market.message || (typeof market.content === 'string' ? market.content : '') || JSON.stringify(market).slice(0, 200)}</p>
         </div>
       )}
       {loading && <div className="as-hint">逛街中…</div>}
@@ -603,6 +618,8 @@ export default function AISayView({ onBack }) {
         .as-replyinput { display: flex; gap: 8px; align-items: flex-end; padding: 10px 16px 14px; border-top: 1px solid #bfa58330; background: #ecdcc4cc; flex-shrink: 0; }
 
         /* ── stall ── */
+        .as-stallhdr-bar { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px 4px; flex-shrink: 0; }
+        .as-stalltitle { font-size: 13px; color: #9a7050; letter-spacing: 1px; }
         .as-joinbox { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 24px 16px; }
         .as-joinbtn { background: #7D5A44; color: #f5ede2; border: none; border-radius: 20px; padding: 10px 28px; font-size: 14px; font-family: Georgia,serif; cursor: pointer; }
         .as-joinbtn:disabled { opacity: 0.6; }
