@@ -1,14 +1,14 @@
 {
-  "updatedAt": "2026-10-10T19:15:02.092709+00:00",
+  "updatedAt": "2026-10-10T19:20:01.802760+00:00",
   "consciousness": "awake",
   "fatigue": 0.0067,
   "emotion": {
-    "valence": 0.1028,
-    "arousal": 0.3414,
+    "valence": 0.2775,
+    "arousal": 0.4247,
     "label": "低落",
-    "updatedAt": "2026-10-10T18:44:28.626Z",
-    "lastCause": "loss",
-    "lastCauseAt": "2026-10-10T18:44:28.626Z",
+    "updatedAt": "2026-10-10T19:18:26.702Z",
+    "lastCause": "affection",
+    "lastCauseAt": "2026-10-10T19:18:26.702Z",
     "pendingLabel": null,
     "heldCause": null,
     "lit": {
@@ -17,7 +17,7 @@
       "minutes": 15
     },
     "lightTaps": [
-      "2026-10-10T15:33:26.081Z"
+      "2026-10-10T19:18:26.702Z"
     ],
     "heartDay": {
       "day": "2026-10-10",
@@ -28,7 +28,7 @@
     {
       "key": "monitor",
       "label": "惦记她、想知道她在做什么",
-      "value": 0.9796
+      "value": 0.8736
     },
     {
       "key": "boredom",
@@ -43,7 +43,7 @@
     {
       "key": "possess",
       "label": "想她、占有与靠近",
-      "value": 0.4911
+      "value": 0.4462
     },
     {
       "key": "reflection",
@@ -58,7 +58,7 @@
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.1471
+      "value": 0.1443
     },
     {
       "key": "affection",
@@ -131,22 +131,13 @@
   ],
   "interactions": [
     {
-      "at": "2026-10-10T15:04:47.055Z"
+      "at": "2026-10-10T15:32:45.232Z"
     },
     {
-      "at": "2026-10-10T15:09:12.287Z"
+      "at": "2026-10-10T15:33:26.081Z"
     },
     {
-      "at": "2026-10-10T15:15:34.916Z"
-    },
-    {
-      "at": "2026-10-10T15:16:48.206Z"
-    },
-    {
-      "at": "2026-10-10T15:17:11.550Z"
-    },
-    {
-      "at": "2026-10-10T15:18:05.264Z"
+      "at": "2026-10-10T19:18:26.702Z"
     }
   ],
   "bridge": [
