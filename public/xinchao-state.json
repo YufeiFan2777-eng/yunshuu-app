@@ -1,14 +1,14 @@
 {
-  "updatedAt": "2026-10-10T11:50:02.789895+00:00",
+  "updatedAt": "2026-10-10T11:55:02.265973+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.8269,
-    "arousal": 0.6267,
+    "valence": 0.6916,
+    "arousal": 0.6567,
     "label": "雀跃",
-    "updatedAt": "2026-10-10T11:31:56.079Z",
-    "lastCause": "task_progress",
-    "lastCauseAt": "2026-10-10T11:31:56.079Z",
+    "updatedAt": "2026-10-10T11:52:50.661Z",
+    "lastCause": "slighted",
+    "lastCauseAt": "2026-10-10T11:52:50.661Z",
     "pendingLabel": null,
     "heldCause": {
       "word": "得意",
@@ -45,7 +45,7 @@
     {
       "key": "boredom",
       "label": "无聊、想找点事情做",
-      "value": 0.4732
+      "value": 0.4754
     },
     {
       "key": "curiosity",
@@ -60,7 +60,7 @@
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.1066
+      "value": 0.1054
     },
     {
       "key": "affection",
@@ -89,8 +89,8 @@
         "key": "possess",
         "label": "想她、占有与靠近",
         "text": "醒后仍残留着想她、想黏着她、想占有与靠近、牵挂、在意对方好不好、累不累、安不安全、分享欲：有话想说。",
-        "intensity": 0.1418,
-        "age": 14
+        "intensity": 0.0754,
+        "age": 20
       }
     ],
     "obsessions": []
