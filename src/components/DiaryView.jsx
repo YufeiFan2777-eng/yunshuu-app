@@ -71,7 +71,8 @@ export default function DiaryView({ onBack }) {
   const [loading, setLoading] = useState(true);
   const [err, setErr]         = useState(null);
 
-  useEffect(() => {
+  function loadList() {
+    setErr(null); setLoading(true);
     fetch(`${API_BASE}/journals?limit=30`)
       .then(r => r.json())
       .then(d => {
@@ -81,7 +82,9 @@ export default function DiaryView({ onBack }) {
         if (j.length > 0) { setOpen(j[0].date); fetchBody(j[0].date); }
       })
       .catch(() => { setErr('日记加载失败'); setLoading(false); });
-  }, []);
+  }
+
+  useEffect(() => { loadList(); }, []);
 
   function fetchBody(date) {
     if (body[date] !== undefined) return;
@@ -111,7 +114,16 @@ export default function DiaryView({ onBack }) {
       </div>
 
       {loading && <div style={S.empty}>读取中…</div>}
-      {err     && <div style={S.empty}>{err}</div>}
+      {err && (
+        <div style={S.empty}>
+          <div>{err}</div>
+          <button onClick={loadList} style={{
+            marginTop: 14, padding: '8px 22px', borderRadius: 20,
+            background: '#7a4f2e', color: '#f5e9d5', border: 'none',
+            fontSize: 13, cursor: 'pointer',
+          }}>重试</button>
+        </div>
+      )}
       {!loading && !err && list.length === 0 && <div style={S.empty}>还没有日记</div>}
 
       {Object.keys(grouped).sort().reverse().map(m => (

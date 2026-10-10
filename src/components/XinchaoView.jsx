@@ -61,10 +61,14 @@ const SUN_ANGLES = [0,30,60,90,120,150,180,210,240,270,300,330];
 export default function XinchaoView({ onBack }) {
   const [data, setData]       = useState(null);
   const [selected, setSelected] = useState(-1);
+  const [loadErr, setLoadErr] = useState(false);
 
-  useEffect(() => {
-    getState().then(d => { if (d.available) setData(d); }).catch(() => {});
-  }, []);
+  function load() {
+    setLoadErr(false);
+    getState().then(d => { if (d.available) setData(d); }).catch(() => setLoadErr(true));
+  }
+
+  useEffect(() => { load(); }, []);
 
   const state  = data?.state || {};
   const values = CN_KEYS.map(k => parseValue(state[k]));
@@ -95,6 +99,16 @@ export default function XinchaoView({ onBack }) {
         <div style={{ fontWeight: 400, fontSize: 17, fontFamily: "Georgia,'Songti SC',serif", color: '#513d2c' }}>身体状态</div>
       </div>
 
+      {loadErr && !data && (
+        <div style={{ textAlign: 'center', padding: '60px 20px', color: '#9a7050', fontFamily: "Georgia,serif" }}>
+          <div style={{ fontSize: 13, marginBottom: 14 }}>加载失败</div>
+          <button onClick={load} style={{
+            padding: '8px 22px', borderRadius: 20, background: '#7D5A44',
+            color: '#f5ede2', border: 'none', fontSize: 13, cursor: 'pointer',
+          }}>重试</button>
+        </div>
+      )}
+
       {/* ── Scrollable body ── */}
       <div style={{
         flex: 1, overflowY: 'auto',
@@ -103,6 +117,7 @@ export default function XinchaoView({ onBack }) {
         color: '#513d2c',
         padding: '0 0 40px',
         position: 'relative',
+        display: loadErr && !data ? 'none' : undefined,
       }}
         onClick={e => {
           if (!e.target.closest('.petal-g,.label-btn,.detail-panel')) setSelected(-1);
