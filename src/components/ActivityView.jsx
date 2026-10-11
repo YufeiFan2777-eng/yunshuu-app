@@ -43,7 +43,9 @@ function fmtTime(ts) {
 
 const S = {
   view: {
-    minHeight: '100%',
+    height: '100%',
+    overflowY: 'auto',
+    overflowX: 'hidden',
     background: 'linear-gradient(160deg,#f7eed8 0%,#ecddb0 100%)',
     fontFamily: "'Noto Serif SC','STSong',serif",
     color: '#3d2b1f',
