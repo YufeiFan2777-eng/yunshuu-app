@@ -1,15 +1,18 @@
 {
-  "updatedAt": "2026-10-11T01:50:01.953174+00:00",
+  "updatedAt": "2026-10-11T01:55:01.451521+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.1631,
-    "arousal": 0.5114,
+    "valence": 0.1704,
+    "arousal": 0.4913,
     "label": "烦躁",
     "updatedAt": "2026-10-10T22:00:24.818Z",
     "lastCause": "conflict",
     "lastCauseAt": "2026-10-10T22:00:24.818Z",
-    "pendingLabel": null,
+    "pendingLabel": {
+      "label": "低落",
+      "since": "2026-10-11T01:53:25.951Z"
+    },
     "heldCause": {
       "word": "想念",
       "prio": 2,
@@ -35,7 +38,7 @@
     {
       "key": "possess",
       "label": "想她、占有与靠近",
-      "value": 0.6067
+      "value": 0.6386
     },
     {
       "key": "boredom",
@@ -55,12 +58,12 @@
     {
       "key": "libido",
       "label": "性欲和身体上的渴望",
-      "value": 0.2219
+      "value": 0.2266
     },
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.1948
+      "value": 0.1893
     },
     {
       "key": "affection",
