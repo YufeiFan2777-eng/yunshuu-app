@@ -30,10 +30,10 @@ export async function getVitals() {
   return r.json();
 }
 
-// 流式发送消息，onDelta(text) 每片段回调
-export async function sendMessage(sessionId, content, onDelta) {
+// 流式发送消息，onDelta(text) 每片段回调，onEvent(type, data) 工具调用事件回调
+export async function sendMessage(sessionId, content, onDelta, onEvent) {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 200000); // 200s 超时兜底
+  const timer = setTimeout(() => controller.abort(), 300000); // 300s 超时兜底
 
   try {
     const resp = await fetch(`${BASE}/chat/sessions/${sessionId}/messages`, {
@@ -53,6 +53,7 @@ export async function sendMessage(sessionId, content, onDelta) {
     let buffer = '';
     let fullContent = '';
     let doneSent = false;
+    let currentEvent = '';
 
     while (true) {
       const { done, value } = await reader.read();
@@ -64,20 +65,28 @@ export async function sendMessage(sessionId, content, onDelta) {
 
       let shouldBreak = false;
       for (const line of lines) {
-        if (line === 'event: done') { doneSent = true; shouldBreak = true; continue; }
-        if (line.startsWith('event: ')) continue;
+        if (line.startsWith('event: ')) {
+          currentEvent = line.slice(7).trim();
+          if (currentEvent === 'done') { doneSent = true; shouldBreak = true; }
+          continue;
+        }
+        if (line === '') { currentEvent = ''; continue; }
         if (!line.startsWith('data: ')) continue;
 
         try {
           const data = JSON.parse(line.slice(6));
-          if (data.text) {
-            fullContent += data.text;
-            onDelta(data.text);
+          if (!currentEvent || currentEvent === 'delta') {
+            if (data.text) { fullContent += data.text; onDelta(data.text); }
+            if (data.message) throw new Error(data.message);
+          } else if (currentEvent === 'error') {
+            if (data.message) throw new Error(data.message);
+          } else if (onEvent) {
+            onEvent(currentEvent, data);
           }
-          if (data.message) throw new Error(data.message);
         } catch (e) {
           if (e.message !== 'Unexpected end of JSON input') throw e;
         }
+        currentEvent = '';
       }
       if (shouldBreak) break;
     }

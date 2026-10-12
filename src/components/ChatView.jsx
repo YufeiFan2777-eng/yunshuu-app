@@ -31,6 +31,7 @@ export default function ChatView({ sessionId, onMenu }) {
   const [input, setInput] = useState('');
   const [streaming, setStreaming] = useState(false);
   const [streamingText, setStreamingText] = useState('');
+  const [toolCalls, setToolCalls] = useState([]);
   const [stateData, setStateData] = useState(null);
   const [extraOpen, setExtraOpen] = useState(false);
   const [callOpen, setCallOpen] = useState(false);
@@ -167,15 +168,31 @@ export default function ChatView({ sessionId, onMenu }) {
     if (!content.trim()) { setStreaming(false); return; }
 
     setMessages(prev => [...prev, { id: Date.now(), role: 'user', content }]);
+    setToolCalls([]);
     try {
-      const { content: replyText } = await sendMessage(sessionId, content, (delta) => {
-        setStreamingText(prev => prev + delta);
-      });
+      const { content: replyText } = await sendMessage(
+        sessionId, content,
+        (delta) => setStreamingText(prev => prev + delta),
+        (event, data) => {
+          if (event === 'tool_start') {
+            setToolCalls(prev => [...prev, { id: `${data.name}_${Date.now()}`, name: data.name, input: data.input, done: false }]);
+          } else if (event === 'tool_done') {
+            setToolCalls(prev => {
+              const idx = prev.map((t, i) => (!t.done && t.name === data.name) ? i : -1).filter(i => i >= 0).pop();
+              if (idx == null || idx < 0) return prev;
+              return prev.map((t, i) => i === idx ? { ...t, done: true } : t);
+            });
+          }
+        }
+      );
       setStreamingText('');
+      setToolCalls([]);
       if (replyText) {
         setMessages(prev => [...prev, { id: Date.now() + 1, role: 'assistant', content: replyText }]);
       }
     } catch (e) {
+      setStreamingText('');
+      setToolCalls([]);
       setMessages(prev => [...prev, { id: Date.now() + 1, role: 'error', content: e.message }]);
     } finally {
       setStreaming(false);
@@ -214,10 +231,15 @@ export default function ChatView({ sessionId, onMenu }) {
           <Bubble msg={{ id: 'welcome', role: 'assistant', content: getWelcome() }} isNew={false} />
         )}
         {messages.map(msg => <Bubble key={msg.id} msg={msg} isNew={false} />)}
+        {streaming && toolCalls.length > 0 && (
+          <div className="bny-tool-log">
+            {toolCalls.map(t => <ToolCallRow key={t.id} tool={t} />)}
+          </div>
+        )}
         {streaming && streamingText && (
           <Bubble msg={{ role: 'assistant', content: streamingText, streaming: true }} isNew={false} />
         )}
-        {streaming && !streamingText && (
+        {streaming && !streamingText && toolCalls.filter(t => !t.done).length === 0 && (
           <div className="bny-message">
             <div className="bny-bubble">
               <span className="bny-ears" aria-hidden="true" />
@@ -629,6 +651,89 @@ export default function ChatView({ sessionId, onMenu }) {
         @media (prefers-reduced-motion: reduce) {
           .bny-message.new, .bny-dot, .bny-state-dot { animation: none !important; }
         }
+
+        .bny-tool-log {
+          margin: 0 clamp(14px, 4vw, 24px) 8px;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .bny-tool-row {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 6px 11px;
+          background: rgba(245, 237, 220, 0.92);
+          border: 1px solid #c8b48a;
+          border-radius: 9px;
+          font: 12px/1.4 'Courier New', monospace;
+          color: #5a4030;
+          cursor: pointer;
+          user-select: none;
+          transition: background 0.15s;
+          max-width: 480px;
+        }
+        .bny-tool-row:hover { background: rgba(238, 228, 208, 0.95); }
+        .bny-tool-row.done { opacity: 0.65; }
+        .bny-tool-icon {
+          flex-shrink: 0;
+          font-size: 11px;
+          width: 16px;
+          text-align: center;
+        }
+        .bny-tool-spin {
+          display: inline-block;
+          animation: bnySpinTool 0.9s linear infinite;
+        }
+        .bny-tool-name {
+          flex-shrink: 0;
+          font-weight: 600;
+          color: #4a3020;
+        }
+        .bny-tool-detail {
+          flex: 1;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          color: #7a6050;
+          font-size: 11px;
+        }
+        .bny-tool-expand {
+          margin-top: 5px;
+          padding: 4px 6px;
+          background: rgba(0,0,0,0.04);
+          border-radius: 5px;
+          font-size: 10.5px;
+          color: #6a5040;
+          word-break: break-all;
+          white-space: pre-wrap;
+          max-height: 120px;
+          overflow-y: auto;
+        }
+        .bny-tool-row-wrap {
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+          max-width: 480px;
+          background: rgba(245, 237, 220, 0.92);
+          border: 1px solid #c8b48a;
+          border-radius: 9px;
+          overflow: hidden;
+          transition: background 0.15s;
+        }
+        .bny-tool-row-wrap.done { opacity: 0.65; }
+        .bny-tool-row-inner {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 6px 11px;
+          cursor: pointer;
+          user-select: none;
+        }
+        @keyframes bnySpinTool {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
       `}</style>
     </div>
   );
@@ -656,6 +761,50 @@ function StateDot({ state }) {
               <span>{v}</span>
             </div>
           ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+const TOOL_LABELS = {
+  exec_vps: '执行命令',
+  read_file_vps: '读取文件',
+  write_file_vps: '写入文件',
+  log_activity: '记录活动',
+};
+
+function ToolCallRow({ tool }) {
+  const [expanded, setExpanded] = React.useState(false);
+  const label = TOOL_LABELS[tool.name] || tool.name;
+  const detail = tool.name === 'exec_vps' ? tool.input?.cmd :
+                 tool.name === 'read_file_vps' ? tool.input?.path :
+                 tool.name === 'write_file_vps' ? tool.input?.path :
+                 tool.name === 'log_activity' ? tool.input?.preview :
+                 '';
+  const hasDetail = detail || tool.input;
+
+  return (
+    <div className={`bny-tool-row-wrap${tool.done ? ' done' : ''}`}>
+      <div className="bny-tool-row-inner" onClick={() => hasDetail && setExpanded(e => !e)}>
+        <span className="bny-tool-icon">
+          {tool.done
+            ? <span style={{ color: '#6a8c5a' }}>✓</span>
+            : <span className="bny-tool-spin" style={{ color: '#9a7840' }}>⟳</span>}
+        </span>
+        <span className="bny-tool-name">{label}</span>
+        {detail && (
+          <span className="bny-tool-detail">{detail}</span>
+        )}
+        {hasDetail && (
+          <span style={{ flexShrink: 0, fontSize: 10, color: '#9a8070', marginLeft: 2 }}>
+            {expanded ? '▲' : '▼'}
+          </span>
+        )}
+      </div>
+      {expanded && tool.input && (
+        <div className="bny-tool-expand">
+          {JSON.stringify(tool.input, null, 2)}
         </div>
       )}
     </div>
