@@ -182,14 +182,21 @@ export default function ChatView({ sessionId, onMenu }) {
               if (idx == null || idx < 0) return prev;
               return prev.map((t, i) => i === idx ? { ...t, done: true } : t);
             });
+          } else if (event === 'moment_posted') {
+            setToolCalls(prev => [...prev, { id: `moment_${Date.now()}`, name: 'moment_posted', input: { content: data.content }, done: true }]);
           }
         }
       );
       setStreamingText('');
-      setToolCalls([]);
       if (replyText) {
-        setMessages(prev => [...prev, { id: Date.now() + 1, role: 'assistant', content: replyText }]);
+        setMessages(prev => [...prev, {
+          id: Date.now() + 1,
+          role: 'assistant',
+          content: replyText,
+          toolCalls: toolCalls.length > 0 ? toolCalls : undefined,
+        }]);
       }
+      setToolCalls([]);
     } catch (e) {
       setStreamingText('');
       setToolCalls([]);
@@ -230,16 +237,17 @@ export default function ChatView({ sessionId, onMenu }) {
         {loaded && messages.length === 0 && !streaming && (
           <Bubble msg={{ id: 'welcome', role: 'assistant', content: getWelcome() }} isNew={false} />
         )}
-        {messages.map(msg => <Bubble key={msg.id} msg={msg} isNew={false} />)}
-        {streaming && toolCalls.length > 0 && (
-          <div className="bny-tool-log">
-            {toolCalls.map(t => <ToolCallRow key={t.id} tool={t} />)}
-          </div>
-        )}
+        {messages.map(msg => (
+          <React.Fragment key={msg.id}>
+            {msg.toolCalls?.length > 0 && <ToolSummary calls={msg.toolCalls} />}
+            <Bubble msg={msg} isNew={false} />
+          </React.Fragment>
+        ))}
+        {streaming && toolCalls.length > 0 && <ToolSummary calls={toolCalls} streaming />}
         {streaming && streamingText && (
           <Bubble msg={{ role: 'assistant', content: streamingText, streaming: true }} isNew={false} />
         )}
-        {streaming && !streamingText && toolCalls.filter(t => !t.done).length === 0 && (
+        {streaming && !streamingText && toolCalls.length === 0 && (
           <div className="bny-message">
             <div className="bny-bubble">
               <span className="bny-ears" aria-hidden="true" />
@@ -652,83 +660,66 @@ export default function ChatView({ sessionId, onMenu }) {
           .bny-message.new, .bny-dot, .bny-state-dot { animation: none !important; }
         }
 
-        .bny-tool-log {
-          margin: 0 clamp(14px, 4vw, 24px) 8px;
+        .bny-tool-summary {
+          margin: 0 clamp(14px, 4vw, 24px) 6px;
+          max-width: 380px;
+        }
+        .bny-tool-summary-btn {
+          display: flex;
+          align-items: center;
+          gap: 0;
+          padding: 5px 10px 5px 8px;
+          background: rgba(243, 234, 216, 0.85);
+          border: 1px solid #c5b080;
+          border-radius: 8px;
+          font: 12px/1.5 sans-serif;
+          color: #5a4030;
+          cursor: pointer;
+          user-select: none;
+          width: 100%;
+          text-align: left;
+          transition: background 0.15s;
+        }
+        .bny-tool-summary-btn:hover { background: rgba(236, 224, 202, 0.92); }
+        .bny-tool-chevron {
+          margin-left: auto;
+          font-size: 9px;
+          color: #9a8060;
+          padding-left: 6px;
+        }
+        .bny-tool-detail-list {
+          margin-top: 3px;
+          padding: 6px 10px;
+          background: rgba(250, 244, 230, 0.9);
+          border: 1px solid #c5b080;
+          border-radius: 7px;
           display: flex;
           flex-direction: column;
           gap: 4px;
         }
-        .bny-tool-row {
+        .bny-tool-detail-row {
           display: flex;
-          align-items: center;
-          gap: 8px;
-          padding: 6px 11px;
-          background: rgba(245, 237, 220, 0.92);
-          border: 1px solid #c8b48a;
-          border-radius: 9px;
-          font: 12px/1.4 'Courier New', monospace;
+          align-items: baseline;
+          gap: 4px;
+          font: 11px/1.4 'Courier New', monospace;
           color: #5a4030;
-          cursor: pointer;
-          user-select: none;
-          transition: background 0.15s;
-          max-width: 480px;
         }
-        .bny-tool-row:hover { background: rgba(238, 228, 208, 0.95); }
-        .bny-tool-row.done { opacity: 0.65; }
-        .bny-tool-icon {
-          flex-shrink: 0;
-          font-size: 11px;
-          width: 16px;
-          text-align: center;
-        }
-        .bny-tool-spin {
-          display: inline-block;
-          animation: bnySpinTool 0.9s linear infinite;
-        }
-        .bny-tool-name {
+        .bny-tool-detail-name {
           flex-shrink: 0;
           font-weight: 600;
           color: #4a3020;
         }
-        .bny-tool-detail {
+        .bny-tool-detail-text {
           flex: 1;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
           color: #7a6050;
-          font-size: 11px;
-        }
-        .bny-tool-expand {
-          margin-top: 5px;
-          padding: 4px 6px;
-          background: rgba(0,0,0,0.04);
-          border-radius: 5px;
           font-size: 10.5px;
-          color: #6a5040;
-          word-break: break-all;
-          white-space: pre-wrap;
-          max-height: 120px;
-          overflow-y: auto;
         }
-        .bny-tool-row-wrap {
-          display: flex;
-          flex-direction: column;
-          gap: 0;
-          max-width: 480px;
-          background: rgba(245, 237, 220, 0.92);
-          border: 1px solid #c8b48a;
-          border-radius: 9px;
-          overflow: hidden;
-          transition: background 0.15s;
-        }
-        .bny-tool-row-wrap.done { opacity: 0.65; }
-        .bny-tool-row-inner {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          padding: 6px 11px;
-          cursor: pointer;
-          user-select: none;
+        .bny-tool-spin {
+          display: inline-block;
+          animation: bnySpinTool 0.9s linear infinite;
         }
         @keyframes bnySpinTool {
           from { transform: rotate(0deg); }
@@ -767,44 +758,68 @@ function StateDot({ state }) {
   );
 }
 
-const TOOL_LABELS = {
-  exec_vps: '执行命令',
-  read_file_vps: '读取文件',
-  write_file_vps: '写入文件',
-  log_activity: '记录活动',
-};
-
-function ToolCallRow({ tool }) {
+function ToolSummary({ calls, streaming }) {
   const [expanded, setExpanded] = React.useState(false);
-  const label = TOOL_LABELS[tool.name] || tool.name;
-  const detail = tool.name === 'exec_vps' ? tool.input?.cmd :
-                 tool.name === 'read_file_vps' ? tool.input?.path :
-                 tool.name === 'write_file_vps' ? tool.input?.path :
-                 tool.name === 'log_activity' ? tool.input?.preview :
-                 '';
-  const hasDetail = detail || tool.input;
+
+  // 生成摘要文字，like CC's "读取了 2 个文件"
+  const counts = {};
+  for (const t of calls) {
+    const key = t.name === 'exec_vps' ? '命令' :
+                t.name === 'read_file_vps' ? '文件' :
+                t.name === 'write_file_vps' ? '文件' :
+                t.name === 'moment_posted' ? '朋友圈' :
+                t.name === 'log_activity' ? '记录' : '操作';
+    counts[key] = (counts[key] || 0) + 1;
+  }
+  const parts = Object.entries(counts).map(([k, n]) => {
+    if (k === '命令') return `执行了 ${n} 个命令`;
+    if (k === '文件') {
+      const hasWrite = calls.some(t => t.name === 'write_file_vps');
+      const hasRead = calls.some(t => t.name === 'read_file_vps');
+      if (hasWrite && hasRead) return `读写了 ${n} 个文件`;
+      if (hasWrite) return `写入了 ${n} 个文件`;
+      return `读取了 ${n} 个文件`;
+    }
+    if (k === '朋友圈') return `发布了 ${n} 条动态`;
+    if (k === '记录') return `记录了 ${n} 条活动`;
+    return `使用了 ${n} 个工具`;
+  });
+  const summary = parts.join('，') || '正在处理';
+
+  const running = calls.some(t => !t.done);
 
   return (
-    <div className={`bny-tool-row-wrap${tool.done ? ' done' : ''}`}>
-      <div className="bny-tool-row-inner" onClick={() => hasDetail && setExpanded(e => !e)}>
-        <span className="bny-tool-icon">
-          {tool.done
-            ? <span style={{ color: '#6a8c5a' }}>✓</span>
-            : <span className="bny-tool-spin" style={{ color: '#9a7840' }}>⟳</span>}
-        </span>
-        <span className="bny-tool-name">{label}</span>
-        {detail && (
-          <span className="bny-tool-detail">{detail}</span>
-        )}
-        {hasDetail && (
-          <span style={{ flexShrink: 0, fontSize: 10, color: '#9a8070', marginLeft: 2 }}>
-            {expanded ? '▲' : '▼'}
-          </span>
-        )}
-      </div>
-      {expanded && tool.input && (
-        <div className="bny-tool-expand">
-          {JSON.stringify(tool.input, null, 2)}
+    <div className="bny-tool-summary">
+      <button className="bny-tool-summary-btn" onClick={() => setExpanded(e => !e)}>
+        {running
+          ? <span className="bny-tool-spin" style={{ color: '#9a7840', marginRight: 6, display: 'inline-block' }}>⟳</span>
+          : <span style={{ color: '#6a8c5a', marginRight: 6 }}>✓</span>
+        }
+        <span>{summary}</span>
+        <span className="bny-tool-chevron">{expanded ? '▲' : '▼'}</span>
+      </button>
+      {expanded && (
+        <div className="bny-tool-detail-list">
+          {calls.map(t => {
+            const detail = t.name === 'exec_vps' ? t.input?.cmd :
+                           t.name === 'read_file_vps' ? t.input?.path :
+                           t.name === 'write_file_vps' ? t.input?.path :
+                           t.name === 'moment_posted' ? t.input?.content :
+                           t.input?.preview || '';
+            return (
+              <div key={t.id} className="bny-tool-detail-row">
+                <span style={{ color: t.done ? '#6a8c5a' : '#9a7840', marginRight: 5 }}>{t.done ? '✓' : '⟳'}</span>
+                <span className="bny-tool-detail-name">{
+                  t.name === 'exec_vps' ? '执行' :
+                  t.name === 'read_file_vps' ? '读取' :
+                  t.name === 'write_file_vps' ? '写入' :
+                  t.name === 'moment_posted' ? '发圈' :
+                  t.name === 'log_activity' ? '记录' : t.name
+                }</span>
+                {detail && <span className="bny-tool-detail-text">{detail}</span>}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
