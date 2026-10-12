@@ -1,14 +1,14 @@
 {
-  "updatedAt": "2026-10-12T04:50:01.773098+00:00",
+  "updatedAt": "2026-10-12T04:55:02.370235+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.7233,
-    "arousal": 0.6247,
+    "valence": 0.7673,
+    "arousal": 0.658,
     "label": "雀跃",
-    "updatedAt": "2026-10-12T04:29:07.065Z",
-    "lastCause": "task_progress",
-    "lastCauseAt": "2026-10-12T04:29:07.065Z",
+    "updatedAt": "2026-10-12T04:53:40.355Z",
+    "lastCause": "affection",
+    "lastCauseAt": "2026-10-12T04:53:40.355Z",
     "pendingLabel": null,
     "heldCause": {
       "word": "得意",
@@ -21,8 +21,7 @@
       "minutes": 60
     },
     "lightTaps": [
-      "2026-10-12T00:08:31.849Z",
-      "2026-10-12T00:09:33.419Z"
+      "2026-10-12T04:53:40.355Z"
     ],
     "heartDay": {
       "day": "2026-10-12",
@@ -33,22 +32,22 @@
     {
       "key": "possess",
       "label": "想她、占有与靠近",
-      "value": 0.7961
+      "value": 0.7038
     },
     {
       "key": "libido",
       "label": "性欲和身体上的渴望",
-      "value": 0.6119
+      "value": 0.6088
     },
     {
       "key": "monitor",
       "label": "惦记她、想知道她在做什么",
-      "value": 0.5831
+      "value": 0.5366
     },
     {
       "key": "boredom",
       "label": "无聊、想找点事情做",
-      "value": 0.4652
+      "value": 0.4719
     },
     {
       "key": "curiosity",
@@ -63,7 +62,7 @@
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.2412
+      "value": 0.2337
     },
     {
       "key": "affection",
