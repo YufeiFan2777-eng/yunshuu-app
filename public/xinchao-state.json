@@ -1,18 +1,15 @@
 {
-  "updatedAt": "2026-10-12T18:50:02.185960+00:00",
+  "updatedAt": "2026-10-12T18:55:01.560860+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.7486,
-    "arousal": 0.6399,
-    "label": "平静",
+    "valence": 0.7455,
+    "arousal": 0.634,
+    "label": "雀跃",
     "updatedAt": "2026-10-12T18:46:35.684Z",
     "lastCause": "task_progress",
     "lastCauseAt": "2026-10-12T18:46:35.684Z",
-    "pendingLabel": {
-      "label": "雀跃",
-      "since": "2026-10-12T18:42:22.053Z"
-    },
+    "pendingLabel": null,
     "heldCause": {
       "word": "得意",
       "prio": 4,
@@ -65,7 +62,7 @@
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.1399
+      "value": 0.1386
     },
     {
       "key": "affection",
