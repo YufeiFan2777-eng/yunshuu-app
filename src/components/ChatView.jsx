@@ -898,6 +898,11 @@ function Bubble({ msg, isNew }) {
       setTtsState('idle');
       return;
     }
+    // iOS Safari: 必须在用户点击的同步上下文里先解锁 audio，否则 async fetch 之后 play() 会被拒绝
+    const audio = new Audio();
+    audio.play().catch(() => {});
+    audio.pause();
+    audioRef.current = audio;
     setTtsState('loading');
     try {
       const resp = await fetch(`${API_BASE}/api/chat/tts`, {
@@ -908,14 +913,14 @@ function Bubble({ msg, isNew }) {
       if (!resp.ok) throw new Error('TTS 失败');
       const blob = await resp.blob();
       const url = URL.createObjectURL(blob);
-      const audio = new Audio(url);
-      audioRef.current = audio;
+      audio.src = url;
       audio.onended = () => { setTtsState('idle'); URL.revokeObjectURL(url); audioRef.current = null; };
       audio.onerror = () => { setTtsState('idle'); URL.revokeObjectURL(url); audioRef.current = null; };
       await audio.play();
       setTtsState('playing');
     } catch {
       setTtsState('idle');
+      audioRef.current = null;
     }
   }
 
