@@ -228,6 +228,12 @@ function FlashView({ state, onBack }) {
             </div>
             {/* 情绪日志 */}
             {(state?.emotionJournal?.length > 0) && (() => {
+              const CAUSE_ZH = {
+                affection: '心动', companionship: '陪伴', conflict: '争执',
+                intimacy: '亲密', loss: '失落', sharing: '分享',
+                slighted: '委屈', task_progress: '成就', reconciliation: '和好',
+                jealousy: '吃醋', longing: '想念', anxiety: '不安',
+              };
               const notable = [...state.emotionJournal]
                 .reverse()
                 .filter(e => e.cause || (e.label && e.label !== '平静'))
@@ -259,7 +265,7 @@ function FlashView({ state, onBack }) {
                               fontSize: 9.5, color: '#9b7a58',
                               background: '#e8d5b540', border: '1px solid #c4a07830',
                               borderRadius: 2, padding: '1px 7px', letterSpacing: 0.3,
-                            }}>{e.cause}</span>
+                            }}>{CAUSE_ZH[e.cause] || e.cause}</span>
                           )}
                           <span style={{ marginLeft: 'auto', fontSize: 9, color: '#b89060', fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>{timeStr}</span>
                         </div>
