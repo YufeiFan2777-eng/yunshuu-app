@@ -169,21 +169,26 @@ export default function ChatView({ sessionId, onMenu }) {
 
     setMessages(prev => [...prev, { id: Date.now(), role: 'user', content }]);
     setToolCalls([]);
+    let localToolCalls = [];
     try {
       const { content: replyText } = await sendMessage(
         sessionId, content,
         (delta) => setStreamingText(prev => prev + delta),
         (event, data) => {
           if (event === 'tool_start') {
-            setToolCalls(prev => [...prev, { id: `${data.name}_${Date.now()}`, name: data.name, input: data.input, done: false }]);
+            const tc = { id: `${data.name}_${Date.now()}`, name: data.name, input: data.input, done: false };
+            localToolCalls = [...localToolCalls, tc];
+            setToolCalls(localToolCalls);
           } else if (event === 'tool_done') {
-            setToolCalls(prev => {
-              const idx = prev.map((t, i) => (!t.done && t.name === data.name) ? i : -1).filter(i => i >= 0).pop();
-              if (idx == null || idx < 0) return prev;
-              return prev.map((t, i) => i === idx ? { ...t, done: true } : t);
-            });
+            const idx = localToolCalls.map((t, i) => (!t.done && t.name === data.name) ? i : -1).filter(i => i >= 0).pop();
+            if (idx != null && idx >= 0) {
+              localToolCalls = localToolCalls.map((t, i) => i === idx ? { ...t, done: true } : t);
+              setToolCalls(localToolCalls);
+            }
           } else if (event === 'moment_posted') {
-            setToolCalls(prev => [...prev, { id: `moment_${Date.now()}`, name: 'moment_posted', input: { content: data.content }, done: true }]);
+            const tc = { id: `moment_${Date.now()}`, name: 'moment_posted', input: { content: data.content }, done: true };
+            localToolCalls = [...localToolCalls, tc];
+            setToolCalls(localToolCalls);
           }
         }
       );
@@ -193,7 +198,7 @@ export default function ChatView({ sessionId, onMenu }) {
           id: Date.now() + 1,
           role: 'assistant',
           content: replyText,
-          toolCalls: toolCalls.length > 0 ? toolCalls : undefined,
+          toolCalls: localToolCalls.length > 0 ? localToolCalls : undefined,
         }]);
       }
       setToolCalls([]);
