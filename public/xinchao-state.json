@@ -1,15 +1,18 @@
 {
-  "updatedAt": "2026-10-12T06:05:02.464781+00:00",
+  "updatedAt": "2026-10-12T06:10:02.168709+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.6116,
-    "arousal": 0.6258,
+    "valence": 0.6087,
+    "arousal": 0.6196,
     "label": "紧绷",
     "updatedAt": "2026-10-12T04:57:26.050Z",
     "lastCause": "reconciliation",
     "lastCauseAt": "2026-10-12T04:57:26.050Z",
-    "pendingLabel": null,
+    "pendingLabel": {
+      "label": "平静",
+      "since": "2026-10-12T06:09:01.016Z"
+    },
     "heldCause": null,
     "lit": {
       "word": "得意",
@@ -33,22 +36,22 @@
     {
       "key": "monitor",
       "label": "惦记她、想知道她在做什么",
-      "value": 0.6093
+      "value": 0.6203
     },
     {
       "key": "libido",
       "label": "性欲和身体上的渴望",
-      "value": 0.5967
+      "value": 0.5957
     },
     {
       "key": "boredom",
       "label": "无聊、想找点事情做",
-      "value": 0.4999
+      "value": 0.5
     },
     {
       "key": "curiosity",
       "label": "好奇、想探索新东西",
-      "value": 0.473
+      "value": 0.4764
     },
     {
       "key": "reflection",
@@ -58,7 +61,7 @@
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.2344
+      "value": 0.2316
     },
     {
       "key": "affection",
