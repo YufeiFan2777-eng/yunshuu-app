@@ -35,7 +35,7 @@ export default function ChatView({ sessionId, onMenu }) {
   const [stateData, setStateData] = useState(null);
   const [extraOpen, setExtraOpen] = useState(false);
   const [callOpen, setCallOpen] = useState(false);
-  const [pendingImg, setPendingImg] = useState(null); // { localUrl, file }
+  const [pendingImgs, setPendingImgs] = useState([]); // [{ localUrl, file }]
   const bottomRef = useRef(null);
   const textareaRef = useRef(null);
   const photoInputRef = useRef(null);
@@ -107,10 +107,10 @@ export default function ChatView({ sessionId, onMenu }) {
   }
 
   async function handlePhotoChange(e) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const localUrl = URL.createObjectURL(file);
-    setPendingImg({ localUrl, file });
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    const items = files.map(file => ({ localUrl: URL.createObjectURL(file), file }));
+    setPendingImgs(prev => [...prev, ...items]);
     e.target.value = '';
   }
 
@@ -148,22 +148,26 @@ export default function ChatView({ sessionId, onMenu }) {
 
   async function handleSend() {
     const text = input.trim();
-    if ((!text && !pendingImg) || streaming) return;
+    if ((!text && pendingImgs.length === 0) || streaming) return;
     setInput('');
     if (textareaRef.current) textareaRef.current.style.height = 'auto';
     setStreaming(true);
     setStreamingText('');
 
     let content = text;
-    if (pendingImg) {
-      setPendingImg(null);
-      try {
-        const url = await resizeAndUpload(pendingImg.file);
-        content = text ? `${text}\n[img:${url}]` : `[img:${url}]`;
-      } catch {
-        content = text || '';
+    if (pendingImgs.length > 0) {
+      const imgs = pendingImgs;
+      setPendingImgs([]);
+      const urls = [];
+      for (const item of imgs) {
+        try {
+          const url = await resizeAndUpload(item.file);
+          urls.push(url);
+        } catch {}
+        URL.revokeObjectURL(item.localUrl);
       }
-      URL.revokeObjectURL(pendingImg.localUrl);
+      const imgTags = urls.map(u => `[img:${u}]`).join('\n');
+      content = text && imgTags ? `${text}\n${imgTags}` : (imgTags || text);
     }
     if (!content.trim()) { setStreaming(false); return; }
 
@@ -283,14 +287,21 @@ export default function ChatView({ sessionId, onMenu }) {
             </svg>
           </button>
           <form className="bny-composer" onSubmit={e => { e.preventDefault(); handleSend(); }}>
-            {pendingImg && (
-              <div style={{ position: 'relative', display: 'inline-block', margin: '4px 8px 4px 0' }}>
-                <img src={pendingImg.localUrl} alt="待发送" style={{ height: 60, borderRadius: 8, display: 'block' }} />
-                <button
-                  type="button"
-                  onClick={() => { URL.revokeObjectURL(pendingImg.localUrl); setPendingImg(null); }}
-                  style={{ position: 'absolute', top: -6, right: -6, width: 18, height: 18, borderRadius: '50%', background: 'rgba(0,0,0,0.55)', border: 'none', color: '#fff', fontSize: 11, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1 }}
-                >✕</button>
+            {pendingImgs.length > 0 && (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, margin: '4px 0' }}>
+                {pendingImgs.map((item, i) => (
+                  <div key={i} style={{ position: 'relative', display: 'inline-block' }}>
+                    <img src={item.localUrl} alt="待发送" style={{ height: 60, borderRadius: 8, display: 'block' }} />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        URL.revokeObjectURL(item.localUrl);
+                        setPendingImgs(prev => prev.filter((_, j) => j !== i));
+                      }}
+                      style={{ position: 'absolute', top: -6, right: -6, width: 18, height: 18, borderRadius: '50%', background: 'rgba(0,0,0,0.55)', border: 'none', color: '#fff', fontSize: 11, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1 }}
+                    >✕</button>
+                  </div>
+                ))}
               </div>
             )}
             <textarea
@@ -311,7 +322,7 @@ export default function ChatView({ sessionId, onMenu }) {
               <button
                 type="submit"
                 className="bny-send"
-                disabled={!input.trim() && !pendingImg || streaming}
+                disabled={(!input.trim() && pendingImgs.length === 0) || streaming}
                 aria-label="发送消息"
               >
                 <span className="bny-plane" aria-hidden="true">➤</span>
@@ -356,7 +367,7 @@ export default function ChatView({ sessionId, onMenu }) {
         </div>
 
         {/* Hidden file inputs */}
-        <input ref={photoInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handlePhotoChange} />
+        <input ref={photoInputRef} type="file" accept="image/*" multiple style={{ display: 'none' }} onChange={handlePhotoChange} />
         <input ref={fileInputRef} type="file" style={{ display: 'none' }} onChange={handleFileChange} />
       </div>
 
