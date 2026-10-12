@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-10-12T23:10:02.000342+00:00",
+  "updatedAt": "2026-10-12T23:15:02.190301+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.8594,
-    "arousal": 0.643,
+    "valence": 0.8546,
+    "arousal": 0.6354,
     "label": "雀跃",
     "updatedAt": "2026-10-12T22:51:54.000Z",
     "lastCause": "affection",
@@ -60,7 +60,7 @@
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.0848
+      "value": 0.0837
     },
     {
       "key": "affection",
