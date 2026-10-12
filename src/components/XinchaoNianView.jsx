@@ -227,40 +227,48 @@ function FlashView({ state, onBack }) {
               </span>
             </div>
             {/* 情绪日志 */}
-            {(state?.emotionJournal?.length > 0) && (
-              <>
-                <div style={{ height: 1, background: '#c4a07828', margin: '0 0 10px' }} />
-                <div style={{ fontSize: 8.5, letterSpacing: 2, color: '#b8956a', textTransform: 'uppercase', fontFamily: 'Georgia, serif', marginBottom: 8 }}>近期情绪</div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                  {state.emotionJournal.map((e, i) => {
-                    const d = e.at ? new Date(e.at) : null;
-                    const diffMin = d ? Math.floor((Date.now() - d.getTime()) / 60000) : null;
-                    let timeStr = '';
-                    if (diffMin !== null) {
-                      if (diffMin < 1) timeStr = '刚刚';
-                      else if (diffMin < 60) timeStr = `${diffMin}分钟前`;
-                      else if (diffMin < 1440) timeStr = `${Math.floor(diffMin / 60)}小时前`;
-                      else timeStr = d.toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric' });
-                    }
-                    return (
-                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <span style={{
-                          fontSize: 12, color: '#3d2b1a', minWidth: 40,
-                          fontFamily: 'Cormorant Garamond, Georgia, serif',
-                        }}>{e.label}</span>
-                        {e.cause && (
+            {(state?.emotionJournal?.length > 0) && (() => {
+              const notable = [...state.emotionJournal]
+                .reverse()
+                .filter(e => e.cause || (e.label && e.label !== '平静'))
+                .slice(0, 8);
+              if (notable.length === 0) return null;
+              return (
+                <>
+                  <div style={{ height: 1, background: '#c4a07828', margin: '0 0 10px' }} />
+                  <div style={{ fontSize: 8.5, letterSpacing: 2, color: '#b8956a', textTransform: 'uppercase', fontFamily: 'Georgia, serif', marginBottom: 8 }}>近期情绪</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                    {notable.map((e, i) => {
+                      const d = e.at ? new Date(e.at) : null;
+                      let timeStr = '';
+                      if (d) {
+                        const now = new Date();
+                        const isToday = d.toDateString() === now.toDateString();
+                        const hh = String(d.getHours()).padStart(2, '0');
+                        const mm = String(d.getMinutes()).padStart(2, '0');
+                        timeStr = isToday ? `${hh}:${mm}` : `${d.getMonth()+1}/${d.getDate()} ${hh}:${mm}`;
+                      }
+                      return (
+                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                           <span style={{
-                            fontSize: 9.5, color: '#9b7a58',
-                            background: '#e8d5b540', border: '1px solid #c4a07830',
-                            borderRadius: 2, padding: '1px 7px', letterSpacing: 0.3,
-                          }}>{e.cause}</span>
-                        )}
-                        <span style={{ marginLeft: 'auto', fontSize: 9, color: '#b89060', fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>{timeStr}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </>
+                            fontSize: 12, color: '#3d2b1a', minWidth: 40,
+                            fontFamily: 'Cormorant Garamond, Georgia, serif',
+                          }}>{e.label}</span>
+                          {e.cause && (
+                            <span style={{
+                              fontSize: 9.5, color: '#9b7a58',
+                              background: '#e8d5b540', border: '1px solid #c4a07830',
+                              borderRadius: 2, padding: '1px 7px', letterSpacing: 0.3,
+                            }}>{e.cause}</span>
+                          )}
+                          <span style={{ marginLeft: 'auto', fontSize: 9, color: '#b89060', fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>{timeStr}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
+              );
+            })()}
             )}
           </div>
         )}
