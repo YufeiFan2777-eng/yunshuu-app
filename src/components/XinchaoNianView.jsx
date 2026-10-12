@@ -226,26 +226,16 @@ function FlashView({ state, onBack }) {
                 唤醒 {Math.round((emotion.arousal || 0) * 100)} · 效价 {Math.round((emotion.valence || 0) * 100)}
               </span>
             </div>
-            {/* 情绪日志 */}
-            {(state?.emotionJournal?.length > 0) && (() => {
-              const CAUSE_ZH = {
-                affection: '心动', companionship: '陪伴', conflict: '争执',
-                intimacy: '亲密', loss: '失落', sharing: '分享',
-                slighted: '委屈', task_progress: '成就', reconciliation: '和好',
-                jealousy: '吃醋', longing: '想念', anxiety: '不安',
-              };
-              const notable = [...state.emotionJournal]
-                .reverse()
-                .filter(e => e.cause || (e.label && e.label !== '平静'))
-                .slice(0, 8);
-              if (notable.length === 0) return null;
+            {/* 近期情绪标记（来自 emotionMarks，对应心潮网页浮标） */}
+            {(state?.emotionMarks?.length > 0) && (() => {
+              const marks = [...state.emotionMarks].reverse();
               return (
                 <>
                   <div style={{ height: 1, background: '#c4a07828', margin: '0 0 10px' }} />
                   <div style={{ fontSize: 8.5, letterSpacing: 2, color: '#b8956a', textTransform: 'uppercase', fontFamily: 'Georgia, serif', marginBottom: 8 }}>近期情绪</div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                    {notable.map((e, i) => {
-                      const d = e.at ? new Date(e.at) : null;
+                    {marks.map((m, i) => {
+                      const d = m.at ? new Date(m.at) : null;
                       let timeStr = '';
                       if (d) {
                         const now = new Date();
@@ -259,13 +249,13 @@ function FlashView({ state, onBack }) {
                           <span style={{
                             fontSize: 12, color: '#3d2b1a', minWidth: 40,
                             fontFamily: 'Cormorant Garamond, Georgia, serif',
-                          }}>{e.label}</span>
-                          {e.cause && (
+                          }}>{m.word}</span>
+                          {m.n > 1 && (
                             <span style={{
                               fontSize: 9.5, color: '#9b7a58',
                               background: '#e8d5b540', border: '1px solid #c4a07830',
                               borderRadius: 2, padding: '1px 7px', letterSpacing: 0.3,
-                            }}>{CAUSE_ZH[e.cause] || e.cause}</span>
+                            }}>×{m.n}</span>
                           )}
                           <span style={{ marginLeft: 'auto', fontSize: 9, color: '#b89060', fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>{timeStr}</span>
                         </div>
