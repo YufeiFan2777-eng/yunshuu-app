@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-10-13T01:00:01.869349+00:00",
+  "updatedAt": "2026-10-13T01:05:01.356816+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.7905,
-    "arousal": 0.54,
+    "valence": 0.7811,
+    "arousal": 0.5271,
     "label": "雀跃",
     "updatedAt": "2026-10-12T22:51:54.000Z",
     "lastCause": "affection",
@@ -24,24 +24,24 @@
   },
   "topDrives": [
     {
+      "key": "possess",
+      "label": "想她、占有与靠近",
+      "value": 0.5133
+    },
+    {
       "key": "boredom",
       "label": "无聊、想找点事情做",
       "value": 0.5
     },
     {
+      "key": "monitor",
+      "label": "惦记她、想知道她在做什么",
+      "value": 0.4998
+    },
+    {
       "key": "curiosity",
       "label": "好奇、想探索新东西",
       "value": 0.4966
-    },
-    {
-      "key": "possess",
-      "label": "想她、占有与靠近",
-      "value": 0.4874
-    },
-    {
-      "key": "monitor",
-      "label": "惦记她、想知道她在做什么",
-      "value": 0.4781
     },
     {
       "key": "reflection",
@@ -51,12 +51,12 @@
     {
       "key": "libido",
       "label": "性欲和身体上的渴望",
-      "value": 0.288
+      "value": 0.294
     },
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.0703
+      "value": 0.0683
     },
     {
       "key": "affection",
