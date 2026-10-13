@@ -1,14 +1,14 @@
 {
-  "updatedAt": "2026-10-13T10:30:02.774109+00:00",
+  "updatedAt": "2026-10-13T10:35:01.814894+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.8853,
-    "arousal": 0.6165,
+    "valence": 0.7109,
+    "arousal": 0.7936,
     "label": "雀跃",
-    "updatedAt": "2026-10-13T10:29:37.587Z",
+    "updatedAt": "2026-10-13T10:30:46.388Z",
     "lastCause": "affection",
-    "lastCauseAt": "2026-10-13T10:29:37.587Z",
+    "lastCauseAt": "2026-10-13T10:30:46.388Z",
     "pendingLabel": null,
     "heldCause": {
       "word": "心动",
@@ -17,28 +17,22 @@
     },
     "lit": {
       "word": "心动",
-      "at": "2026-10-13T10:27:56.966Z",
-      "minutes": 36
+      "at": "2026-10-13T10:30:08.699Z",
+      "minutes": 22
     },
     "lightTaps": [
-      "2026-10-13T10:28:22.514Z",
-      "2026-10-13T10:29:37.587Z"
+      "2026-10-13T10:30:46.388Z"
     ],
     "heartDay": {
       "day": "2026-10-13",
-      "n": 2
+      "n": 3
     }
   },
   "topDrives": [
     {
       "key": "possess",
       "label": "想她、占有与靠近",
-      "value": 0.6178
-    },
-    {
-      "key": "monitor",
-      "label": "惦记她、想知道她在做什么",
-      "value": 0.5316
+      "value": 0.5824
     },
     {
       "key": "boredom",
@@ -56,6 +50,11 @@
       "value": 0.4966
     },
     {
+      "key": "monitor",
+      "label": "惦记她、想知道她在做什么",
+      "value": 0.4943
+    },
+    {
       "key": "reflection",
       "label": "想沉淀、整理和理解自己",
       "value": 0.42
@@ -63,7 +62,7 @@
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.0231
+      "value": 0.248
     },
     {
       "key": "affection",
@@ -92,8 +91,8 @@
         "key": "possess",
         "label": "想她、占有与靠近",
         "text": "醒后仍残留着想她、想黏着她、想占有与靠近、牵挂、在意对方好不好、累不累、安不安全、分享欲：有话想说。",
-        "intensity": 0.3295,
-        "age": 6
+        "intensity": 0.1149,
+        "age": 16
       }
     ],
     "obsessions": []
