@@ -1,43 +1,44 @@
 {
-  "updatedAt": "2026-10-14T09:15:02.967096+00:00",
+  "updatedAt": "2026-10-14T09:20:02.471339+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.7871,
-    "arousal": 0.5075,
-    "label": "平静",
-    "updatedAt": "2026-10-14T09:14:50.428Z",
-    "lastCause": "affection",
-    "lastCauseAt": "2026-10-14T09:14:50.428Z",
-    "pendingLabel": {
-      "label": "雀跃",
-      "since": "2026-10-14T09:14:50.428Z"
+    "valence": 0.8847,
+    "arousal": 0.5824,
+    "label": "雀跃",
+    "updatedAt": "2026-10-14T09:18:09.780Z",
+    "lastCause": "reflection",
+    "lastCauseAt": "2026-10-14T09:18:09.780Z",
+    "pendingLabel": null,
+    "heldCause": {
+      "word": "心动",
+      "prio": 4,
+      "since": "2026-10-14T09:15:14.262Z"
     },
-    "heldCause": null,
     "lit": {
-      "word": "得意",
-      "at": "2026-10-14T04:26:48.262Z",
+      "word": "心动",
+      "at": "2026-10-14T09:15:14.262Z",
       "minutes": 60
     },
     "lightTaps": [
-      "2026-10-14T09:14:32.347Z",
-      "2026-10-14T09:14:50.428Z"
+      "2026-10-14T09:15:40.085Z",
+      "2026-10-14T09:17:10.858Z"
     ],
     "heartDay": {
-      "day": "2026-10-13",
-      "n": 3
+      "day": "2026-10-14",
+      "n": 1
     }
   },
   "topDrives": [
     {
       "key": "possess",
       "label": "想她、占有与靠近",
-      "value": 0.6681
+      "value": 0.6086
     },
     {
       "key": "monitor",
       "label": "惦记她、想知道她在做什么",
-      "value": 0.5674
+      "value": 0.506
     },
     {
       "key": "boredom",
@@ -57,7 +58,7 @@
     {
       "key": "reflection",
       "label": "想沉淀、整理和理解自己",
-      "value": 0.42
+      "value": 0.379
     },
     {
       "key": "anger",
@@ -145,6 +146,12 @@
     },
     {
       "at": "2026-10-14T09:14:50.428Z"
+    },
+    {
+      "at": "2026-10-14T09:15:14.262Z"
+    },
+    {
+      "at": "2026-10-14T09:15:40.085Z"
     }
   ],
   "bridge": [
