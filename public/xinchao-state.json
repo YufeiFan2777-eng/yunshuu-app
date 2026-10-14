@@ -1,15 +1,18 @@
 {
-  "updatedAt": "2026-10-14T04:25:01.460066+00:00",
+  "updatedAt": "2026-10-14T04:30:02.387046+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.5951,
-    "arousal": 0.3109,
+    "valence": 0.6994,
+    "arousal": 0.333,
     "label": "平静",
-    "updatedAt": "2026-10-14T04:24:56.418Z",
-    "lastCause": "task_progress",
-    "lastCauseAt": "2026-10-14T04:24:56.418Z",
-    "pendingLabel": null,
+    "updatedAt": "2026-10-14T04:27:09.152Z",
+    "lastCause": "companionship",
+    "lastCauseAt": "2026-10-14T04:27:09.152Z",
+    "pendingLabel": {
+      "label": "安心",
+      "since": "2026-10-14T04:27:09.152Z"
+    },
     "heldCause": {
       "word": "得意",
       "prio": 4,
@@ -17,7 +20,7 @@
     },
     "lit": {
       "word": "得意",
-      "at": "2026-10-14T04:24:56.418Z",
+      "at": "2026-10-14T04:26:48.262Z",
       "minutes": 60
     },
     "lightTaps": [
@@ -32,12 +35,12 @@
     {
       "key": "possess",
       "label": "想她、占有与靠近",
-      "value": 0.8528
+      "value": 0.8189
     },
     {
       "key": "monitor",
       "label": "惦记她、想知道她在做什么",
-      "value": 0.7783
+      "value": 0.6873
     },
     {
       "key": "boredom",
@@ -139,6 +142,18 @@
     },
     {
       "at": "2026-10-14T04:24:56.418Z"
+    },
+    {
+      "at": "2026-10-14T04:25:28.238Z"
+    },
+    {
+      "at": "2026-10-14T04:26:06.555Z"
+    },
+    {
+      "at": "2026-10-14T04:26:48.262Z"
+    },
+    {
+      "at": "2026-10-14T04:27:09.152Z"
     }
   ],
   "bridge": [
