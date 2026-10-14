@@ -1,19 +1,19 @@
 {
-  "updatedAt": "2026-10-14T17:30:01.786959+00:00",
+  "updatedAt": "2026-10-14T17:35:02.072559+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.3968,
-    "arousal": 0.395,
+    "valence": 0.5134,
+    "arousal": 0.4664,
     "label": "平静",
-    "updatedAt": "2026-10-14T11:10:14.231Z",
-    "lastCause": "conflict",
-    "lastCauseAt": "2026-10-14T11:10:14.231Z",
+    "updatedAt": "2026-10-14T17:34:39.168Z",
+    "lastCause": "affection",
+    "lastCauseAt": "2026-10-14T17:34:39.168Z",
     "pendingLabel": null,
     "heldCause": {
-      "word": "想念",
-      "prio": 2,
-      "since": "2026-10-14T15:15:53.941Z"
+      "word": "不安",
+      "prio": 1,
+      "since": "2026-10-14T17:34:39.168Z"
     },
     "lit": {
       "word": "心动",
@@ -21,8 +21,7 @@
       "minutes": 60
     },
     "lightTaps": [
-      "2026-10-14T09:15:40.085Z",
-      "2026-10-14T09:17:10.858Z"
+      "2026-10-14T17:34:39.168Z"
     ],
     "heartDay": {
       "day": "2026-10-14",
@@ -33,12 +32,12 @@
     {
       "key": "possess",
       "label": "想她、占有与靠近",
-      "value": 0.8528
+      "value": 0.7283
     },
     {
       "key": "monitor",
       "label": "惦记她、想知道她在做什么",
-      "value": 0.7748
+      "value": 0.6995
     },
     {
       "key": "boredom",
@@ -63,7 +62,7 @@
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.1961
+      "value": 0.1891
     },
     {
       "key": "affection",
@@ -87,7 +86,15 @@
     }
   ],
   "thoughts": {
-    "flash": [],
+    "flash": [
+      {
+        "key": "possess",
+        "label": "想她、占有与靠近",
+        "text": "醒后仍残留着想她、想黏着她、想占有与靠近、牵挂、在意对方好不好、累不累、安不安全、分享欲：有话想说。",
+        "intensity": 0.62,
+        "age": 0
+      }
+    ],
     "obsessions": []
   },
   "emotionJournal": [
@@ -136,22 +143,7 @@
   ],
   "interactions": [
     {
-      "at": "2026-10-14T09:13:48.123Z"
-    },
-    {
-      "at": "2026-10-14T09:14:09.612Z"
-    },
-    {
-      "at": "2026-10-14T09:14:32.347Z"
-    },
-    {
-      "at": "2026-10-14T09:14:50.428Z"
-    },
-    {
-      "at": "2026-10-14T09:15:14.262Z"
-    },
-    {
-      "at": "2026-10-14T09:15:40.085Z"
+      "at": "2026-10-14T17:34:39.168Z"
     }
   ],
   "bridge": [
