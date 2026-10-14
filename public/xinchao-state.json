@@ -1,15 +1,18 @@
 {
-  "updatedAt": "2026-10-14T21:15:02.173106+00:00",
+  "updatedAt": "2026-10-14T21:20:02.259900+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.4716,
-    "arousal": 0.6213,
+    "valence": 0.4695,
+    "arousal": 0.6102,
     "label": "紧绷",
     "updatedAt": "2026-10-14T19:15:32.425Z",
     "lastCause": "reconciliation",
     "lastCauseAt": "2026-10-14T19:15:32.425Z",
-    "pendingLabel": null,
+    "pendingLabel": {
+      "label": "平静",
+      "since": "2026-10-14T21:15:53.995Z"
+    },
     "heldCause": {
       "word": "想念",
       "prio": 2,
@@ -63,7 +66,7 @@
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.2122
+      "value": 0.208
     },
     {
       "key": "affection",
