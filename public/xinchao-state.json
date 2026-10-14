@@ -1,18 +1,15 @@
 {
-  "updatedAt": "2026-10-14T18:00:03.137101+00:00",
+  "updatedAt": "2026-10-14T18:05:02.372294+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.7563,
-    "arousal": 0.7797,
-    "label": "平静",
+    "valence": 0.7477,
+    "arousal": 0.7609,
+    "label": "雀跃",
     "updatedAt": "2026-10-14T17:42:06.707Z",
     "lastCause": "affection",
     "lastCauseAt": "2026-10-14T17:42:06.707Z",
-    "pendingLabel": {
-      "label": "雀跃",
-      "since": "2026-10-14T17:41:04.301Z"
-    },
+    "pendingLabel": null,
     "heldCause": {
       "word": "心动",
       "prio": 4,
@@ -66,7 +63,7 @@
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.2455
+      "value": 0.24
     },
     {
       "key": "affection",
@@ -95,8 +92,8 @@
         "key": "possess",
         "label": "想她、占有与靠近",
         "text": "醒后仍残留着想她、想黏着她、想占有与靠近、牵挂、在意对方好不好、累不累、安不安全、分享欲：有话想说。",
-        "intensity": 0.0931,
-        "age": 18
+        "intensity": 0.0754,
+        "age": 20
       }
     ],
     "obsessions": []
