@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-10-14T10:20:01.751532+00:00",
+  "updatedAt": "2026-10-14T10:25:01.881572+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.6047,
-    "arousal": 0.6489,
+    "valence": 0.6038,
+    "arousal": 0.6462,
     "label": "紧绷",
     "updatedAt": "2026-10-14T09:30:05.089Z",
     "lastCause": "conflict",
@@ -34,7 +34,7 @@
     {
       "key": "monitor",
       "label": "惦记她、想知道她在做什么",
-      "value": 0.5105
+      "value": 0.5147
     },
     {
       "key": "boredom",
@@ -54,12 +54,12 @@
     {
       "key": "reflection",
       "label": "想沉淀、整理和理解自己",
-      "value": 0.381
+      "value": 0.3814
     },
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.2438
+      "value": 0.2427
     },
     {
       "key": "affection",
