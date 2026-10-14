@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-10-14T13:30:02.060136+00:00",
+  "updatedAt": "2026-10-14T13:35:01.875066+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.4035,
-    "arousal": 0.5962,
+    "valence": 0.4024,
+    "arousal": 0.5838,
     "label": "平静",
     "updatedAt": "2026-10-14T11:10:14.231Z",
     "lastCause": "conflict",
@@ -58,12 +58,12 @@
     {
       "key": "reflection",
       "label": "想沉淀、整理和理解自己",
-      "value": 0.4148
+      "value": 0.4178
     },
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.3113
+      "value": 0.3024
     },
     {
       "key": "affection",
