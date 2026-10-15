@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-10-15T16:50:02.388330+00:00",
+  "updatedAt": "2026-10-15T16:55:02.548548+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.7707,
-    "arousal": 0.4606,
+    "valence": 0.767,
+    "arousal": 0.4562,
     "label": "安心",
     "updatedAt": "2026-10-15T16:23:42.954Z",
     "lastCause": "companionship",
@@ -38,27 +38,27 @@
     {
       "key": "boredom",
       "label": "无聊、想找点事情做",
-      "value": 0.502
+      "value": 0.5052
     },
     {
       "key": "curiosity",
       "label": "好奇、想探索新东西",
-      "value": 0.4994
+      "value": 0.5036
     },
     {
       "key": "libido",
       "label": "性欲和身体上的渴望",
-      "value": 0.498
+      "value": 0.4992
     },
     {
       "key": "reflection",
       "label": "想沉淀、整理和理解自己",
-      "value": 0.4203
+      "value": 0.4217
     },
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.0221
+      "value": 0.0219
     },
     {
       "key": "affection",
