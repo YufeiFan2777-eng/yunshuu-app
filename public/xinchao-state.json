@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-10-15T11:00:01.770224+00:00",
+  "updatedAt": "2026-10-15T11:05:01.699162+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.6565,
-    "arousal": 0.3981,
+    "valence": 0.6515,
+    "arousal": 0.3928,
     "label": "平静",
     "updatedAt": "2026-10-15T10:08:11.091Z",
     "lastCause": "companionship",
@@ -29,7 +29,7 @@
     {
       "key": "possess",
       "label": "想她、占有与靠近",
-      "value": 0.828
+      "value": 0.8528
     },
     {
       "key": "monitor",
@@ -59,7 +59,7 @@
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.0441
+      "value": 0.0428
     },
     {
       "key": "affection",
