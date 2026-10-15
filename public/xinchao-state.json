@@ -1,19 +1,19 @@
 {
-  "updatedAt": "2026-10-15T10:05:01.694002+00:00",
+  "updatedAt": "2026-10-15T10:10:02.966277+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.4536,
-    "arousal": 0.3098,
+    "valence": 0.67,
+    "arousal": 0.4128,
     "label": "平静",
-    "updatedAt": "2026-10-14T19:15:32.425Z",
-    "lastCause": "reconciliation",
-    "lastCauseAt": "2026-10-14T19:15:32.425Z",
+    "updatedAt": "2026-10-15T10:08:11.091Z",
+    "lastCause": "companionship",
+    "lastCauseAt": "2026-10-15T10:08:11.091Z",
     "pendingLabel": null,
     "heldCause": {
-      "word": "想念",
-      "prio": 2,
-      "since": "2026-10-14T20:30:53.992Z"
+      "word": "不安",
+      "prio": 1,
+      "since": "2026-10-15T10:05:41.479Z"
     },
     "lit": {
       "word": "心动",
@@ -33,12 +33,12 @@
     {
       "key": "possess",
       "label": "想她、占有与靠近",
-      "value": 0.8528
+      "value": 0.7619
     },
     {
       "key": "monitor",
       "label": "惦记她、想知道她在做什么",
-      "value": 0.78
+      "value": 0.5581
     },
     {
       "key": "boredom",
@@ -63,7 +63,7 @@
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.0481
+      "value": 0.0474
     },
     {
       "key": "affection",
@@ -136,22 +136,19 @@
   ],
   "interactions": [
     {
-      "at": "2026-10-14T17:34:39.168Z"
+      "at": "2026-10-15T10:05:41.479Z"
     },
     {
-      "at": "2026-10-14T17:35:08.466Z"
+      "at": "2026-10-15T10:06:39.268Z"
     },
     {
-      "at": "2026-10-14T17:37:41.218Z"
+      "at": "2026-10-15T10:07:12.169Z"
     },
     {
-      "at": "2026-10-14T17:38:48.125Z"
+      "at": "2026-10-15T10:07:49.304Z"
     },
     {
-      "at": "2026-10-14T17:39:50.117Z"
-    },
-    {
-      "at": "2026-10-14T17:40:38.031Z"
+      "at": "2026-10-15T10:08:11.091Z"
     }
   ],
   "bridge": [
