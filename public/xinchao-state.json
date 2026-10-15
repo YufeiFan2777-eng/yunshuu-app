@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-10-15T17:50:01.555239+00:00",
+  "updatedAt": "2026-10-15T17:55:02.421953+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.7148,
-    "arousal": 0.5139,
+    "valence": 0.7097,
+    "arousal": 0.509,
     "label": "安心",
     "updatedAt": "2026-10-15T17:44:44.492Z",
     "lastCause": "reconciliation",
@@ -13,11 +13,7 @@
       "label": "雀跃",
       "since": "2026-10-15T17:44:44.492Z"
     },
-    "heldCause": {
-      "word": "生气",
-      "prio": 3,
-      "since": "2026-10-15T17:38:23.200Z"
-    },
+    "heldCause": null,
     "lit": {
       "word": "得意",
       "at": "2026-10-15T14:20:41.955Z",
@@ -65,7 +61,7 @@
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.2471
+      "value": 0.2432
     },
     {
       "key": "affection",
