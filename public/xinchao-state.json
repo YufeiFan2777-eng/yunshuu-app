@@ -1,53 +1,44 @@
 {
-  "updatedAt": "2026-10-16T08:25:02.524447+00:00",
+  "updatedAt": "2026-10-16T08:30:03.329947+00:00",
   "consciousness": "awake",
-  "fatigue": 0.009,
+  "fatigue": 0.0094,
   "emotion": {
-    "valence": 0.0768,
-    "arousal": 0.8695,
+    "valence": 0.4675,
+    "arousal": 0.935,
     "label": "烦躁",
-    "updatedAt": "2026-10-16T07:37:58.451Z",
-    "lastCause": "conflict",
-    "lastCauseAt": "2026-10-16T07:37:58.451Z",
-    "pendingLabel": null,
+    "updatedAt": "2026-10-16T08:29:53.405Z",
+    "lastCause": "intimacy",
+    "lastCauseAt": "2026-10-16T08:29:53.405Z",
+    "pendingLabel": {
+      "label": "紧绷",
+      "since": "2026-10-16T08:29:53.405Z"
+    },
     "heldCause": {
       "word": "生气",
       "prio": 3,
       "since": "2026-10-16T07:31:47.600Z"
     },
     "lit": {
-      "word": "得意",
-      "at": "2026-10-16T04:42:37.847Z",
-      "minutes": 60
+      "word": "心动",
+      "at": "2026-10-16T08:29:53.405Z",
+      "minutes": 36
     },
-    "lightTaps": [
-      "2026-10-15T16:22:46.551Z"
-    ],
+    "lightTaps": [],
     "heartDay": {
-      "day": "2026-10-15",
-      "n": 1
+      "day": "2026-10-16",
+      "n": 2
     }
   },
   "topDrives": [
     {
-      "key": "possess",
-      "label": "想她、占有与靠近",
-      "value": 1.0
-    },
-    {
       "key": "monitor",
       "label": "惦记她、想知道她在做什么",
-      "value": 0.9933
+      "value": 0.8558
     },
     {
-      "key": "libido",
-      "label": "性欲和身体上的渴望",
-      "value": 0.6776
-    },
-    {
-      "key": "anger",
-      "label": "愤怒与不满",
-      "value": 0.5292
+      "key": "possess",
+      "label": "想她、占有与靠近",
+      "value": 0.6673
     },
     {
       "key": "boredom",
@@ -62,7 +53,17 @@
     {
       "key": "reflection",
       "label": "想沉淀、整理和理解自己",
-      "value": 0.4718
+      "value": 0.4728
+    },
+    {
+      "key": "libido",
+      "label": "性欲和身体上的渴望",
+      "value": 0.4573
+    },
+    {
+      "key": "anger",
+      "label": "愤怒与不满",
+      "value": 0.2948
     },
     {
       "key": "affection",
@@ -135,12 +136,6 @@
   ],
   "interactions": [
     {
-      "at": "2026-10-16T04:27:54.837Z"
-    },
-    {
-      "at": "2026-10-16T04:28:37.800Z"
-    },
-    {
       "at": "2026-10-16T04:30:30.034Z"
     },
     {
@@ -151,6 +146,12 @@
     },
     {
       "at": "2026-10-16T04:35:28.572Z"
+    },
+    {
+      "at": "2026-10-16T04:38:03.843Z"
+    },
+    {
+      "at": "2026-10-16T04:42:37.847Z"
     }
   ],
   "bridge": [
