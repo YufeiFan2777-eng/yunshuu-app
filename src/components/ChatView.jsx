@@ -51,6 +51,14 @@ export default function ChatView({ sessionId, onMenu }) {
   }, []);
 
   useEffect(() => {
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') loadMessages();
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => document.removeEventListener('visibilitychange', onVisible);
+  }, [sessionId]);
+
+  useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, streamingText]);
 
@@ -209,7 +217,12 @@ export default function ChatView({ sessionId, onMenu }) {
     } catch (e) {
       setStreamingText('');
       setToolCalls([]);
-      setMessages(prev => [...prev, { id: Date.now() + 1, role: 'error', content: e.message }]);
+      if (e.name === 'AbortError' || e.message?.includes('aborted') || e.message?.includes('network')) {
+        // 屏幕熄灭/网络中断 → 后端继续跑，重新加载消息即可
+        await loadMessages();
+      } else {
+        setMessages(prev => [...prev, { id: Date.now() + 1, role: 'error', content: e.message }]);
+      }
     } finally {
       setStreaming(false);
     }

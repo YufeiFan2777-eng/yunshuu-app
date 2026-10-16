@@ -32,15 +32,11 @@ export async function getVitals() {
 
 // 流式发送消息，onDelta(text) 每片段回调，onEvent(type, data) 工具调用事件回调
 export async function sendMessage(sessionId, content, onDelta, onEvent) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 300000); // 300s 超时兜底
-
   try {
     const resp = await fetch(`${BASE}/chat/sessions/${sessionId}/messages`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ content }),
-      signal: controller.signal,
     });
 
     if (!resp.ok) {
@@ -92,7 +88,5 @@ export async function sendMessage(sessionId, content, onDelta, onEvent) {
     }
 
     return { content: fullContent, doneSent };
-  } finally {
-    clearTimeout(timer);
   }
 }
