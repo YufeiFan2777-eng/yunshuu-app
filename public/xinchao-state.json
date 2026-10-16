@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-10-16T16:45:02.774555+00:00",
+  "updatedAt": "2026-10-16T16:50:01.876194+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.7978,
-    "arousal": 0.5791,
+    "valence": 0.794,
+    "arousal": 0.5738,
     "label": "雀跃",
     "updatedAt": "2026-10-16T15:14:23.106Z",
     "lastCause": "affection",
@@ -28,12 +28,12 @@
     {
       "key": "monitor",
       "label": "惦记她、想知道她在做什么",
-      "value": 0.6709
+      "value": 0.6788
     },
     {
       "key": "possess",
       "label": "想她、占有与靠近",
-      "value": 0.6639
+      "value": 0.6676
     },
     {
       "key": "boredom",
@@ -53,12 +53,12 @@
     {
       "key": "libido",
       "label": "性欲和身体上的渴望",
-      "value": 0.4627
+      "value": 0.4636
     },
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.0967
+      "value": 0.0956
     },
     {
       "key": "affection",
