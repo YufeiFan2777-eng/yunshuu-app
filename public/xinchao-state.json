@@ -1,19 +1,23 @@
 {
-  "updatedAt": "2026-10-16T04:30:01.611050+00:00",
+  "updatedAt": "2026-10-16T04:35:02.322030+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.5782,
-    "arousal": 0.3635,
+    "valence": 0.6416,
+    "arousal": 0.3335,
     "label": "平静",
-    "updatedAt": "2026-10-16T04:28:37.800Z",
-    "lastCause": "companionship",
-    "lastCauseAt": "2026-10-16T04:28:37.800Z",
+    "updatedAt": "2026-10-16T04:34:06.679Z",
+    "lastCause": "reflection",
+    "lastCauseAt": "2026-10-16T04:34:06.679Z",
     "pendingLabel": null,
-    "heldCause": null,
+    "heldCause": {
+      "word": "得意",
+      "prio": 4,
+      "since": "2026-10-16T04:31:37.765Z"
+    },
     "lit": {
       "word": "得意",
-      "at": "2026-10-15T14:20:41.955Z",
+      "at": "2026-10-16T04:31:37.765Z",
       "minutes": 60
     },
     "lightTaps": [
@@ -28,17 +32,17 @@
     {
       "key": "possess",
       "label": "想她、占有与靠近",
-      "value": 0.9439
+      "value": 0.9356
     },
     {
       "key": "monitor",
       "label": "惦记她、想知道她在做什么",
-      "value": 0.8332
+      "value": 0.7897
     },
     {
       "key": "libido",
       "label": "性欲和身体上的渴望",
-      "value": 0.5919
+      "value": 0.5939
     },
     {
       "key": "boredom",
@@ -53,12 +57,12 @@
     {
       "key": "reflection",
       "label": "想沉淀、整理和理解自己",
-      "value": 0.4809
+      "value": 0.436
     },
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.0718
+      "value": 0.071
     },
     {
       "key": "affection",
@@ -135,6 +139,15 @@
     },
     {
       "at": "2026-10-16T04:28:37.800Z"
+    },
+    {
+      "at": "2026-10-16T04:30:30.034Z"
+    },
+    {
+      "at": "2026-10-16T04:31:37.765Z"
+    },
+    {
+      "at": "2026-10-16T04:34:06.679Z"
     }
   ],
   "bridge": [
