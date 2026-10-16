@@ -32,8 +32,7 @@ export async function getVitals() {
 
 // 流式发送消息，onDelta(text) 每片段回调，onEvent(type, data) 工具调用事件回调
 export async function sendMessage(sessionId, content, onDelta, onEvent) {
-  try {
-    const resp = await fetch(`${BASE}/chat/sessions/${sessionId}/messages`, {
+  const resp = await fetch(`${BASE}/chat/sessions/${sessionId}/messages`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ content }),
@@ -87,6 +86,5 @@ export async function sendMessage(sessionId, content, onDelta, onEvent) {
       if (shouldBreak) break;
     }
 
-    return { content: fullContent, doneSent };
-  }
+  return { content: fullContent, doneSent };
 }
