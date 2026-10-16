@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-10-16T15:20:02.354758+00:00",
+  "updatedAt": "2026-10-16T15:25:02.649019+00:00",
   "consciousness": "awake",
   "fatigue": 0,
   "emotion": {
-    "valence": 0.8694,
-    "arousal": 0.688,
+    "valence": 0.8611,
+    "arousal": 0.6747,
     "label": "雀跃",
     "updatedAt": "2026-10-16T15:14:23.106Z",
     "lastCause": "affection",
@@ -57,12 +57,12 @@
     {
       "key": "libido",
       "label": "性欲和身体上的渴望",
-      "value": 0.4478
+      "value": 0.4494
     },
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.1149
+      "value": 0.1128
     },
     {
       "key": "affection",
@@ -91,8 +91,8 @@
         "key": "monitor",
         "label": "惦记她、想知道她在做什么",
         "text": "醒后仍残留着牵挂、在意对方好不好、累不累、安不安全、分享欲：有话想说、想她、想黏着她、想占有与靠近。",
-        "intensity": 0.2669,
-        "age": 8
+        "intensity": 0.2402,
+        "age": 9
       }
     ],
     "obsessions": []
