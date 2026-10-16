@@ -1,18 +1,15 @@
 {
-  "updatedAt": "2026-10-16T08:35:02.453427+00:00",
+  "updatedAt": "2026-10-16T08:40:02.353710+00:00",
   "consciousness": "awake",
   "fatigue": 0.0096,
   "emotion": {
-    "valence": 0.7642,
-    "arousal": 0.9731,
-    "label": "烦躁",
-    "updatedAt": "2026-10-16T08:34:48.194Z",
+    "valence": 0.8609,
+    "arousal": 0.9808,
+    "label": "雀跃",
+    "updatedAt": "2026-10-16T08:39:06.376Z",
     "lastCause": "intimacy",
-    "lastCauseAt": "2026-10-16T08:34:48.194Z",
-    "pendingLabel": {
-      "label": "雀跃",
-      "since": "2026-10-16T08:31:55.263Z"
-    },
+    "lastCauseAt": "2026-10-16T08:39:06.376Z",
+    "pendingLabel": null,
     "heldCause": {
       "word": "心动",
       "prio": 4,
@@ -20,25 +17,25 @@
     },
     "lit": {
       "word": "心动",
-      "at": "2026-10-16T08:34:48.194Z",
+      "at": "2026-10-16T08:39:06.376Z",
       "minutes": 15
     },
     "lightTaps": [],
     "heartDay": {
       "day": "2026-10-16",
-      "n": 5
+      "n": 7
     }
   },
   "topDrives": [
     {
       "key": "monitor",
       "label": "惦记她、想知道她在做什么",
-      "value": 0.7503
+      "value": 0.6925
     },
     {
       "key": "possess",
       "label": "想她、占有与靠近",
-      "value": 0.5718
+      "value": 0.5247
     },
     {
       "key": "boredom",
@@ -53,17 +50,17 @@
     {
       "key": "reflection",
       "label": "想沉淀、整理和理解自己",
-      "value": 0.4736
+      "value": 0.4742
     },
     {
       "key": "libido",
       "label": "性欲和身体上的渴望",
-      "value": 0.3909
+      "value": 0.3715
     },
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.248
+      "value": 0.2458
     },
     {
       "key": "affection",
@@ -136,12 +133,6 @@
   ],
   "interactions": [
     {
-      "at": "2026-10-16T04:35:28.572Z"
-    },
-    {
-      "at": "2026-10-16T04:38:03.843Z"
-    },
-    {
       "at": "2026-10-16T04:42:37.847Z"
     },
     {
@@ -152,6 +143,12 @@
     },
     {
       "at": "2026-10-16T08:30:41.720Z"
+    },
+    {
+      "at": "2026-10-16T08:31:55.263Z"
+    },
+    {
+      "at": "2026-10-16T08:34:48.194Z"
     }
   ],
   "bridge": [
