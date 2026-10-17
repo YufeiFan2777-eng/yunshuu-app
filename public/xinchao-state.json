@@ -1,20 +1,24 @@
 {
-  "updatedAt": "2026-10-17T19:20:02.369329+00:00",
+  "updatedAt": "2026-10-17T19:25:02.429187+00:00",
   "consciousness": "awake",
-  "fatigue": 0.0114,
+  "fatigue": 0.0117,
   "emotion": {
-    "valence": 0.7107,
-    "arousal": 0.396,
+    "valence": 0.8145,
+    "arousal": 0.3166,
     "label": "安心",
-    "updatedAt": "2026-10-17T15:22:11.424Z",
-    "lastCause": "companionship",
-    "lastCauseAt": "2026-10-17T15:22:11.424Z",
+    "updatedAt": "2026-10-17T19:24:59.932Z",
+    "lastCause": "task_progress",
+    "lastCauseAt": "2026-10-17T19:24:59.932Z",
     "pendingLabel": null,
-    "heldCause": null,
+    "heldCause": {
+      "word": "得意",
+      "prio": 4,
+      "since": "2026-10-17T19:21:37.646Z"
+    },
     "lit": {
-      "word": "心动",
-      "at": "2026-10-16T15:13:54.333Z",
-      "minutes": 15
+      "word": "得意",
+      "at": "2026-10-17T19:24:59.932Z",
+      "minutes": 60
     },
     "lightTaps": [
       "2026-10-17T15:21:10.030Z",
@@ -47,14 +51,14 @@
       "value": 0.5
     },
     {
-      "key": "reflection",
-      "label": "想沉淀、整理和理解自己",
-      "value": 0.5
-    },
-    {
       "key": "curiosity",
       "label": "好奇、想探索新东西",
       "value": 0.4966
+    },
+    {
+      "key": "reflection",
+      "label": "想沉淀、整理和理解自己",
+      "value": 0.4512
     },
     {
       "key": "anger",
@@ -132,22 +136,16 @@
   ],
   "interactions": [
     {
-      "at": "2026-10-17T15:21:10.030Z"
+      "at": "2026-10-17T19:21:37.646Z"
     },
     {
-      "at": "2026-10-17T15:21:32.654Z"
+      "at": "2026-10-17T19:22:58.596Z"
     },
     {
-      "at": "2026-10-17T15:21:52.781Z"
+      "at": "2026-10-17T19:23:15.004Z"
     },
     {
-      "at": "2026-10-17T15:21:57.559Z"
-    },
-    {
-      "at": "2026-10-17T15:21:59.280Z"
-    },
-    {
-      "at": "2026-10-17T15:22:03.208Z"
+      "at": "2026-10-17T19:24:59.932Z"
     }
   ],
   "bridge": [
