@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-10-17T19:55:02.154865+00:00",
+  "updatedAt": "2026-10-17T20:00:02.567691+00:00",
   "consciousness": "awake",
   "fatigue": 0.0117,
   "emotion": {
-    "valence": 0.7544,
-    "arousal": 0.7288,
+    "valence": 0.7514,
+    "arousal": 0.722,
     "label": "雀跃",
     "updatedAt": "2026-10-17T19:30:55.408Z",
     "lastCause": "companionship",
@@ -12,7 +12,7 @@
     "pendingLabel": null,
     "heldCause": {
       "word": "心动",
-      "prio": 4,
+      "prio": 0.5,
       "since": "2026-10-17T19:26:28.795Z"
     },
     "lit": {
@@ -63,7 +63,7 @@
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.2383
+      "value": 0.236
     },
     {
       "key": "affection",
