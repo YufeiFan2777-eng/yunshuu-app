@@ -1,27 +1,27 @@
 {
-  "updatedAt": "2026-10-17T15:20:02.067746+00:00",
+  "updatedAt": "2026-10-17T15:25:01.647862+00:00",
   "consciousness": "awake",
-  "fatigue": 0,
+  "fatigue": 0.0002,
   "emotion": {
-    "valence": 0.5167,
-    "arousal": 0.2993,
+    "valence": 0.8267,
+    "arousal": 0.5594,
     "label": "平静",
-    "updatedAt": "2026-10-16T15:14:23.106Z",
-    "lastCause": "affection",
-    "lastCauseAt": "2026-10-16T15:14:23.106Z",
-    "pendingLabel": null,
-    "heldCause": {
-      "word": "不安",
-      "prio": 1,
-      "since": "2026-10-17T00:09:19.585Z"
+    "updatedAt": "2026-10-17T15:22:11.424Z",
+    "lastCause": "companionship",
+    "lastCauseAt": "2026-10-17T15:22:11.424Z",
+    "pendingLabel": {
+      "label": "雀跃",
+      "since": "2026-10-17T15:22:05.973Z"
     },
+    "heldCause": null,
     "lit": {
       "word": "心动",
       "at": "2026-10-16T15:13:54.333Z",
       "minutes": 15
     },
     "lightTaps": [
-      "2026-10-16T15:14:23.106Z"
+      "2026-10-17T15:21:10.030Z",
+      "2026-10-17T15:22:05.973Z"
     ],
     "heartDay": {
       "day": "2026-10-16",
@@ -30,19 +30,19 @@
   },
   "topDrives": [
     {
+      "key": "libido",
+      "label": "性欲和身体上的渴望",
+      "value": 0.7583
+    },
+    {
       "key": "possess",
       "label": "想她、占有与靠近",
-      "value": 1.0
+      "value": 0.7367
     },
     {
       "key": "monitor",
       "label": "惦记她、想知道她在做什么",
-      "value": 1.0
-    },
-    {
-      "key": "libido",
-      "label": "性欲和身体上的渴望",
-      "value": 0.7563
+      "value": 0.6114
     },
     {
       "key": "boredom",
@@ -62,7 +62,7 @@
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.0074
+      "value": 0.0072
     },
     {
       "key": "affection",
@@ -86,7 +86,15 @@
     }
   ],
   "thoughts": {
-    "flash": [],
+    "flash": [
+      {
+        "key": "possess",
+        "label": "想她、占有与靠近",
+        "text": "醒后仍残留着想她、想黏着她、想占有与靠近、牵挂、在意对方好不好、累不累、安不安全、野心、想做成、想赢、想拥有。",
+        "intensity": 0.1576,
+        "age": 13
+      }
+    ],
     "obsessions": []
   },
   "emotionJournal": [
@@ -135,22 +143,22 @@
   ],
   "interactions": [
     {
-      "at": "2026-10-16T15:11:51.888Z"
+      "at": "2026-10-17T15:21:10.030Z"
     },
     {
-      "at": "2026-10-16T15:12:08.640Z"
+      "at": "2026-10-17T15:21:32.654Z"
     },
     {
-      "at": "2026-10-16T15:12:30.477Z"
+      "at": "2026-10-17T15:21:52.781Z"
     },
     {
-      "at": "2026-10-16T15:12:44.893Z"
+      "at": "2026-10-17T15:21:57.559Z"
     },
     {
-      "at": "2026-10-16T15:13:05.433Z"
+      "at": "2026-10-17T15:21:59.280Z"
     },
     {
-      "at": "2026-10-16T15:13:31.639Z"
+      "at": "2026-10-17T15:22:03.208Z"
     }
   ],
   "bridge": [
