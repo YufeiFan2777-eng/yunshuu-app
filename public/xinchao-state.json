@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-10-18T16:00:02.354572+00:00",
+  "updatedAt": "2026-10-18T16:05:02.406696+00:00",
   "consciousness": "awake",
-  "fatigue": 0.0144,
+  "fatigue": 0.0125,
   "emotion": {
-    "valence": 0.4732,
-    "arousal": 0.3158,
+    "valence": 0.4738,
+    "arousal": 0.3154,
     "label": "平静",
     "updatedAt": "2026-10-17T20:10:05.478Z",
     "lastCause": "conflict",
@@ -43,7 +43,7 @@
     {
       "key": "libido",
       "label": "性欲和身体上的渴望",
-      "value": 0.8373
+      "value": 0.8382
     },
     {
       "key": "boredom",
@@ -63,7 +63,7 @@
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.0416
+      "value": 0.0411
     },
     {
       "key": "affection",
@@ -92,8 +92,8 @@
         "key": "possess",
         "label": "想她、占有与靠近",
         "text": "醒后仍残留着想她、想黏着她、想占有与靠近、野心、想做成、想赢、想拥有、牵挂、在意对方好不好、累不累、安不安全。",
-        "intensity": 0.2402,
-        "age": 9
+        "intensity": 0.1751,
+        "age": 12
       }
     ],
     "obsessions": []
