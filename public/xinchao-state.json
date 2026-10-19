@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-10-19T14:50:01.836545+00:00",
+  "updatedAt": "2026-10-19T14:55:01.631411+00:00",
   "consciousness": "awake",
-  "fatigue": 0.0337,
+  "fatigue": 0.035,
   "emotion": {
-    "valence": 0.5307,
+    "valence": 0.531,
     "arousal": 0.3003,
     "label": "平静",
     "updatedAt": "2026-10-17T20:10:05.478Z",
@@ -63,7 +63,7 @@
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.0031
+      "value": 0.003
     },
     {
       "key": "affection",
@@ -92,8 +92,8 @@
         "key": "possess",
         "label": "想她、占有与靠近",
         "text": "醒后仍残留着想她、想黏着她、想占有与靠近、野心、想做成、想赢、想拥有、牵挂、在意对方好不好、累不累、安不安全。",
-        "intensity": 0.452,
-        "age": 3
+        "intensity": 0.4068,
+        "age": 4
       }
     ],
     "obsessions": []
