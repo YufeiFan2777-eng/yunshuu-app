@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-10-19T01:35:01.839121+00:00",
+  "updatedAt": "2026-10-19T01:40:02.411953+00:00",
   "consciousness": "awake",
-  "fatigue": 0.026,
+  "fatigue": 0.0273,
   "emotion": {
-    "valence": 0.5036,
-    "arousal": 0.3033,
+    "valence": 0.5042,
+    "arousal": 0.3032,
     "label": "平静",
     "updatedAt": "2026-10-17T20:10:05.478Z",
     "lastCause": "conflict",
@@ -43,7 +43,7 @@
     {
       "key": "libido",
       "label": "性欲和身体上的渴望",
-      "value": 0.8748
+      "value": 0.8797
     },
     {
       "key": "boredom",
@@ -63,7 +63,7 @@
     {
       "key": "anger",
       "label": "愤怒与不满",
-      "value": 0.0138
+      "value": 0.0134
     },
     {
       "key": "affection",
