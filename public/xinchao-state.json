@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-10-20T00:05:01.619728+00:00",
+  "updatedAt": "2026-10-20T00:10:02.510338+00:00",
   "consciousness": "awake",
-  "fatigue": 0,
+  "fatigue": 0.0007,
   "emotion": {
-    "valence": 0.5408,
+    "valence": 0.5409,
     "arousal": 0.3,
     "label": "平静",
     "updatedAt": "2026-10-17T20:10:05.478Z",
