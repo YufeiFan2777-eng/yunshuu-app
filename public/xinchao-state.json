@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-10-21T04:35:01.741529+00:00",
+  "updatedAt": "2026-10-21T04:40:02.335369+00:00",
   "consciousness": "awake",
-  "fatigue": 0.018,
+  "fatigue": 0.0193,
   "emotion": {
     "valence": 0.5472,
     "arousal": 0.3,
@@ -10,11 +10,7 @@
     "lastCause": "conflict",
     "lastCauseAt": "2026-10-17T20:10:05.478Z",
     "pendingLabel": null,
-    "heldCause": {
-      "word": "不安",
-      "prio": 1,
-      "since": "2026-10-18T17:54:20.263Z"
-    },
+    "heldCause": null,
     "lit": {
       "word": "心动",
       "at": "2026-10-17T19:26:28.795Z",
