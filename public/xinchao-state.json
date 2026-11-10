@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-11-10T11:35:02.231722+00:00",
+  "updatedAt": "2026-11-10T11:40:02.043042+00:00",
   "consciousness": "awake",
-  "fatigue": 0.0087,
+  "fatigue": 0.01,
   "emotion": {
     "valence": 0.5477,
     "arousal": 0.3,
