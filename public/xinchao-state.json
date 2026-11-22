@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-11-22T16:50:01.527515+00:00",
+  "updatedAt": "2026-11-22T16:55:02.048562+00:00",
   "consciousness": "awake",
-  "fatigue": 0.0062,
+  "fatigue": 0.0075,
   "emotion": {
     "valence": 0.5477,
     "arousal": 0.3,
@@ -88,20 +88,13 @@
         "key": "possess",
         "label": "想她、占有与靠近",
         "text": "醒后仍残留着想她、想黏着她、想占有与靠近、野心、想做成、想赢、想拥有、牵挂、在意对方好不好、累不累、安不安全。",
-        "intensity": 0.3295,
-        "age": 6
+        "intensity": 0.2965,
+        "age": 7
       }
     ],
     "obsessions": []
   },
   "emotionJournal": [
-    {
-      "label": "平静",
-      "at": "2026-10-08T23:23:49.498Z",
-      "valence": 0.558,
-      "arousal": 0.301,
-      "cause": ""
-    },
     {
       "label": "平静",
       "at": "2026-10-09T01:23:49.517Z",
@@ -133,6 +126,13 @@
     {
       "label": "平静",
       "at": "2026-10-09T09:23:49.621Z",
+      "valence": 0.55,
+      "arousal": 0.301,
+      "cause": ""
+    },
+    {
+      "label": "平静",
+      "at": "2026-10-09T11:23:49.667Z",
       "valence": 0.55,
       "arousal": 0.301,
       "cause": ""
