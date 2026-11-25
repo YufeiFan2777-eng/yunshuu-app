@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-11-25T20:50:02.022471+00:00",
+  "updatedAt": "2026-11-25T20:55:01.606009+00:00",
   "consciousness": "awake",
-  "fatigue": 0.0068,
+  "fatigue": 0.0081,
   "emotion": {
     "valence": 0.5477,
     "arousal": 0.3,
@@ -88,13 +88,6 @@
   },
   "emotionJournal": [
     {
-      "label": "低落",
-      "at": "2026-10-10T19:18:26.702Z",
-      "valence": 0.278,
-      "arousal": 0.425,
-      "cause": "affection"
-    },
-    {
       "label": "紧绷",
       "at": "2026-10-10T19:27:07.726Z",
       "valence": 0.538,
@@ -127,6 +120,13 @@
       "at": "2026-10-10T21:29:59.972Z",
       "valence": 0.325,
       "arousal": 0.814,
+      "cause": "conflict"
+    },
+    {
+      "label": "烦躁",
+      "at": "2026-10-10T21:35:57.179Z",
+      "valence": 0.231,
+      "arousal": 0.867,
       "cause": "conflict"
     }
   ],
